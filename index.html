@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hospitality Pro — Tools & Playbook by Jordan Pitts</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #060606;
+      --panel: #0f0f0f;
+      --text: #f6f6f6;
+      --muted: #9ca3af;
+      --accent: #d4a85a;
+      --border: rgba(255, 255, 255, 0.08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: radial-gradient(circle at top, rgba(212,168,90,0.08), transparent 55%), var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    header {
+      padding: 4rem 1.5rem 3rem;
+      max-width: 1100px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    header h1 {
+      font-size: clamp(2.2rem, 4vw, 3.5rem);
+      margin-bottom: 1rem;
+      letter-spacing: 0.03em;
+    }
+    header p {
+      margin: 0 auto;
+      max-width: 720px;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+    .cta-row {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+    .btn {
+      padding: 0.9rem 1.8rem;
+      border-radius: 999px;
+      border: 1px solid var(--accent);
+      color: var(--bg);
+      background: var(--accent);
+      font-weight: 600;
+      text-decoration: none;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .btn.secondary {
+      background: transparent;
+      color: var(--text);
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.25); }
+    main {
+      padding: 0 1.5rem 4rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    section {
+      margin-top: 3.5rem;
+    }
+    h2 {
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+    }
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
+    .tool-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      min-height: 220px;
+    }
+    .tool-card h3 {
+      margin: 0;
+      font-size: 1.15rem;
+    }
+    .tool-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.97rem;
+    }
+    .tool-card a {
+      margin-top: auto;
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .split {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 1.75rem;
+    }
+    ul { padding-left: 1.2rem; }
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 1.5rem;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    @media (max-width: 600px) {
+      header { padding-top: 3rem; }
+      .btn { width: 100%; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <p style="letter-spacing:0.2em; text-transform:uppercase; color:var(--accent); font-size:0.85rem; margin-bottom:1rem;">Jordan Pitts</p>
+    <h1>Hospitality Pro — The Operating System for Modern Operators</h1>
+    <p>
+      A premium playbook (9,000+ words) and a suite of single-purpose AI tools built for real operators:
+      Michelin kitchens, boutique hotels, heritage rail, and high-volume restaurants. Ship faster, run leaner,
+      and protect your margins.
+    </p>
+    <div class="cta-row">
+      <a class="btn" href="guide.md">Read the Guide</a>
+      <a class="btn secondary" href="#tools">Explore the Tool Suite</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="split">
+      <div class="panel">
+        <h2>The Playbook</h2>
+        <p>
+          <strong>The AI Operations Toolkit for Hospitality</strong> distils 20 years of Michelin discipline,
+          multi-venue operations, and AI automation into a single, field-ready manual. Modules cover day-to-day
+          automations, department playbooks, and a 50+ prompt library. Download the PDF or view the Markdown source
+          <a href="guide.md" style="color:var(--accent);">here</a>.
+        </p>
+        <ul>
+          <li>10 daily workflows (pre-arrival, rota, procurement, finance, reviews)</li>
+          <li>Department playbooks for Marketing, Revenue, HR, Procurement, Events, Sustainability, Sales</li>
+          <li>Implementation roadmap + ROI calculator</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h2>How to Use</h2>
+        <p>
+          Every tool on this site runs locally in your browser. No logins, no SaaS lock-in. For AI-powered tools,
+          plug in your own OpenRouter API key and the prompts will run through Claude 3.5.
+        </p>
+        <ul>
+          <li>Best experienced on desktop (Chrome/Safari)</li>
+          <li>Print-ready exports for ops manuals, allergen boards, SOPs</li>
+          <li>Use the bundle to prove ROI, then customise for your venues</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="tools">
+      <h2>Tool Suite</h2>
+      <div class="tools-grid">
+        <div class="tool-card">
+          <h3>GP & Recipe Costing Calculator</h3>
+          <p>Price every dish properly. Ingredient roll-ups, target GP, allergen flags, print-ready cards.</p>
+          <a href="tools/recipe-costing/index.html">Launch tool →</a>
+        </div>
+        <div class="tool-card">
+          <h3>AI Review Responder</h3>
+          <p>On-brand TripAdvisor/Google replies in seconds. Platform-specific tone, no "discount" language ever.</p>
+          <a href="tools/review-responder/index.html">Launch tool →</a>
+        </div>
+        <div class="tool-card">
+          <h3>Smart Procurement Generator</h3>
+          <p>Turn next week's covers into supplier-ready orders with a 10% buffer. Export in one click.</p>
+          <a href="tools/procurement-generator/index.html">Launch tool →</a>
+        </div>
+        <div class="tool-card">
+          <h3>Pre-Arrival Email Builder</h3>
+          <p>Concierge-grade sequences that build anticipation, mention upsells naturally, and stay on-brand.</p>
+          <a href="tools/pre-arrival-email/index.html">Launch tool →</a>
+        </div>
+        <div class="tool-card">
+          <h3>Menu Engineering Analyzer</h3>
+          <p>BCG matrix for your menu. Stars, Ploughhorses, Puzzles, Dogs — plus AI-led actions.</p>
+          <a href="tools/menu-engineering/index.html">Launch tool →</a>
+        </div>
+        <div class="tool-card">
+          <h3>AI Rota Optimizer</h3>
+          <p>Availability-aware scheduling with cover minimums, overtime alerts, and manager notes.</p>
+          <a href="tools/rota-optimizer/index.html">Launch tool →</a>
+        </div>
+        <div class="tool-card">
+          <h3>Financial Narrative Generator</h3>
+          <p>Turn weekly P&L into a 300-word executive summary with directives and red-flag alerts.</p>
+          <a href="tools/financial-narrative/index.html">Launch tool →</a>
+        </div>
+        <div class="tool-card">
+          <h3>SOP Generator</h3>
+          <p>Dump rough notes, get a numbered, print-ready SOP with scope, equipment, and sign-off.</p>
+          <a href="tools/sop-generator/index.html">Launch tool →</a>
+        </div>
+        <div class="tool-card">
+          <h3>Allergen Matrix Builder</h3>
+          <p>Compliance-ready matrix for all 14 allergens. Auto-detect, manual overrides, CSV + print.</p>
+          <a href="tools/allergen-matrix/index.html">Launch tool →</a>
+        </div>
+        <div class="tool-card">
+          <h3>Delivery Pricing Optimizer</h3>
+          <p>See the real GP after commission + VAT. Fix pricing and generate high-margin bundles.</p>
+          <a href="tools/delivery-pricing/index.html">Launch tool →</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" style="margin-top:3rem;">
+      <h2>Need bespoke automation?</h2>
+      <p>
+        I deploy these systems directly for independent operators, multi-site groups, and heritage experiences.
+        If you want the tools tailored to your venues (or integrated with PMS/POS), reach out at
+        <a href="https://jordanpitts.com" style="color:var(--accent);">jordanpitts.com</a>.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    Built by Jordan Pitts · Hospitality Pro © <span id="year"></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>
