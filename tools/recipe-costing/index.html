@@ -1,801 +1,889 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GP & Recipe Costing Calculator</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-color: #0f0f0f;
-            --surface-color: #1a1a1a;
-            --border-color: #333333;
-            --text-primary: #ffffff;
-            --text-secondary: #a0a0a0;
-            --accent-color: #d4a85a;
-            --accent-hover: #b88f4b;
-            --danger-color: #e55353;
-            
-            --allergen-bg: #2a2a2a;
-            --allergen-text: #e0e0e0;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-primary);
-            line-height: 1.5;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 3rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        h1 {
-            font-weight: 400;
-            font-size: 1.5rem;
-            letter-spacing: 0.05em;
-            color: var(--text-primary);
-        }
-
-        .accent-text {
-            color: var(--accent-color);
-        }
-
-        /* Layout */
-        .app-layout {
-            display: grid;
-            grid-template-columns: 250px 1fr;
-            gap: 2rem;
-        }
-
-        /* Sidebar / Recipe List */
-        .sidebar {
-            background: var(--surface-color);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 1.5rem;
-            height: fit-content;
-        }
-
-        .sidebar h2 {
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--text-secondary);
-            margin-bottom: 1rem;
-            font-weight: 500;
-        }
-
-        .recipe-list {
-            list-style: none;
-            margin-bottom: 1.5rem;
-        }
-
-        .recipe-item {
-            padding: 0.75rem 1rem;
-            cursor: pointer;
-            border-radius: 4px;
-            margin-bottom: 0.5rem;
-            transition: all 0.2s;
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .recipe-item:hover {
-            background: rgba(255,255,255,0.05);
-            color: var(--text-primary);
-        }
-
-        .recipe-item.active {
-            background: var(--accent-color);
-            color: var(--bg-color);
-            font-weight: 500;
-        }
-        
-        .recipe-item.active .delete-btn {
-            color: var(--bg-color);
-            opacity: 0.7;
-        }
-
-        /* Main Content */
-        .main-content {
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
-        }
-
-        .card {
-            background: var(--surface-color);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 2rem;
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            margin-bottom: 2rem;
-        }
-
-        /* Forms */
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-row {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        label {
-            display: block;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--text-secondary);
-            margin-bottom: 0.5rem;
-        }
-
-        input[type="text"],
-        input[type="number"] {
-            width: 100%;
-            background: var(--bg-color);
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-            padding: 0.75rem 1rem;
-            border-radius: 4px;
-            font-size: 1rem;
-            transition: border-color 0.2s;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: var(--accent-color);
-        }
-
-        .dish-title-input {
-            font-size: 1.5rem !important;
-            font-weight: 300;
-            border: none !important;
-            border-bottom: 1px solid var(--border-color) !important;
-            border-radius: 0 !important;
-            padding: 0.5rem 0 !important;
-            background: transparent !important;
-        }
-
-        .dish-title-input:focus {
-            border-bottom-color: var(--accent-color) !important;
-        }
-
-        /* Buttons */
-        button {
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-family: inherit;
-            transition: all 0.2s;
-        }
-
-        .btn-primary {
-            background: var(--accent-color);
-            color: var(--bg-color);
-            padding: 0.75rem 1.5rem;
-            border-radius: 4px;
-            font-weight: 500;
-            font-size: 0.9rem;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-        }
-
-        .btn-primary:hover {
-            background: var(--accent-hover);
-        }
-
-        .btn-secondary {
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            font-size: 0.85rem;
-        }
-
-        .btn-secondary:hover {
-            border-color: var(--text-secondary);
-        }
-        
-        .btn-icon {
-            color: var(--text-secondary);
-            padding: 0.25rem;
-        }
-        
-        .btn-icon:hover {
-            color: var(--danger-color);
-        }
-
-        /* Ingredients Table */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 1.5rem;
-        }
-
-        th {
-            text-align: left;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--text-secondary);
-            padding-bottom: 1rem;
-            border-bottom: 1px solid var(--border-color);
-            font-weight: 500;
-        }
-
-        td {
-            padding: 1rem 0;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        tr:last-child td {
-            border-bottom: none;
-        }
-
-        .ingredient-row input {
-            padding: 0.5rem;
-            font-size: 0.9rem;
-        }
-
-        /* Results Panel */
-        .results-panel {
-            background: var(--bg-color);
-            border: 1px solid var(--accent-color);
-            border-radius: 8px;
-            padding: 2rem;
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 2rem;
-        }
-
-        .result-item {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .result-label {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--text-secondary);
-        }
-
-        .result-value {
-            font-size: 1.75rem;
-            font-weight: 300;
-            color: var(--text-primary);
-        }
-
-        .result-value.highlight {
-            color: var(--accent-color);
-            font-weight: 400;
-        }
-
-        /* Allergens */
-        .allergens-container {
-            margin-top: 2rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .allergen-pills {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-top: 0.5rem;
-        }
-
-        .allergen-pill {
-            background: var(--allergen-bg);
-            color: var(--allergen-text);
-            padding: 0.25rem 0.75rem;
-            border-radius: 16px;
-            font-size: 0.75rem;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            border: 1px solid var(--border-color);
-        }
-
-        .allergen-pill.dairy { border-color: #8ab4f8; color: #8ab4f8; }
-        .allergen-pill.gluten { border-color: #f29900; color: #f29900; }
-        .allergen-pill.peanuts { border-color: #e2725b; color: #e2725b; }
-        .allergen-pill.treenuts { border-color: #8d6e63; color: #8d6e63; }
-        .allergen-pill.eggs { border-color: #fdd835; color: #fdd835; }
-        .allergen-pill.fish { border-color: #4fc3f7; color: #4fc3f7; }
-        .allergen-pill.crustaceans { border-color: #ff8a65; color: #ff8a65; }
-        .allergen-pill.molluscs { border-color: #bcaaa4; color: #bcaaa4; }
-        .allergen-pill.soya { border-color: #aed581; color: #aed581; }
-        .allergen-pill.celery { border-color: #81c784; color: #81c784; }
-        .allergen-pill.mustard { border-color: #ffd54f; color: #ffd54f; }
-        .allergen-pill.sesame { border-color: #ffb74d; color: #ffb74d; }
-        .allergen-pill.sulphites { border-color: #ba68c8; color: #ba68c8; }
-        .allergen-pill.lupin { border-color: #fff176; color: #fff176; }
-
-        .hidden {
-            display: none !important;
-        }
-
-        /* Print Styles */
-        @media print {
-            body {
-                background: white;
-                color: black;
-            }
-            .container {
-                padding: 0;
-            }
-            .sidebar, .btn-primary, .btn-secondary, header button {
-                display: none !important;
-            }
-            .app-layout {
-                display: block;
-            }
-            .card {
-                border: none;
-                padding: 0;
-            }
-            .results-panel {
-                border: 1px solid #ccc;
-                background: #f9f9f9;
-            }
-            input {
-                border: none !important;
-                background: transparent !important;
-                color: black !important;
-            }
-            .dish-title-input {
-                font-size: 2rem !important;
-                color: black !important;
-            }
-            .text-secondary {
-                color: #555 !important;
-            }
-            .allergen-pill {
-                border-color: #ccc;
-                color: black;
-            }
-            .btn-icon {
-                display: none;
-            }
-        }
-
-        /* Mobile Responsive */
-        @media (max-width: 768px) {
-            .app-layout {
-                grid-template-columns: 1fr;
-            }
-            .results-panel {
-                grid-template-columns: 1fr 1fr;
-            }
-            .form-row {
-                flex-direction: column;
-            }
-            table, thead, tbody, th, td, tr {
-                display: block;
-            }
-            thead tr {
-                position: absolute;
-                top: -9999px;
-                left: -9999px;
-            }
-            tr {
-                margin-bottom: 1rem;
-                border: 1px solid var(--border-color);
-                padding: 1rem;
-                border-radius: 4px;
-            }
-            td {
-                border: none;
-                position: relative;
-                padding-left: 50%;
-                text-align: right;
-                padding-top: 0.5rem;
-                padding-bottom: 0.5rem;
-            }
-            td:before {
-                position: absolute;
-                top: 0.5rem;
-                left: 0;
-                width: 45%;
-                padding-right: 10px;
-                white-space: nowrap;
-                text-align: left;
-                font-size: 0.75rem;
-                text-transform: uppercase;
-                color: var(--text-secondary);
-            }
-            td:nth-of-type(1):before { content: "Ingredient"; }
-            td:nth-of-type(2):before { content: "Qty"; }
-            td:nth-of-type(3):before { content: "Unit"; }
-            td:nth-of-type(4):before { content: "Cost/Unit (£)"; }
-            td:nth-of-type(5):before { content: "Total (£)"; }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recipe Costing Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="/assets/styles/system.css" />
+  <style>
+    :root {
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    body {
+      margin: 0;
+    }
+    .app-shell {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 3rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .layout-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+      gap: 1.5rem;
+      align-items: start;
+    }
+    .stack {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      grid-gap: 1rem;
+    }
+    .form-field.full {
+      grid-column: 1 / -1;
+    }
+    .ingredient-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .ingredient-table th,
+    .ingredient-table td {
+      padding: 0.6rem;
+      text-align: left;
+    }
+    .ingredient-table th {
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .ingredient-allergens {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-top: 0.35rem;
+    }
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+    }
+    .gp-gauge-wrapper {
+      margin-top: 1rem;
+    }
+    .gp-gauge {
+      position: relative;
+      height: 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+      margin-top: 0.35rem;
+    }
+    .gp-gauge .fill {
+      height: 100%;
+      width: 0;
+      border-radius: 999px;
+      transition: width 0.3s ease;
+    }
+    .gp-gauge .fill.state-hit {
+      background: #22c55e;
+    }
+    .gp-gauge .fill.state-watch {
+      background: #facc15;
+    }
+    .gp-gauge .fill.state-miss {
+      background: #f87171;
+    }
+    .gp-gauge .marker {
+      position: absolute;
+      top: -6px;
+      width: 2px;
+      height: 24px;
+      background: currentColor;
+      opacity: 0.65;
+    }
+    .section-card-header {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+    }
+    .section-title-block {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .section-body[hidden] {
+      display: none;
+    }
+    .inline-messages {
+      list-style: none;
+      padding: 0;
+      margin: 1rem 0 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .inline-messages li {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.9rem;
+    }
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+    textarea.mono-block {
+      width: 100%;
+      min-height: 160px;
+      border-radius: 0.75rem;
+      padding: 1rem;
+      font-family: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace;
+      font-size: 0.85rem;
+    }
+    .tooltip-icon {
+      border: none;
+      background: transparent;
+      cursor: help;
+      font-weight: 600;
+      color: inherit;
+      padding: 0;
+      margin-left: 0.25rem;
+    }
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+    }
+    @media (max-width: 960px) {
+      .layout-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    @media (max-width: 640px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      .section-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .button-row {
+        flex-direction: column;
+      }
+    }
+  </style>
 </head>
 <body>
-
-<div class="container">
-    <header>
-        <h1><span class="accent-text">GP</span> Costing</h1>
-        <button class="btn-secondary" onclick="window.print()">Print Recipe Card</button>
+  <div class="app-shell">
+    <header class="page-header">
+      <div>
+        <p class="eyebrow">Hidden Café Bar Social ops</p>
+        <h1>Recipe Costing Studio</h1>
+        <p class="muted">Two-column control centre for live GP, allergen compliance, and exportable prep sheets.</p>
+      </div>
+      <div class="header-actions" style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+        <button type="button" class="btn ghost" id="startBlankBtn">Start blank</button>
+        <button type="button" class="btn primary" id="sampleDataBtn">Load sample dish</button>
+      </div>
     </header>
 
-    <div class="app-layout">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <h2>Your Recipes</h2>
-            <ul class="recipe-list" id="recipeList">
-                <!-- Populated via JS -->
-            </ul>
-            <button class="btn-secondary" style="width: 100%;" onclick="createNewRecipe()">+ New Recipe</button>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="main-content" id="mainContent">
-            
-            <!-- Recipe Card -->
-            <div class="card">
-                <div class="card-header">
-                    <div style="flex-grow: 1; margin-right: 2rem;">
-                        <input type="text" id="dishName" class="dish-title-input" placeholder="Enter Dish Name..." oninput="updateCurrentRecipe()">
-                    </div>
-                    <div>
-                        <label>Target GP%</label>
-                        <input type="number" id="targetGP" value="70" step="1" style="width: 80px;" oninput="calculateCosting()">
-                    </div>
-                    <div style="margin-left: 1rem;">
-                        <label>Portions</label>
-                        <input type="number" id="portions" value="1" step="1" style="width: 80px;" oninput="calculateCosting()">
-                    </div>
-                </div>
-
-                <div class="ingredients-section">
-                    <table id="ingredientsTable">
-                        <thead>
-                            <tr>
-                                <th style="width: 40%;">Ingredient</th>
-                                <th style="width: 15%;">Qty</th>
-                                <th style="width: 15%;">Unit</th>
-                                <th style="width: 15%;">Cost/Unit (£)</th>
-                                <th style="width: 10%;">Total (£)</th>
-                                <th style="width: 5%;"></th>
-                            </tr>
-                        </thead>
-                        <tbody id="ingredientsBody">
-                            <!-- Populated via JS -->
-                        </tbody>
-                    </table>
-                    
-                    <button class="btn-secondary" onclick="addIngredientRow()">+ Add Ingredient</button>
-                </div>
-
-                <div class="allergens-container" id="allergensContainer">
-                    <label>Allergens Detected</label>
-                    <div class="allergen-pills" id="allergenPills">
-                        <span class="allergen-pill">None detected</span>
-                    </div>
-                </div>
+    <main class="layout-grid">
+      <section class="stack column-inputs">
+        <article class="card">
+          <header class="section-header" style="margin-bottom: 1rem;">
+            <div>
+              <p class="eyebrow">Dish basics</p>
+              <h2>Build context</h2>
             </div>
-
-            <!-- Results -->
-            <div class="results-panel">
-                <div class="result-item">
-                    <span class="result-label">Cost Per Portion</span>
-                    <span class="result-value">£<span id="portionCost">0.00</span></span>
-                </div>
-                <div class="result-item">
-                    <span class="result-label">Rec. Selling Price (ex VAT)</span>
-                    <span class="result-value highlight">£<span id="sellingPrice">0.00</span></span>
-                </div>
-                <div class="result-item">
-                    <span class="result-label">Actual Selling Price</span>
-                    <span class="result-value" style="display:flex; align-items:center;">
-                        <span style="font-size: 1.5rem; margin-right: 0.2rem;">£</span>
-                        <input type="number" id="actualPrice" step="0.01" style="font-size: 1.5rem; width: 100px; padding: 0.2rem; background: transparent; border: 1px solid var(--border-color); color: var(--text-primary);" oninput="calculateCosting()">
-                    </span>
-                </div>
-                <div class="result-item">
-                    <span class="result-label">Actual GP%</span>
-                    <span class="result-value"><span id="actualGP">0</span>%</span>
-                </div>
+          </header>
+          <div class="form-grid">
+            <div class="form-field full">
+              <label for="dishName">Dish name</label>
+              <input id="dishName" type="text" placeholder="e.g., Wood-fired nduja pizza" />
             </div>
-            
-        </main>
-    </div>
-</div>
+            <div class="form-field">
+              <label for="servings">Servings</label>
+              <input id="servings" type="number" min="1" inputmode="numeric" />
+            </div>
+            <div class="form-field">
+              <label for="targetGP">
+                Target GP%
+                <button type="button" class="tooltip-icon" title="Gross profit percentage you'd like this dish to achieve.">?</button>
+              </label>
+              <input id="targetGP" type="number" min="10" max="95" step="0.5" inputmode="decimal" />
+            </div>
+            <div class="form-field full">
+              <label for="cuisineTags">Cuisine tags</label>
+              <input id="cuisineTags" type="text" placeholder="pizza, nduja, sharing" />
+              <p class="help-text">Comma-separated tags power menu filters, prep boards, and search.</p>
+            </div>
+          </div>
+        </article>
 
-<script>
-    // State
-    let recipes = [
-        {
+        <article class="card">
+          <header class="section-header" style="display:flex; justify-content:space-between; align-items:center; gap:1rem;">
+            <div>
+              <p class="eyebrow">Ingredient plan</p>
+              <h2>Cost builder</h2>
+            </div>
+            <button type="button" class="btn ghost" id="addSubRecipeBtn">+ Sub-recipe</button>
+          </header>
+          <div id="ingredientSections" class="stack"></div>
+        </article>
+      </section>
+
+      <section class="stack column-analysis">
+        <article class="card">
+          <header class="section-header" style="margin-bottom: 1rem;">
+            <div>
+              <p class="eyebrow">Live analysis</p>
+              <h2>Cost & GP</h2>
+            </div>
+          </header>
+          <div class="metric-grid">
+            <div class="metric">
+              <p class="muted">Batch cost</p>
+              <p class="stat" id="batchCostDisplay">£0.00</p>
+            </div>
+            <div class="metric">
+              <p class="muted">Cost per portion</p>
+              <p class="stat" id="portionCostDisplay">£0.00</p>
+            </div>
+            <div class="metric">
+              <p class="muted">Recommended sell (£)</p>
+              <p class="stat" id="recommendedPriceDisplay">£0.00</p>
+            </div>
+            <div class="metric">
+              <label for="actualPriceInput">Actual sell (£)</label>
+              <input id="actualPriceInput" type="number" min="0" step="0.1" inputmode="decimal" />
+            </div>
+            <div class="metric">
+              <p class="muted">Actual GP%</p>
+              <p class="stat" id="actualGpDisplay">—</p>
+            </div>
+          </div>
+          <div class="gp-gauge-wrapper">
+            <div style="display:flex; justify-content:space-between; font-size:0.9rem;">
+              <span>Actual GP vs target</span>
+              <span id="gpGaugeLabel" class="muted">0% vs target</span>
+            </div>
+            <div class="gp-gauge" role="img" aria-live="polite" aria-label="Gross profit comparison">
+              <div class="fill state-miss" id="gpGaugeFill"></div>
+              <div class="marker" id="gpMarker"></div>
+            </div>
+          </div>
+          <ul class="inline-messages" id="warningList" aria-live="polite"></ul>
+          <div id="summaryLiveRegion" class="sr-only" aria-live="polite"></div>
+        </article>
+
+        <article class="card">
+          <header class="section-header" style="margin-bottom: 0.5rem;">
+            <div>
+              <p class="eyebrow">Allergens</p>
+              <h2>Automatic detection</h2>
+            </div>
+          </header>
+          <div id="allergenSummary" class="pill-group" aria-live="polite"></div>
+          <p class="help-text">Allergen badges also sit inside each ingredient row for prep sheets.</p>
+        </article>
+
+        <article class="card">
+          <header class="section-header" style="margin-bottom: 0.5rem;">
+            <div>
+              <p class="eyebrow">Exports</p>
+              <h2>Share & print</h2>
+            </div>
+          </header>
+          <div class="button-row">
+            <button type="button" class="btn secondary" id="copyRecipeCard">Copy recipe card</button>
+            <button type="button" class="btn primary" id="printFriendly">Print-friendly view</button>
+          </div>
+          <textarea id="recipeCardOutput" class="mono-block" rows="12" readonly></textarea>
+          <p id="copyFeedback" class="help-text" aria-live="polite"></p>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <script src="/assets/scripts/venue-profile.js" defer></script>
+  <script defer>
+    (() => {
+      const elements = {
+        dishName: document.getElementById('dishName'),
+        servings: document.getElementById('servings'),
+        targetGP: document.getElementById('targetGP'),
+        cuisineTags: document.getElementById('cuisineTags'),
+        ingredientSections: document.getElementById('ingredientSections'),
+        batchCost: document.getElementById('batchCostDisplay'),
+        portionCost: document.getElementById('portionCostDisplay'),
+        recommendedPrice: document.getElementById('recommendedPriceDisplay'),
+        actualPrice: document.getElementById('actualPriceInput'),
+        actualGp: document.getElementById('actualGpDisplay'),
+        gaugeFill: document.getElementById('gpGaugeFill'),
+        gaugeMarker: document.getElementById('gpMarker'),
+        gaugeLabel: document.getElementById('gpGaugeLabel'),
+        warningList: document.getElementById('warningList'),
+        allergenSummary: document.getElementById('allergenSummary'),
+        recipeCardOutput: document.getElementById('recipeCardOutput'),
+        copyFeedback: document.getElementById('copyFeedback'),
+        summaryLive: document.getElementById('summaryLiveRegion'),
+        printButton: document.getElementById('printFriendly'),
+        copyButton: document.getElementById('copyRecipeCard'),
+        sampleButton: document.getElementById('sampleDataBtn'),
+        startBlank: document.getElementById('startBlankBtn'),
+        addSubRecipe: document.getElementById('addSubRecipeBtn')
+      };
+
+      const allergenCatalog = [
+        { key: 'gluten', label: 'Gluten', keywords: ['flour', 'bread', 'dough', 'wheat', 'barley', 'rye', 'pasta', 'pastry', 'breadcrumbs', 'panko'] },
+        { key: 'dairy', label: 'Dairy', keywords: ['milk', 'cream', 'butter', 'cheese', 'mozzarella', 'yoghurt', 'ghee'] },
+        { key: 'peanuts', label: 'Peanuts', keywords: ['peanut', 'groundnut'] },
+        { key: 'treenuts', label: 'Tree nuts', keywords: ['almond', 'hazelnut', 'walnut', 'cashew', 'pecan', 'pistachio', 'macadamia', 'brazil', 'pine nut'] },
+        { key: 'eggs', label: 'Eggs', keywords: ['egg', 'meringue', 'mayonnaise', 'aioli'] },
+        { key: 'fish', label: 'Fish', keywords: ['fish', 'salmon', 'tuna', 'cod', 'haddock', 'anchovy', 'bass'] },
+        { key: 'crustaceans', label: 'Crustaceans', keywords: ['prawn', 'shrimp', 'lobster', 'crab', 'langoustine', 'crayfish'] },
+        { key: 'molluscs', label: 'Molluscs', keywords: ['squid', 'octopus', 'clam', 'scallop', 'oyster', 'mussel'] },
+        { key: 'soya', label: 'Soya', keywords: ['soy', 'soya', 'tofu', 'miso', 'edamame'] },
+        { key: 'celery', label: 'Celery', keywords: ['celery', 'celeriac'] },
+        { key: 'mustard', label: 'Mustard', keywords: ['mustard'] },
+        { key: 'sesame', label: 'Sesame', keywords: ['sesame', 'tahini', 'gomashio'] },
+        { key: 'sulphites', label: 'Sulphites', keywords: ['wine', 'vinegar', 'sulphite', 'sulfite'] },
+        { key: 'lupin', label: 'Lupin', keywords: ['lupin'] }
+      ];
+
+      const sampleRecipe = () => ({
+        dishName: 'Wood-fired nduja pizza',
+        servings: 12,
+        targetGP: 72,
+        cuisineTags: 'pizza, nduja, Hidden Social, sharing',
+        actualPrice: 16,
+        sections: [
+          {
             id: generateId(),
-            name: "Truffle Roasted Scallops",
-            targetGP: 72,
-            portions: 4,
+            name: 'Main build',
+            type: 'base',
+            yieldPercent: 100,
+            collapsed: false,
             ingredients: [
-                { id: generateId(), name: "King Scallops", qty: 12, unit: "ea", costPerUnit: 1.50 },
-                { id: generateId(), name: "Unsalted Butter", qty: 100, unit: "g", costPerUnit: 0.008 },
-                { id: generateId(), name: "Black Truffle Paste", qty: 20, unit: "g", costPerUnit: 0.45 },
-                { id: generateId(), name: "Double Cream", qty: 50, unit: "ml", costPerUnit: 0.005 },
-                { id: generateId(), name: "Chives", qty: 10, unit: "g", costPerUnit: 0.05 }
+              ingredientSeed({ name: 'Fermented dough ball', supplier: 'Hidden Bakehouse', quantity: 12, unit: 'x 280g', costPerUnit: 0.92, yieldPercent: 100 }),
+              ingredientSeed({ name: 'San Marzano sugo', supplier: 'House prep', quantity: 1.8, unit: 'kg', costPerUnit: 2.4, yieldPercent: 100 }),
+              ingredientSeed({ name: 'Fior di latte mozzarella', supplier: 'Casa Formaggio', quantity: 1.2, unit: 'kg', costPerUnit: 6.5, yieldPercent: 95 }),
+              ingredientSeed({ name: 'Nduja di Spilinga', supplier: 'Calabria Imports', quantity: 0.9, unit: 'kg', costPerUnit: 11.2, yieldPercent: 100 }),
+              ingredientSeed({ name: 'Charred spring onions', supplier: 'Leeds Market', quantity: 0.6, unit: 'kg', costPerUnit: 3.2, yieldPercent: 85 })
             ]
+          },
+          {
+            id: generateId(),
+            name: 'Hot honey drizzle',
+            type: 'sub',
+            yieldPercent: 85,
+            collapsed: false,
+            ingredients: [
+              ingredientSeed({ name: 'Wildflower honey', supplier: 'Northern Apiary', quantity: 0.5, unit: 'kg', costPerUnit: 6.8, yieldPercent: 100 }),
+              ingredientSeed({ name: 'Calabrian chillies', supplier: 'Sous Chef', quantity: 0.08, unit: 'kg', costPerUnit: 18, yieldPercent: 100 }),
+              ingredientSeed({ name: 'Organic cider vinegar', supplier: 'Hedgerow', quantity: 0.1, unit: 'kg', costPerUnit: 1.4, yieldPercent: 100 })
+            ]
+          }
+        ]
+      });
+
+      let state = createBlankState();
+
+      elements.dishName.addEventListener('input', (event) => {
+        state.dishName = event.target.value;
+        refresh();
+      });
+
+      elements.servings.addEventListener('input', (event) => {
+        const value = event.target.value;
+        state.servings = value === '' ? '' : Math.max(1, Number(value));
+        refresh();
+      });
+
+      elements.targetGP.addEventListener('input', (event) => {
+        const value = event.target.value;
+        state.targetGP = value === '' ? '' : Number(value);
+        refresh();
+      });
+
+      elements.cuisineTags.addEventListener('input', (event) => {
+        state.cuisineTags = event.target.value;
+        refresh();
+      });
+
+      elements.actualPrice.addEventListener('input', (event) => {
+        state.actualPrice = event.target.value;
+        refresh();
+      });
+
+      elements.addSubRecipe.addEventListener('click', () => {
+        state.sections.push(createSection('sub'));
+        refresh();
+      });
+
+      elements.sampleButton.addEventListener('click', () => {
+        const seeded = sampleRecipe();
+        state = JSON.parse(JSON.stringify(seeded));
+        refresh();
+      });
+
+      elements.startBlank.addEventListener('click', () => {
+        state = createBlankState();
+        refresh();
+      });
+
+      elements.printButton.addEventListener('click', () => window.print());
+
+      elements.copyButton.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(elements.recipeCardOutput.value);
+          elements.copyFeedback.textContent = 'Recipe card copied to clipboard.';
+        } catch (error) {
+          elements.copyFeedback.textContent = 'Clipboard not available – select the text and copy manually.';
         }
-    ];
-    let currentRecipeId = recipes[0].id;
+      });
 
-    // Allergen Dictionary
-    const ALLERGENS = {
-        dairy: { name: 'Dairy', keywords: ['milk', 'cream', 'butter', 'cheese', 'yoghurt', 'whey', 'ghee', 'mascarpone'] },
-        gluten: { name: 'Gluten', keywords: ['flour', 'bread', 'wheat', 'barley', 'rye', 'oats', 'pasta', 'pastry', 'panko', 'soy sauce', 'malt'] },
-        peanuts: { name: 'Peanuts', keywords: ['peanut', 'groundnut'] },
-        treenuts: { name: 'Tree Nuts', keywords: ['almond', 'hazelnut', 'walnut', 'cashew', 'pecan', 'brazil', 'pistachio', 'macadamia', 'pine nut'] },
-        eggs: { name: 'Eggs', keywords: ['egg', 'mayonnaise', 'meringue'] },
-        fish: { name: 'Fish', keywords: ['fish', 'salmon', 'tuna', 'cod', 'haddock', 'anchovy', 'bass', 'halibut'] },
-        crustaceans: { name: 'Crustaceans', keywords: ['prawn', 'shrimp', 'crab', 'lobster', 'crayfish', 'scampi'] },
-        molluscs: { name: 'Molluscs', keywords: ['mussel', 'oyster', 'squid', 'octopus', 'scallop', 'clam', 'cockle'] },
-        soya: { name: 'Soya', keywords: ['soy', 'soya', 'tofu', 'edamame', 'miso'] },
-        celery: { name: 'Celery', keywords: ['celery', 'celeriac'] },
-        mustard: { name: 'Mustard', keywords: ['mustard'] },
-        sesame: { name: 'Sesame', keywords: ['sesame', 'tahini'] },
-        sulphites: { name: 'Sulphites', keywords: ['wine', 'vinegar', 'sulphite', 'sulfite'] },
-        lupin: { name: 'Lupin', keywords: ['lupin'] }
-    };
+      elements.ingredientSections.addEventListener('input', handleSectionInput);
+      elements.ingredientSections.addEventListener('click', handleSectionClick);
 
-    // Utils
-    function generateId() {
-        return Math.random().toString(36).substr(2, 9);
-    }
+      refresh();
 
-    // App Init
-    function init() {
-        renderRecipeList();
-        loadRecipe(currentRecipeId);
-    }
-
-    // Recipe Management
-    function createNewRecipe() {
-        const newRecipe = {
-            id: generateId(),
-            name: "New Dish",
-            targetGP: 70,
-            portions: 1,
-            ingredients: [
-                { id: generateId(), name: "", qty: 1, unit: "kg", costPerUnit: 0.00 }
-            ]
+      function createBlankState() {
+        return {
+          dishName: '',
+          servings: 8,
+          targetGP: 70,
+          cuisineTags: '',
+          actualPrice: '',
+          sections: [createSection('base')]
         };
-        recipes.push(newRecipe);
-        currentRecipeId = newRecipe.id;
-        renderRecipeList();
-        loadRecipe(currentRecipeId);
-    }
+      }
 
-    function deleteRecipe(id, event) {
-        event.stopPropagation();
-        if (recipes.length === 1) return; // Prevent deleting last recipe
-        
-        recipes = recipes.filter(r => r.id !== id);
-        if (currentRecipeId === id) {
-            currentRecipeId = recipes[0].id;
-        }
-        renderRecipeList();
-        loadRecipe(currentRecipeId);
-    }
+      function createSection(type) {
+        return {
+          id: generateId(),
+          name: type === 'base' ? 'Main dish build' : 'New sub-recipe',
+          type,
+          yieldPercent: 100,
+          collapsed: false,
+          ingredients: [ingredientSeed()]
+        };
+      }
 
-    function loadRecipe(id) {
-        currentRecipeId = id;
-        const recipe = recipes.find(r => r.id === id);
-        if (!recipe) return;
+      function ingredientSeed(overrides = {}) {
+        return {
+          id: generateId(),
+          name: '',
+          supplier: '',
+          quantity: '',
+          unit: '',
+          costPerUnit: '',
+          yieldPercent: 100,
+          ...overrides
+        };
+      }
 
-        document.getElementById('dishName').value = recipe.name;
-        document.getElementById('targetGP').value = recipe.targetGP;
-        document.getElementById('portions').value = recipe.portions || 1;
+      function refresh() {
+        renderBasics();
+        const metrics = calculateMetrics();
+        renderSections();
+        renderAnalysis(metrics);
+        renderAllergens(metrics);
+        renderRecipeCard(metrics);
+      }
 
-        renderRecipeList();
-        renderIngredients();
-        calculateCosting();
-    }
+      function renderBasics() {
+        elements.dishName.value = state.dishName;
+        elements.servings.value = state.servings;
+        elements.targetGP.value = state.targetGP;
+        elements.cuisineTags.value = state.cuisineTags;
+        elements.actualPrice.value = state.actualPrice;
+      }
 
-    function updateCurrentRecipe() {
-        const recipe = recipes.find(r => r.id === currentRecipeId);
-        if (!recipe) return;
-
-        recipe.name = document.getElementById('dishName').value || "Unnamed Dish";
-        recipe.targetGP = parseFloat(document.getElementById('targetGP').value) || 0;
-        recipe.portions = parseFloat(document.getElementById('portions').value) || 1;
-        
-        // Only update name in list if it changes, to avoid losing focus
-        const listItem = document.getElementById('recipe-item-' + currentRecipeId);
-        if (listItem) {
-            listItem.querySelector('.recipe-name').textContent = recipe.name;
-        }
-    }
-
-    // Rendering
-    function renderRecipeList() {
-        const list = document.getElementById('recipeList');
-        list.innerHTML = '';
-        recipes.forEach(r => {
-            const li = document.createElement('li');
-            li.className = `recipe-item ${r.id === currentRecipeId ? 'active' : ''}`;
-            li.id = 'recipe-item-' + r.id;
-            li.onclick = () => loadRecipe(r.id);
-            
-            li.innerHTML = `
-                <span class="recipe-name">${r.name}</span>
-                ${recipes.length > 1 ? `<span class="delete-btn" onclick="deleteRecipe('${r.id}', event)">×</span>` : ''}
+      function renderSections() {
+        const markup = state.sections
+          .map((section) => {
+            const sectionCost = computeSectionTotal(section);
+            const sectionBody = section.collapsed ? 'hidden' : '';
+            return `
+              <article class="card surface-muted" data-section-id="${section.id}">
+                <div class="section-card-header">
+                  <div class="section-title-block">
+                    <button type="button" class="btn icon" data-action="toggle-section" data-section-id="${section.id}" aria-expanded="${!section.collapsed}" aria-label="Toggle ${escapeHtml(section.name)}">
+                      ${section.collapsed ? '▶' : '▼'}
+                    </button>
+                    <div>
+                      <label class="sr-only" for="section-name-${section.id}">Section name</label>
+                      <input id="section-name-${section.id}" type="text" value="${escapeHtml(section.name)}" data-section-id="${section.id}" data-field="section-name" />
+                      <p class="muted" style="margin:0; font-size:0.8rem;">${section.type === 'sub' ? 'Sub-recipe' : 'Primary dish'}</p>
+                    </div>
+                  </div>
+                  <div style="display:flex; align-items:center; gap:0.65rem;">
+                    <label for="section-yield-${section.id}">Yield %
+                      <button type="button" class="tooltip-icon" title="Use this for prep loss or batch yield vs usage.">?</button>
+                    </label>
+                    <input id="section-yield-${section.id}" type="number" min="0" max="200" inputmode="decimal" value="${section.yieldPercent === '' ? '' : section.yieldPercent}" data-section-id="${section.id}" data-field="section-yield" />
+                    <div>
+                      <p class="muted" style="margin:0; font-size:0.75rem;">Section cost</p>
+                      <p style="margin:0; font-weight:600;">£${formatCurrency(sectionCost)}</p>
+                    </div>
+                    ${section.type === 'sub' ? `<button type="button" class="btn ghost" data-action="remove-section" data-section-id="${section.id}">Remove</button>` : ''}
+                  </div>
+                </div>
+                <div class="section-body" ${sectionBody}>
+                  <div class="table-wrapper">
+                    <table class="ingredient-table">
+                      <thead>
+                        <tr>
+                          <th>Ingredient & Supplier</th>
+                          <th>Qty</th>
+                          <th>Unit</th>
+                          <th>Cost / unit (£)</th>
+                          <th>Yield %</th>
+                          <th>Net cost (£)</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        ${section.ingredients.map((ingredient) => renderIngredientRow(section.id, ingredient)).join('')}
+                      </tbody>
+                    </table>
+                  </div>
+                  <button type="button" class="btn secondary" data-action="add-ingredient" data-section-id="${section.id}">+ Add ingredient row</button>
+                </div>
+              </article>
             `;
-            list.appendChild(li);
-        });
-    }
+          })
+          .join('');
 
-    function renderIngredients() {
-        const tbody = document.getElementById('ingredientsBody');
-        tbody.innerHTML = '';
-        const recipe = recipes.find(r => r.id === currentRecipeId);
-        
-        recipe.ingredients.forEach(ing => {
-            const tr = document.createElement('tr');
-            tr.className = 'ingredient-row';
-            tr.innerHTML = `
-                <td><input type="text" value="${ing.name}" oninput="updateIngredient('${ing.id}', 'name', this.value)" placeholder="Ingredient name"></td>
-                <td><input type="number" value="${ing.qty}" step="any" oninput="updateIngredient('${ing.id}', 'qty', this.value)"></td>
-                <td><input type="text" value="${ing.unit}" oninput="updateIngredient('${ing.id}', 'unit', this.value)" placeholder="kg, g, ea"></td>
-                <td><input type="number" value="${ing.costPerUnit}" step="0.001" oninput="updateIngredient('${ing.id}', 'costPerUnit', this.value)"></td>
-                <td style="font-weight: 500;">£<span id="total-${ing.id}">${(ing.qty * ing.costPerUnit).toFixed(2)}</span></td>
-                <td><button class="btn-icon" onclick="removeIngredient('${ing.id}')" title="Remove">×</button></td>
-            `;
-            tbody.appendChild(tr);
-        });
-    }
+        elements.ingredientSections.innerHTML = markup;
+      }
 
-    // Ingredient Management
-    function addIngredientRow() {
-        const recipe = recipes.find(r => r.id === currentRecipeId);
-        recipe.ingredients.push({
-            id: generateId(),
-            name: "",
-            qty: 1,
-            unit: "",
-            costPerUnit: 0
-        });
-        renderIngredients();
-        calculateCosting();
-    }
+      function renderIngredientRow(sectionId, ingredient) {
+        const ingredientAllergens = detectAllergens(ingredient.name);
+        const allergenBadges = ingredientAllergens.length
+          ? ingredientAllergens.map((item) => `<span class="pill subtle">${item.label}</span>`).join('')
+          : '<span class="muted">No allergens</span>';
+        const netCost = computeIngredientNetCost(ingredient);
+        return `
+          <tr>
+            <td>
+              <label class="sr-only" for="ingredient-name-${ingredient.id}">Ingredient name</label>
+              <input id="ingredient-name-${ingredient.id}" type="text" value="${escapeHtml(ingredient.name)}" placeholder="Ingredient" data-section-id="${sectionId}" data-ingredient-id="${ingredient.id}" data-field="ingredient-name" />
+              <label class="sr-only" for="ingredient-supplier-${ingredient.id}">Supplier</label>
+              <input id="ingredient-supplier-${ingredient.id}" type="text" value="${escapeHtml(ingredient.supplier)}" placeholder="Supplier (optional)" data-section-id="${sectionId}" data-ingredient-id="${ingredient.id}" data-field="ingredient-supplier" />
+              <div class="ingredient-allergens" aria-live="polite">${allergenBadges}</div>
+            </td>
+            <td>
+              <label class="sr-only" for="ingredient-qty-${ingredient.id}">Quantity</label>
+              <input id="ingredient-qty-${ingredient.id}" type="number" step="any" min="0" value="${ingredient.quantity}" data-section-id="${sectionId}" data-ingredient-id="${ingredient.id}" data-field="ingredient-quantity" />
+            </td>
+            <td>
+              <label class="sr-only" for="ingredient-unit-${ingredient.id}">Unit</label>
+              <input id="ingredient-unit-${ingredient.id}" type="text" value="${escapeHtml(ingredient.unit)}" data-section-id="${sectionId}" data-ingredient-id="${ingredient.id}" data-field="ingredient-unit" />
+            </td>
+            <td>
+              <label class="sr-only" for="ingredient-cost-${ingredient.id}">Cost per unit</label>
+              <input id="ingredient-cost-${ingredient.id}" type="number" step="0.01" min="0" value="${ingredient.costPerUnit}" data-section-id="${sectionId}" data-ingredient-id="${ingredient.id}" data-field="ingredient-cost" />
+            </td>
+            <td>
+              <label class="sr-only" for="ingredient-yield-${ingredient.id}">Yield %</label>
+              <input id="ingredient-yield-${ingredient.id}" type="number" min="0" max="200" value="${ingredient.yieldPercent}" data-section-id="${sectionId}" data-ingredient-id="${ingredient.id}" data-field="ingredient-yield" />
+            </td>
+            <td>£${formatCurrency(netCost)}</td>
+            <td>
+              <button type="button" class="btn ghost" title="Remove ingredient" data-action="remove-ingredient" data-section-id="${sectionId}" data-ingredient-id="${ingredient.id}">×</button>
+            </td>
+          </tr>
+        `;
+      }
 
-    function removeIngredient(id) {
-        const recipe = recipes.find(r => r.id === currentRecipeId);
-        recipe.ingredients = recipe.ingredients.filter(ing => ing.id !== id);
-        renderIngredients();
-        calculateCosting();
-    }
+      function renderAnalysis(metrics) {
+        elements.batchCost.textContent = `£${formatCurrency(metrics.totalCost)}`;
+        elements.portionCost.textContent = `£${formatCurrency(metrics.portionCost)}`;
+        elements.recommendedPrice.textContent = `£${formatCurrency(metrics.recommendedPrice)}`;
+        elements.actualGp.textContent = metrics.actualGp == null ? '—' : `${metrics.actualGp.toFixed(1)}%`;
+        const gaugeState = determineGaugeState(metrics.actualGp, metrics.targetGP);
+        elements.gaugeFill.classList.remove('state-hit', 'state-watch', 'state-miss');
+        elements.gaugeFill.classList.add(gaugeState.className);
+        elements.gaugeFill.style.width = `${gaugeState.fillWidth}%`;
+        elements.gaugeMarker.style.left = `${Math.min(metrics.targetGP, 100)}%`;
+        elements.gaugeLabel.textContent = metrics.actualGp == null
+          ? `Target ${metrics.targetGP}%`
+          : `${metrics.actualGp.toFixed(1)}% vs target ${metrics.targetGP}%`;
+        renderWarnings(metrics);
+        elements.summaryLive.textContent = `Batch £${formatCurrency(metrics.totalCost)}, per portion £${formatCurrency(metrics.portionCost)}, recommended price £${formatCurrency(metrics.recommendedPrice)}.`;
+      }
 
-    function updateIngredient(id, field, value) {
-        const recipe = recipes.find(r => r.id === currentRecipeId);
-        const ing = recipe.ingredients.find(i => i.id === id);
-        if (field === 'qty' || field === 'costPerUnit') {
-            ing[field] = parseFloat(value) || 0;
-            document.getElementById(`total-${id}`).textContent = (ing.qty * ing.costPerUnit).toFixed(2);
-            calculateCosting();
-        } else {
-            ing[field] = value;
-            if (field === 'name') {
-                detectAllergens();
-            }
+      function determineGaugeState(actualGp, targetGp) {
+        if (actualGp == null) {
+          return { className: 'state-miss', fillWidth: 0 };
         }
-    }
+        const capped = Math.max(0, Math.min(actualGp, 150));
+        const fillWidth = (capped / 150) * 100;
+        if (actualGp >= targetGp) {
+          return { className: 'state-hit', fillWidth };
+        }
+        if (actualGp >= targetGp - 5) {
+          return { className: 'state-watch', fillWidth };
+        }
+        return { className: 'state-miss', fillWidth };
+      }
 
-    // Calculations
-    function calculateCosting() {
-        updateCurrentRecipe();
-        const recipe = recipes.find(r => r.id === currentRecipeId);
-        
+      function renderWarnings(metrics) {
+        const warnings = [];
+        if (!state.dishName.trim()) {
+          warnings.push('Name the dish so service sheets know what to plate.');
+        }
+        if (metrics.portionCost > 15) {
+          warnings.push('Cost per portion exceeds £15 – check premium items or adjust price.');
+        }
+        if (metrics.actualGp != null && metrics.actualGp < metrics.targetGP - 5) {
+          warnings.push('Actual GP is more than 5% below target. Consider a price lift or yield fix.');
+        }
+        if (!warnings.length) {
+          elements.warningList.innerHTML = '<li class="text-positive">All metrics tracking within tolerance.</li>';
+          return;
+        }
+        elements.warningList.innerHTML = warnings.map((warning) => `<li>⚠️ ${warning}</li>`).join('');
+      }
+
+      function renderAllergens(metrics) {
+        if (!metrics.allergens.length) {
+          elements.allergenSummary.innerHTML = '<span class="pill subtle">No allergens detected</span>';
+          return;
+        }
+        elements.allergenSummary.innerHTML = metrics.allergens
+          .map((label) => `<span class="pill highlight">${label}</span>`)
+          .join('');
+      }
+
+      function renderRecipeCard(metrics) {
+        const lines = [];
+        lines.push(state.dishName || 'Unnamed dish');
+        lines.push(`Serves: ${metrics.servings} | Target GP: ${metrics.targetGP}%`);
+        lines.push(`Cuisine tags: ${state.cuisineTags || '—'}`);
+        state.sections.forEach((section) => {
+          lines.push('');
+          lines.push(`${section.type === 'sub' ? 'Sub-recipe' : 'Main build'}: ${section.name} (Yield ${section.yieldPercent}%)`);
+          section.ingredients.forEach((ingredient) => {
+            const net = formatCurrency(computeIngredientNetCost(ingredient));
+            const qtyLabel = ingredient.quantity ? `${ingredient.quantity} ${ingredient.unit}`.trim() : '—';
+            lines.push(` • ${ingredient.name || 'Unnamed'} [${qtyLabel} @ £${formatCurrency(ingredient.costPerUnit || 0)} | Yield ${ingredient.yieldPercent}%] → £${net}`);
+          });
+        });
+        lines.push('');
+        lines.push(`Batch cost: £${formatCurrency(metrics.totalCost)}`);
+        lines.push(`Cost per portion: £${formatCurrency(metrics.portionCost)}`);
+        lines.push(`Recommended sell (GP ${metrics.targetGP}%): £${formatCurrency(metrics.recommendedPrice)}`);
+        if (metrics.actualGp != null) {
+          lines.push(`Actual sell £${formatCurrency(metrics.actualPrice)} | GP ${metrics.actualGp.toFixed(1)}%`);
+        }
+        lines.push(`Allergens: ${metrics.allergens.length ? metrics.allergens.join(', ') : 'None'}`);
+        elements.recipeCardOutput.value = lines.join('\n');
+      }
+
+      function handleSectionInput(event) {
+        const target = event.target;
+        const sectionId = target.dataset.sectionId;
+        const field = target.dataset.field;
+        if (!sectionId || !field) return;
+        if (field === 'section-name') {
+          updateSection(sectionId, { name: target.value });
+          return;
+        }
+        if (field === 'section-yield') {
+          const value = target.value === '' ? 0 : Number(target.value);
+          updateSection(sectionId, { yieldPercent: value });
+          return;
+        }
+        const ingredientId = target.dataset.ingredientId;
+        if (!ingredientId) return;
+        const updates = {};
+        switch (field) {
+          case 'ingredient-name':
+            updates.name = target.value;
+            break;
+          case 'ingredient-supplier':
+            updates.supplier = target.value;
+            break;
+          case 'ingredient-quantity':
+            updates.quantity = target.value === '' ? '' : Number(target.value);
+            break;
+          case 'ingredient-unit':
+            updates.unit = target.value;
+            break;
+          case 'ingredient-cost':
+            updates.costPerUnit = target.value === '' ? '' : Number(target.value);
+            break;
+          case 'ingredient-yield':
+            updates.yieldPercent = target.value === '' ? 0 : Number(target.value);
+            break;
+          default:
+            break;
+        }
+        updateIngredient(sectionId, ingredientId, updates);
+      }
+
+      function handleSectionClick(event) {
+        const actionButton = event.target.closest('[data-action]');
+        if (!actionButton) return;
+        const sectionId = actionButton.dataset.sectionId;
+        const ingredientId = actionButton.dataset.ingredientId;
+        const action = actionButton.dataset.action;
+        switch (action) {
+          case 'add-ingredient':
+            addIngredient(sectionId);
+            break;
+          case 'remove-ingredient':
+            removeIngredient(sectionId, ingredientId);
+            break;
+          case 'toggle-section':
+            toggleSection(sectionId);
+            break;
+          case 'remove-section':
+            removeSection(sectionId);
+            break;
+          default:
+            break;
+        }
+      }
+
+      function addIngredient(sectionId) {
+        const section = findSection(sectionId);
+        if (!section) return;
+        section.ingredients.push(ingredientSeed());
+        refresh();
+      }
+
+      function removeIngredient(sectionId, ingredientId) {
+        const section = findSection(sectionId);
+        if (!section) return;
+        section.ingredients = section.ingredients.filter((ingredient) => ingredient.id !== ingredientId);
+        if (!section.ingredients.length) {
+          section.ingredients.push(ingredientSeed());
+        }
+        refresh();
+      }
+
+      function toggleSection(sectionId) {
+        const section = findSection(sectionId);
+        if (!section) return;
+        section.collapsed = !section.collapsed;
+        refresh();
+      }
+
+      function removeSection(sectionId) {
+        const section = findSection(sectionId);
+        if (!section || section.type === 'base') return;
+        state.sections = state.sections.filter((item) => item.id !== sectionId);
+        refresh();
+      }
+
+      function updateSection(sectionId, updates) {
+        const section = findSection(sectionId);
+        if (!section) return;
+        Object.assign(section, updates);
+        refresh();
+      }
+
+      function updateIngredient(sectionId, ingredientId, updates) {
+        const section = findSection(sectionId);
+        if (!section) return;
+        const ingredient = section.ingredients.find((item) => item.id === ingredientId);
+        if (!ingredient) return;
+        Object.assign(ingredient, updates);
+        refresh();
+      }
+
+      function findSection(sectionId) {
+        return state.sections.find((section) => section.id === sectionId);
+      }
+
+      function calculateMetrics() {
         let totalCost = 0;
-        recipe.ingredients.forEach(ing => {
-            totalCost += (ing.qty * ing.costPerUnit);
+        const allergenSet = new Map();
+        state.sections.forEach((section) => {
+          section.ingredients.forEach((ingredient) => {
+            const net = computeIngredientNetCost(ingredient);
+            totalCost += net;
+            detectAllergens(ingredient.name).forEach((item) => {
+              allergenSet.set(item.key, item.label);
+            });
+          });
         });
+        const servingsValue = Number(state.servings) || 1;
+        const servings = Math.max(1, servingsValue);
+        const portionCost = totalCost / servings;
+        const targetGPValue = Number(state.targetGP) || 0;
+        const targetGP = Math.min(95, Math.max(0, targetGPValue));
+        const targetDecimal = targetGP / 100;
+        const recommendedPrice = targetDecimal >= 1 ? portionCost : portionCost / (1 - targetDecimal || 1);
+        const actualPriceValue = Number(state.actualPrice);
+        const actualGp = actualPriceValue > 0 ? ((actualPriceValue - portionCost) / actualPriceValue) * 100 : null;
+        return {
+          totalCost,
+          portionCost,
+          recommendedPrice,
+          actualPrice: actualPriceValue,
+          actualGp,
+          servings,
+          targetGP,
+          allergens: Array.from(allergenSet.values())
+        };
+      }
 
-        const portions = recipe.portions || 1;
-        const portionCost = totalCost / portions;
-        const targetGP = recipe.targetGP / 100;
-        
-        // Selling Price = Cost / (1 - GP%)
-        let recommendedPrice = 0;
-        if (targetGP < 1) {
-            recommendedPrice = portionCost / (1 - targetGP);
-        }
+      function computeIngredientNetCost(ingredient) {
+        const qty = Number(ingredient.quantity) || 0;
+        const cost = Number(ingredient.costPerUnit) || 0;
+        const yieldFactor = (Number(ingredient.yieldPercent) || 0) / 100;
+        return qty * cost * yieldFactor;
+      }
 
-        // Display updates
-        document.getElementById('portionCost').textContent = portionCost.toFixed(2);
-        document.getElementById('sellingPrice').textContent = recommendedPrice.toFixed(2);
-        
-        let actualPrice = parseFloat(document.getElementById('actualPrice').value);
-        if (isNaN(actualPrice) || actualPrice <= 0) {
-            document.getElementById('actualGP').textContent = '—';
-        } else {
-            let gp = ((actualPrice - portionCost) / actualPrice) * 100;
-            document.getElementById('actualGP').textContent = gp.toFixed(1);
-        }
-
-        detectAllergens();
-    }
-
-    // Allergens
-    function detectAllergens() {
-        const recipe = recipes.find(r => r.id === currentRecipeId);
-        const detected = new Set();
-        
-        recipe.ingredients.forEach(ing => {
-            if (!ing.name) return;
-            const text = ing.name.toLowerCase();
-            
-            for (const [key, data] of Object.entries(ALLERGENS)) {
-                for (const keyword of data.keywords) {
-                    // Match word boundaries to prevent partial matches like 'grape' matching 'ape' (if 'ape' was a keyword)
-                    const regex = new RegExp(`\\b${keyword}\\b`, 'i');
-                    if (regex.test(text)) {
-                        detected.add(key);
-                        break;
-                    }
-                }
-            }
+      function detectAllergens(text) {
+        if (!text) return [];
+        const lowered = text.toLowerCase();
+        const matches = [];
+        allergenCatalog.forEach((entry) => {
+          if (entry.keywords.some((keyword) => lowered.includes(keyword))) {
+            matches.push({ key: entry.key, label: entry.label });
+          }
         });
+        return matches;
+      }
 
-        renderAllergens(detected);
-    }
+      function formatCurrency(value) {
+        const number = Number(value);
+        if (!Number.isFinite(number)) return '0.00';
+        return number.toFixed(2);
+      }
 
-    function renderAllergens(detectedSet) {
-        const container = document.getElementById('allergenPills');
-        container.innerHTML = '';
-        
-        if (detectedSet.size === 0) {
-            container.innerHTML = '<span class="allergen-pill" style="opacity: 0.5;">None detected</span>';
-            return;
-        }
+      function escapeHtml(value = '') {
+        return value
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;');
+      }
 
-        detectedSet.forEach(key => {
-            const span = document.createElement('span');
-            span.className = `allergen-pill ${key}`;
-            span.textContent = ALLERGENS[key].name;
-            container.appendChild(span);
-        });
-    }
-
-    // Run
-    init();
-
-</script>
+      function generateId() {
+        return Math.random().toString(36).slice(2, 9);
+      }
+    })();
+  </script>
 </body>
 </html>
