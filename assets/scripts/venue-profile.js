@@ -20,6 +20,7 @@
     dom.form = document.querySelector('[data-profile-form]');
     dom.alert = document.querySelector('[data-profile-alert]');
     dom.dismissButtons = document.querySelectorAll('[data-profile-dismiss]');
+    dom.skipButtons = document.querySelectorAll('[data-profile-skip]');
     dom.reset = document.querySelector('[data-profile-reset]');
     dom.firstField = document.getElementById('venueNameInput');
     dom.yearTarget = document.querySelector('[data-current-year]');
@@ -37,6 +38,7 @@
 
     dom.triggers.forEach((trigger) => trigger.addEventListener('click', openModal));
     dom.dismissButtons.forEach((btn) => btn.addEventListener('click', closeModal));
+    dom.skipButtons.forEach((btn) => btn.addEventListener('click', closeModal));
     dom.modal.addEventListener('click', (event) => {
       if (event.target === dom.modal) {
         closeModal();
@@ -156,6 +158,7 @@
       event.preventDefault();
     }
     dom.modal.removeAttribute('hidden');
+    document.body.classList.add('profile-modal-open');
     if (event && event.currentTarget) {
       lastTrigger = event.currentTarget;
     }
@@ -168,6 +171,7 @@
 
   function closeModal() {
     dom.modal.setAttribute('hidden', '');
+    document.body.classList.remove('profile-modal-open');
     if (lastTrigger && typeof lastTrigger.focus === 'function') {
       lastTrigger.focus();
     } else if (dom.triggers && dom.triggers.length) {

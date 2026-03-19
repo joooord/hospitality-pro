@@ -36,6 +36,10 @@ html {
   min-width: 180px;
 }
 
+body.profile-modal-open {
+  overflow: hidden;
+}
+
 .venue-profile {
   position: relative;
   gap: 0.75rem;
@@ -71,6 +75,21 @@ html {
 .venue-profile__summary {
   color: var(--muted);
   font-size: 0.97rem;
+}
+
+.link-btn {
+  border: none;
+  background: transparent;
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 0;
+}
+
+.link-btn:hover,
+.link-btn:focus-visible {
+  text-decoration: underline;
 }
 
 .venue-profile__note {
