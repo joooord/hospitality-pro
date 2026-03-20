@@ -3,446 +3,233 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Hospitality Pro — AI Tools for Operators</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg: #0a0a0a;
-      --surface: #121212;
-      --surface2: #1a1a1a;
-      --gold: #c9993f;
-      --gold-glow: rgba(201,153,63,0.15);
-      --text: #f2ede4;
-      --muted: #8a8278;
-      --border: rgba(255,255,255,0.07);
-      --radius: 16px;
-      --font: 'Inter', system-ui, sans-serif;
-      --font-display: 'Playfair Display', Georgia, serif;
-    }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body {
-      font-family: var(--font);
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-      min-height: 100vh;
-    }
-
-    /* NAV */
-    nav {
-      position: sticky;
-      top: 0;
-      z-index: 40;
-      backdrop-filter: blur(20px) saturate(1.8);
-      -webkit-backdrop-filter: blur(20px) saturate(1.8);
-      background: rgba(10,10,10,0.75);
-      border-bottom: 1px solid var(--border);
-      padding: 0 1.5rem;
-      height: 56px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .nav-brand { font-weight: 700; font-size: 1rem; letter-spacing: -0.01em; }
-    .nav-brand span { color: var(--gold); }
-    .nav-links { display: flex; gap: 2rem; align-items: center; }
-    .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
-    .nav-links a:hover { color: var(--text); }
-    .nav-cta {
-      background: var(--gold);
-      color: #080808;
-      font-weight: 600;
-      font-size: 0.85rem;
-      padding: 0.45rem 1.1rem;
-      border-radius: 999px;
-      text-decoration: none;
-      transition: opacity 0.2s;
-    }
-    .nav-cta:hover { opacity: 0.85; color: #080808; }
-
-    /* HERO */
-    .hero {
-      padding: clamp(5rem, 10vw, 8rem) 1.5rem clamp(4rem, 8vw, 6rem);
-      max-width: 900px;
-      margin: 0 auto;
-      text-align: center;
-    }
-    .hero-eyebrow {
-      display: inline-block;
-      font-size: 0.78rem;
-      font-weight: 600;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 1.5rem;
-    }
-    .hero h1 {
-      font-family: var(--font-display);
-      font-size: clamp(2.4rem, 5vw, 4rem);
-      font-weight: 600;
-      line-height: 1.12;
-      letter-spacing: -0.01em;
-      margin-bottom: 1.5rem;
-    }
-    .hero h1 em { font-style: italic; color: var(--gold); }
-    .hero p {
-      font-size: 1.1rem;
-      color: var(--muted);
-      max-width: 620px;
-      margin: 0 auto 2.5rem;
-    }
-    .hero-actions { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
-    .btn-primary {
-      background: var(--gold);
-      color: #080808;
-      font-weight: 700;
-      font-size: 0.95rem;
-      padding: 0.8rem 1.8rem;
-      border-radius: 999px;
-      text-decoration: none;
-      border: none;
-      cursor: pointer;
-      transition: transform 0.15s, box-shadow 0.15s;
-      box-shadow: 0 4px 20px rgba(201,153,63,0.35);
-    }
-    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 25px rgba(201,153,63,0.45); }
-    .btn-ghost {
-      background: transparent;
-      color: var(--text);
-      font-weight: 600;
-      font-size: 0.95rem;
-      padding: 0.8rem 1.8rem;
-      border-radius: 999px;
-      text-decoration: none;
-      border: 1px solid var(--border);
-      cursor: pointer;
-      transition: border-color 0.15s, color 0.15s;
-    }
-    .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
-
-    /* TRUST STRIP */
-    .trust {
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      padding: 1.25rem 1.5rem;
-      display: flex;
-      gap: 2rem;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-    .trust-item {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.85rem;
-      color: var(--muted);
-    }
-    .trust-item::before {
-      content: '✦';
-      color: var(--gold);
-      font-size: 0.6rem;
-    }
-
-    /* MAIN CONTENT */
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 1.5rem;
-    }
-
-    .section {
-      padding: clamp(3rem, 6vw, 5rem) 0;
-    }
-
-    .section-eyebrow {
-      font-size: 0.78rem;
-      font-weight: 600;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 0.75rem;
-    }
-    .section-title {
-      font-family: var(--font-display);
-      font-size: clamp(1.75rem, 3vw, 2.5rem);
-      font-weight: 600;
-      line-height: 1.2;
-      margin-bottom: 0.75rem;
-    }
-    .section-desc { color: var(--muted); max-width: 680px; margin-bottom: 2.5rem; }
-
-    /* TOOL CATEGORIES */
-    .category { margin-bottom: 3rem; }
-    .category-header { margin-bottom: 1.25rem; }
-    .category-title {
-      font-size: 0.78rem;
-      font-weight: 600;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--muted);
-      padding-bottom: 0.75rem;
-      border-bottom: 1px solid var(--border);
-    }
-    .tool-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 1rem;
-      margin-top: 1rem;
-    }
-    .tool-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.5rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      transition: border-color 0.2s, transform 0.2s, background 0.2s;
-      text-decoration: none;
-      color: inherit;
-    }
-    .tool-card:hover {
-      border-color: rgba(201,153,63,0.4);
-      transform: translateY(-2px);
-      background: var(--surface2);
-    }
-    .tool-card h3 { font-size: 1rem; font-weight: 600; }
-    .tool-card p { font-size: 0.88rem; color: var(--muted); flex: 1; }
-    .tool-card .card-cta {
-      color: var(--gold);
-      font-size: 0.85rem;
-      font-weight: 600;
-      margin-top: 0.5rem;
-    }
-    .tool-badge {
-      display: inline-block;
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      background: var(--gold-glow);
-      border: 1px solid rgba(201,153,63,0.3);
-      color: var(--gold);
-      padding: 0.15rem 0.5rem;
-      border-radius: 4px;
-      align-self: flex-start;
-    }
-
-    /* GLASS PANEL */
-    .glass-panel {
-      background: rgba(255,255,255,0.03);
-      backdrop-filter: blur(24px) saturate(1.6);
-      -webkit-backdrop-filter: blur(24px) saturate(1.6);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: calc(var(--radius) + 4px);
-      padding: 2rem;
-      position: relative;
-      overflow: hidden;
-    }
-    .glass-panel::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(201,153,63,0.06) 0%, transparent 60%);
-      pointer-events: none;
-    }
-
-    /* ABOUT */
-    .about-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
-    }
-    @media(max-width:640px) { .about-grid { grid-template-columns: 1fr; } }
-
-    /* FOOTER */
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 2rem 1.5rem;
-      text-align: center;
-      color: var(--muted);
-      font-size: 0.85rem;
-    }
-    footer a { color: var(--gold); text-decoration: none; }
-
-    /* RESPONSIVE NAV */
-    @media(max-width: 640px) {
-      .nav-links { display: none; }
-    }
-  </style>
+  <title>Hospitality Pro — AI Toolkit for Operators</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="/assets/styles/system.css" />
+  <link rel="stylesheet" href="/assets/styles/landing.css" />
 </head>
 <body>
-
-  <!-- NAV -->
-  <nav>
-    <div class="nav-brand">Hospitality <span>Pro</span></div>
+  <nav class="site-nav">
+    <a class="nav-brand smooth-link" href="#top">Hospitality <span>Pro</span></a>
     <div class="nav-links">
-      <a href="#tools">Tools</a>
-      <a href="#playbook">Playbook</a>
-      <a href="#about">About</a>
-      <a class="nav-cta" href="#tools">Get Started →</a>
+      <a class="smooth-link" href="#tools">Tools</a>
+      <a class="smooth-link" href="#playbook">Playbook</a>
+      <a class="smooth-link" href="#about">About</a>
+      <a class="nav-cta smooth-link" href="#tools">Get Started →</a>
     </div>
   </nav>
 
-  <!-- HERO -->
-  <section class="hero">
-    <span class="hero-eyebrow">Jordan Pitts · Hospitality Pro</span>
-    <h1>The operations toolkit built by someone who's <em>actually done the service</em></h1>
-    <p>10 AI-powered tools for independent operators. No login. No subscription. No nonsense. Built on 20 years across Michelin kitchens, multi-site hotels, and heritage rail.</p>
-    <div class="hero-actions">
-      <a class="btn-primary" href="#tools">Explore the tools</a>
-      <a class="btn-ghost" href="#playbook">Download the playbook</a>
-    </div>
-  </section>
-
-  <!-- TRUST -->
-  <div class="trust">
-    <div class="trust-item">Zero logins required</div>
-    <div class="trust-item">Runs in your browser</div>
-    <div class="trust-item">10 tools included free</div>
-    <div class="trust-item">Built by a Michelin-trained operator</div>
-    <div class="trust-item">No subscription</div>
-  </div>
-
-  <!-- TOOLS -->
-  <section class="section" id="tools">
-    <div class="container">
-      <div class="section-eyebrow">Tool Suite</div>
-      <h2 class="section-title">Pick a tool. Start saving time today.</h2>
-      <p class="section-desc">Every tool runs entirely in your browser. For AI-powered responses, you'll need a free OpenRouter API key — enter it in the tool, it's stored locally, never sent anywhere else.</p>
-
-      <!-- Kitchen & Finance -->
-      <div class="category">
-        <div class="category-header">
-          <div class="category-title">Kitchen & Finance</div>
+  <main id="top" class="landing-shell">
+    <section class="hero hero-marquee glass-panel">
+      <div class="hero__content stack">
+        <p class="hero__eyebrow eyebrow">Jordan Pitts · Hospitality Pro</p>
+        <h1 class="page-title">The operations toolkit built by someone who's <em>actually done the service</em></h1>
+        <p class="hero__description muted">10 AI-powered tools for independent operators. Runs locally, uses your OpenRouter key, and keeps heritage hospitality guardrails intact. Built from 20 years across Michelin kitchens, multi-site hotels, and heritage rail.</p>
+        <div class="pill-group hero__stats">
+          <span class="pill highlight">10 tools · 0 logins</span>
+          <span class="pill subtle">Works offline (file:// ready)</span>
+          <span class="pill subtle">Michelin-trained operator</span>
         </div>
-        <div class="tool-grid">
-          <a class="tool-card" href="tools/recipe-costing/index.html">
-            <span class="tool-badge">Start here</span>
-            <h3>GP & Recipe Costing</h3>
-            <p>Ingredient roll-ups, yield factors, target GP, allergen flags, and print-ready kitchen cards.</p>
-            <span class="card-cta">Launch →</span>
-          </a>
-          <a class="tool-card" href="tools/menu-engineering/index.html">
-            <h3>Menu Engineering Analyzer</h3>
-            <p>Stars, Ploughhorses, Puzzles, Dogs — with AI-generated actions for each dish.</p>
-            <span class="card-cta">Launch →</span>
-          </a>
-          <a class="tool-card" href="tools/procurement-generator/index.html">
-            <h3>Smart Procurement Generator</h3>
-            <p>Turn next week's covers into a supplier-ready order list with a 10% buffer built in.</p>
-            <span class="card-cta">Launch →</span>
-          </a>
-          <a class="tool-card" href="tools/delivery-pricing/index.html">
-            <h3>Delivery Pricing Optimizer</h3>
-            <p>Real GP after Uber Eats / Deliveroo commission. Fix pricing, build high-margin bundles.</p>
-            <span class="card-cta">Launch →</span>
-          </a>
+        <div class="hero__actions cluster">
+          <a class="btn btn-primary smooth-link" href="#tools">Explore the tools</a>
+          <a class="btn btn-ghost smooth-link" href="#playbook">Read the playbook</a>
         </div>
       </div>
-
-      <!-- Guest & Marketing -->
-      <div class="category">
-        <div class="category-header">
-          <div class="category-title">Guest Experience & Marketing</div>
-        </div>
-        <div class="tool-grid">
-          <a class="tool-card" href="tools/review-responder/index.html">
-            <span class="tool-badge">Start here</span>
-            <h3>AI Review Responder</h3>
-            <p>Platform-specific, on-brand replies to TripAdvisor, Google & Booking.com. Never says "discount".</p>
-            <span class="card-cta">Launch →</span>
-          </a>
-          <a class="tool-card" href="tools/pre-arrival-email/index.html">
-            <h3>Pre-Arrival Email Builder</h3>
-            <p>Concierge-quality 2-email sequences that build anticipation and naturally upsell.</p>
-            <span class="card-cta">Launch →</span>
-          </a>
-          <a class="tool-card" href="tools/allergen-matrix/index.html">
-            <h3>Allergen Matrix Builder</h3>
-            <p>All 14 allergens, auto-detected. Compliance-ready matrix with CSV and print export.</p>
-            <span class="card-cta">Launch →</span>
-          </a>
-        </div>
-      </div>
-
-      <!-- Team & Ops -->
-      <div class="category">
-        <div class="category-header">
-          <div class="category-title">Team & Operations</div>
-        </div>
-        <div class="tool-grid">
-          <a class="tool-card" href="tools/rota-optimizer/index.html">
-            <h3>AI Rota Optimizer</h3>
-            <p>Availability-aware scheduling with cover minimums, overtime warnings, and manager notes.</p>
-            <span class="card-cta">Launch →</span>
-          </a>
-          <a class="tool-card" href="tools/financial-narrative/index.html">
-            <h3>Financial Narrative Generator</h3>
-            <p>Raw weekly P&L → plain-English executive summary with 3 directives and red-flag alerts.</p>
-            <span class="card-cta">Launch →</span>
-          </a>
-          <a class="tool-card" href="tools/sop-generator/index.html">
-            <h3>SOP Generator</h3>
-            <p>Rough notes → numbered, print-ready Standard Operating Procedure in 90 seconds.</p>
-            <span class="card-cta">Launch →</span>
-          </a>
+      <div class="hero__scene" aria-hidden="true">
+        <div class="stitch-board">
+          <div class="stitch-board__felt">
+            <span class="stitch-cue"></span>
+            <span class="stitch-ball" style="--x: 68%; --y: 46%; --ball-color: #111111;">8</span>
+            <span class="stitch-ball" style="--x: 38%; --y: 60%; --ball-color: #ffb700;">1</span>
+            <span class="stitch-ball" style="--x: 22%; --y: 35%; --ball-color: #ff2dd9;">3</span>
+            <span class="stitch-ball stitch-ball--ghost" style="--x: 80%; --y: 65%;">●</span>
+            <div class="hero-host-card">
+              <div class="hero-host-card__avatar">JP</div>
+              <div>
+                <p class="hero-host-card__label">Host</p>
+                <p class="hero-host-card__name">Jordan Pitts</p>
+                <p class="hero-host-card__meta">Service orchestrator</p>
+              </div>
+              <span class="hero-host-card__badge">LIVE</span>
+            </div>
+            <div class="hero-score-card glass-card glass-card--tight">
+              <p class="eyebrow">Ops Health</p>
+              <p class="hero-score-card__value">91%</p>
+              <p class="muted">Prep · Rota · Reviews in flow</p>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- PLAYBOOK -->
-  <section class="section" id="playbook" style="background: var(--surface);">
-    <div class="container">
-      <div class="section-eyebrow">Field Guide</div>
-      <h2 class="section-title">The Hospitality Pro Playbook</h2>
-      <p class="section-desc">9,000+ words. 50+ copy-paste prompts. 7 department playbooks. Built for operators, not consultants.</p>
-      <div class="glass-panel" style="max-width: 680px;">
-        <h3 style="margin-bottom: 1rem; font-size: 1.1rem;">What's inside</h3>
-        <ul style="display: flex; flex-direction: column; gap: 0.6rem; list-style: none; margin-bottom: 1.5rem;">
-          <li style="color: var(--muted); font-size: 0.95rem; padding-left: 1.2rem; position: relative;"><span style="position:absolute;left:0;color:var(--gold);">→</span> 10 daily workflows — pre-arrival, rota, procurement, finance, reviews</li>
-          <li style="color: var(--muted); font-size: 0.95rem; padding-left: 1.2rem; position: relative;"><span style="position:absolute;left:0;color:var(--gold);">→</span> Marketing, Revenue, HR, Procurement, Events, Sustainability & Sales modules</li>
-          <li style="color: var(--muted); font-size: 0.95rem; padding-left: 1.2rem; position: relative;"><span style="position:absolute;left:0;color:var(--gold);">→</span> ROI calculator and implementation roadmap</li>
-          <li style="color: var(--muted); font-size: 0.95rem; padding-left: 1.2rem; position: relative;"><span style="position:absolute;left:0;color:var(--gold);">→</span> 50+ prompts — copy-paste ready, no AI knowledge needed</li>
-        </ul>
-        <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
-          <a class="btn-primary" href="guide.md" target="_blank">Read the playbook</a>
-        </div>
+    <section class="trust-strip glass-card" aria-label="Trust markers">
+      <p class="trust-strip__label">Operators rely on Hospitality Pro for</p>
+      <div class="trust-strip__logos">
+        <span>Zero login tooling</span>
+        <span>Runs in your browser</span>
+        <span>Own your data + API keys</span>
+        <span>10 tools included free</span>
+        <span>Built by a Michelin-trained operator</span>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- ABOUT -->
-  <section class="section" id="about">
-    <div class="container">
-      <div class="section-eyebrow">About</div>
-      <h2 class="section-title">Built by Jordan Pitts</h2>
-      <p class="section-desc">Michelin kitchens, 23-property hotel groups, eight-figure revenue systems — then AI. Every tool here solved a real problem first.</p>
+    <section class="section" id="tools">
+      <div class="section__header">
+        <p class="section__eyebrow">Tool Suite</p>
+        <h2 class="section__title">Pick a tool. Start saving time today.</h2>
+        <p class="section__description muted">Every tool runs entirely in your browser. For AI-powered responses, enter a free OpenRouter API key inside the tool — it's stored locally and never sent anywhere else.</p>
+      </div>
+
+      <div class="tool-categories">
+        <article class="tool-category glass-panel">
+          <header class="tool-category__header">
+            <p class="section-eyebrow">Kitchen &amp; Finance</p>
+            <h3 class="tool-category__title">Command the GP and procurement rhythm</h3>
+            <p class="tool-category__description muted">Prep sheets, GP guardrails, supplier orders — all tuned for chefs who still cook.</p>
+          </header>
+          <div class="tool-grid">
+            <a class="tool-card" href="tools/recipe-costing/index.html">
+              <span class="pill highlight">Start here</span>
+              <h3>GP &amp; Recipe Costing</h3>
+              <p>Ingredient roll-ups, yield factors, target GP, allergen flags, and print-ready kitchen cards.</p>
+              <span class="card-cta">Launch →</span>
+            </a>
+            <a class="tool-card" href="tools/menu-engineering/index.html">
+              <h3>Menu Engineering Analyzer</h3>
+              <p>Stars, Ploughhorses, Puzzles, Dogs — with AI-generated actions for each dish.</p>
+              <span class="card-cta">Launch →</span>
+            </a>
+            <a class="tool-card" href="tools/procurement-generator/index.html">
+              <h3>Smart Procurement Generator</h3>
+              <p>Turn next week's covers into a supplier-ready order list with a 10% buffer built in.</p>
+              <span class="card-cta">Launch →</span>
+            </a>
+            <a class="tool-card" href="tools/delivery-pricing/index.html">
+              <h3>Delivery Pricing Optimizer</h3>
+              <p>Real GP after Uber Eats / Deliveroo commission. Fix pricing, build high-margin bundles.</p>
+              <span class="card-cta">Launch →</span>
+            </a>
+          </div>
+        </article>
+
+        <article class="tool-category glass-panel">
+          <header class="tool-category__header">
+            <p class="section-eyebrow">Guest Experience &amp; Marketing</p>
+            <h3 class="tool-category__title">Protect the brand voice everywhere guests see you</h3>
+            <p class="tool-category__description muted">Reviews, pre-arrival, allergen compliance — obsessive about tone and regulation.</p>
+          </header>
+          <div class="tool-grid">
+            <a class="tool-card" href="tools/review-responder/index.html">
+              <span class="pill highlight">Start here</span>
+              <h3>AI Review Responder</h3>
+              <p>Platform-specific, on-brand replies to TripAdvisor, Google &amp; Booking.com. Never says "discount".</p>
+              <span class="card-cta">Launch →</span>
+            </a>
+            <a class="tool-card" href="tools/pre-arrival-email/index.html">
+              <h3>Pre-Arrival Email Builder</h3>
+              <p>Concierge-quality sequences that build anticipation and naturally upsell.</p>
+              <span class="card-cta">Launch →</span>
+            </a>
+            <a class="tool-card" href="tools/allergen-matrix/index.html">
+              <h3>Allergen Matrix Builder</h3>
+              <p>All 14 allergens, auto-detected. Compliance-ready matrix with CSV and print export.</p>
+              <span class="card-cta">Launch →</span>
+            </a>
+          </div>
+        </article>
+
+        <article class="tool-category glass-panel">
+          <header class="tool-category__header">
+            <p class="section-eyebrow">Team &amp; Operations</p>
+            <h3 class="tool-category__title">Keep the rota, finances, and SOPs in sync</h3>
+            <p class="tool-category__description muted">Scheduling, weekly narratives, SOP codification — structured for busy operators.</p>
+          </header>
+          <div class="tool-grid">
+            <a class="tool-card" href="tools/rota-optimizer/index.html">
+              <h3>AI Rota Optimizer</h3>
+              <p>Availability-aware scheduling with cover minimums, overtime warnings, and manager notes.</p>
+              <span class="card-cta">Launch →</span>
+            </a>
+            <a class="tool-card" href="tools/financial-narrative/index.html">
+              <h3>Financial Narrative Generator</h3>
+              <p>Raw weekly P&amp;L → plain-English executive summary with directives and red-flag alerts.</p>
+              <span class="card-cta">Launch →</span>
+            </a>
+            <a class="tool-card" href="tools/sop-generator/index.html">
+              <h3>SOP Generator</h3>
+              <p>Rough notes → numbered, print-ready Standard Operating Procedure in 90 seconds.</p>
+              <span class="card-cta">Launch →</span>
+            </a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="playbook">
+      <div class="section__header">
+        <p class="section__eyebrow">Field Guide</p>
+        <h2 class="section__title">The Hospitality Pro Playbook</h2>
+        <p class="section__description muted">9,000+ words. 50+ copy-paste prompts. 7 department playbooks. Built for operators, not consultants.</p>
+      </div>
+      <article class="glass-panel playbook-panel">
+        <div>
+          <h3>What's inside</h3>
+          <ul class="feature-list">
+            <li><span>10 daily workflows — pre-arrival, rota, procurement, finance, reviews.</span></li>
+            <li><span>Marketing, Revenue, HR, Procurement, Events, Sustainability &amp; Sales modules.</span></li>
+            <li><span>ROI calculator and implementation roadmap.</span></li>
+            <li><span>50+ prompts — copy/paste ready, no AI knowledge needed.</span></li>
+          </ul>
+        </div>
+        <div class="playbook-actions">
+          <a class="btn btn-primary" href="guide.md" target="_blank" rel="noreferrer">Read the playbook</a>
+          <a class="btn btn-ghost" href="guide.md" download>Download markdown</a>
+        </div>
+      </article>
+    </section>
+
+    <section class="section" id="about">
+      <div class="section__header">
+        <p class="section__eyebrow">About</p>
+        <h2 class="section__title">Built by Jordan Pitts</h2>
+        <p class="section__description muted">Michelin kitchens, 23-property hotel groups, eight-figure revenue systems — then AI. Every tool here solved a real problem first.</p>
+      </div>
       <div class="about-grid">
-        <div class="glass-panel">
-          <p style="color: var(--muted); font-size: 0.95rem; line-height: 1.75;">
+        <article class="about-panel glass-panel">
+          <p class="muted">
             "I've cooked on the pass at a Michelin-starred restaurant, managed purchasing across 23 hotels in Italy during a pandemic, and built marketing automation that scaled a business from £800k to £12M. These are the tools I wish I'd had. They're designed to be used by someone in the middle of service, not someone sat at a desk."
           </p>
-          <p style="margin-top: 1rem; color: var(--gold); font-size: 0.85rem; font-weight: 600;">— Jordan Pitts</p>
-        </div>
-        <div class="glass-panel">
-          <h3 style="margin-bottom: 0.75rem; font-size: 1rem;">Need bespoke automation?</h3>
-          <p style="color: var(--muted); font-size: 0.9rem; margin-bottom: 1.25rem;">Jordan deploys these systems for independent operators, multi-site groups, and heritage experiences. If you want the tools tailored to your venues or integrated with your PMS/POS, let's talk.</p>
-          <a class="btn-ghost" href="https://jordanpitts.com" target="_blank" rel="noreferrer">Work with Jordan →</a>
-        </div>
+          <p class="signature">— Jordan Pitts</p>
+        </article>
+        <article class="cta-panel glass-panel">
+          <h3 class="cta-panel__title">Need bespoke automation?</h3>
+          <p class="cta-panel__description muted">Jordan deploys these systems for independent operators, multi-site groups, and heritage experiences. If you want the tools tailored to your venues or integrated with your PMS/POS, let's talk.</p>
+          <div class="cta-panel__actions">
+            <a class="btn btn-primary" href="https://jordanpitts.com" target="_blank" rel="noreferrer">Work with Jordan →</a>
+          </div>
+        </article>
       </div>
-    </div>
-  </section>
+    </section>
+  </main>
 
-  <!-- FOOTER -->
-  <footer>
-    Built by <a href="https://jordanpitts.com">Jordan Pitts</a> · Hospitality Pro © <span id="year"></span>
+  <footer class="footer">
+    Built by <a href="https://jordanpitts.com" target="_blank" rel="noreferrer">Jordan Pitts</a> · Hospitality Pro © <span id="year"></span>
   </footer>
 
-  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+  <script>
+    const currentYearEl = document.getElementById('year');
+    if (currentYearEl) currentYearEl.textContent = new Date().getFullYear();
+    document.querySelectorAll('a.smooth-link').forEach((anchor) => {
+      anchor.addEventListener('click', (event) => {
+        const targetId = anchor.getAttribute('href');
+        if (!targetId || !targetId.startsWith('#')) return;
+        const target = document.querySelector(targetId);
+        if (!target) return;
+        event.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+  </script>
 </body>
 </html>
