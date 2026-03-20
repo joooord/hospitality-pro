@@ -63,6 +63,8 @@
       </div>
     </section>
 
+    <div data-profile-mount></div>
+
     <section class="trust-strip glass-card" aria-label="Trust markers">
       <p class="trust-strip__label">Operators rely on Hospitality Pro for</p>
       <div class="trust-strip__logos">
@@ -217,6 +219,7 @@
     Built by <a href="https://jordanpitts.com" target="_blank" rel="noreferrer">Jordan Pitts</a> · Hospitality Pro © <span id="year"></span>
   </footer>
 
+  <script src="/assets/scripts/venue-profile.js" defer></script>
   <script>
     const currentYearEl = document.getElementById('year');
     if (currentYearEl) currentYearEl.textContent = new Date().getFullYear();

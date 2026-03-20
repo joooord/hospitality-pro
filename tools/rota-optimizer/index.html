@@ -340,7 +340,7 @@
       <p>Feed in forecasts, availability, and role minimums, then let Claude engineer a service-ready weekly rota with risk highlights and manager notes.</p>
     </header>
 
-    <section class="card">
+    <section class="glass-card stack">
       <div class="stack">
         <div>
           <h2>API Access</h2>
@@ -355,7 +355,7 @@
     </section>
 
     <form id="rotaForm" class="grid two-col">
-      <section class="card stack">
+      <section class="glass-card stack">
         <div>
           <h2>Venue &amp; Demand</h2>
           <p class="subtitle">Baseline context for the model.</p>
@@ -376,7 +376,7 @@
         </div>
       </section>
 
-      <section class="card stack">
+      <section class="glass-card stack">
         <div>
           <h2>Role Minimums &amp; Notes</h2>
           <p class="subtitle">Let the model know your floor for safe service.</p>
@@ -394,7 +394,7 @@
         </div>
       </section>
 
-      <section class="card stack" style="grid-column: 1 / -1;">
+      <section class="glass-card stack" style="grid-column: 1 / -1;">
         <div class="header-row" style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;">
           <div>
             <h2>Team Availability</h2>
@@ -405,7 +405,7 @@
         <div class="stack" id="staffList"></div>
       </section>
 
-      <section class="card stack" style="grid-column: 1 / -1;">
+      <section class="glass-card stack" style="grid-column: 1 / -1;">
         <div class="stack">
           <div>
             <h2>Generate Rota</h2>
@@ -418,7 +418,7 @@
     </form>
 
     <section class="grid" id="outputGrid">
-      <section class="card stack hidden" id="rotaCard">
+      <section class="glass-card stack hidden" id="rotaCard">
         <div>
           <h2>Optimised Schedule</h2>
           <p class="subtitle">Understaffed days glow amber. Overtime risks are muted red.</p>
@@ -427,7 +427,7 @@
         <div class="rota-table" id="rotaTable"></div>
       </section>
 
-      <section class="card stack hidden" id="notesCard">
+      <section class="glass-card stack hidden" id="notesCard">
         <div>
           <h2>Shift Manager Notes</h2>
           <p class="subtitle">Top-line guidance surfaced by the model.</p>
@@ -435,7 +435,7 @@
         <div class="notes-card" id="managerNotes"></div>
       </section>
 
-      <section class="card stack hidden" id="exportCard" style="grid-column: 1 / -1;">
+      <section class="glass-card stack hidden" id="exportCard" style="grid-column: 1 / -1;">
         <div>
           <h2>Export</h2>
           <p class="subtitle">Copy a plain-text summary for WhatsApp or email.</p>

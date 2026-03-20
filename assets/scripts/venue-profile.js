@@ -1,5 +1,21 @@
 (() => {
   const STORAGE_KEY = 'hp-venue-profile';
+  const HP_VENUE_PROFILES = window.HP_VENUE_PROFILES || {
+    hiddenCafeBarSocial: {
+      name: 'Hidden Café Bar Social',
+      type: 'Warm & boutique',
+      tone: 'Warm & boutique',
+      tagline: 'Hidden Café Bar Social · Warm & boutique',
+      highlights: [
+        'Signature serve: Burnt honey old fashioned',
+        'Vinyl-led supper clubs each Thursday',
+        'Service mantra: “Warm, sharp, never scripted.”'
+      ],
+      narrative: 'Independent day-to-night listening bar blending single-origin coffee, low-intervention wines, and detail-obsessed hospitality. Loyalty is framed as private invitations, never discounts.'
+    }
+  };
+  window.HP_VENUE_PROFILES = HP_VENUE_PROFILES;
+
   const defaultProfile = {
     name: '',
     type: '',
@@ -10,9 +26,20 @@
   const dom = {};
   const subscribers = new Set();
   let profileState = loadProfile();
+  if (!profileState.name && HP_VENUE_PROFILES.hiddenCafeBarSocial) {
+    profileState = {
+      name: HP_VENUE_PROFILES.hiddenCafeBarSocial.name,
+      type: HP_VENUE_PROFILES.hiddenCafeBarSocial.type,
+      tone: HP_VENUE_PROFILES.hiddenCafeBarSocial.tone,
+      nonNegotiables: HP_VENUE_PROFILES.hiddenCafeBarSocial.narrative
+    };
+    persistProfile(profileState);
+  }
   let lastTrigger = null;
 
   function init() {
+    ensureProfileUi();
+
     dom.summary = document.querySelector('[data-profile-summary]');
     dom.status = document.querySelector('[data-profile-status]');
     dom.triggers = document.querySelectorAll('[data-profile-trigger]');
@@ -55,10 +82,10 @@
       event.preventDefault();
       const formData = new FormData(dom.form);
       profileState = {
-        name: formData.get('venueName').trim(),
-        type: formData.get('venueType'),
-        tone: formData.get('venueTone'),
-        nonNegotiables: formData.get('venueRules').trim()
+        name: (formData.get('venueName') || '').trim(),
+        type: formData.get('venueType') || '',
+        tone: formData.get('venueTone') || '',
+        nonNegotiables: (formData.get('venueRules') || '').trim()
       };
       persistProfile(profileState);
       hydrateForm(profileState);
@@ -79,6 +106,108 @@
         closeModal();
       });
     }
+  }
+
+  function ensureProfileUi() {
+    ensureSummarySurface();
+    ensureModalSurface();
+  }
+
+  function ensureSummarySurface() {
+    if (document.querySelector('[data-profile-summary]')) return;
+    const placeholder = document.querySelector('[data-profile-mount]');
+    const summaryCard = buildSummaryCard();
+    if (placeholder) {
+      placeholder.replaceWith(summaryCard);
+      return;
+    }
+    const backLink = document.querySelector('.back-link');
+    if (backLink && backLink.parentElement) {
+      backLink.insertAdjacentElement('afterend', summaryCard);
+      return;
+    }
+    const shell = document.querySelector('.app-shell');
+    if (shell) {
+      shell.insertAdjacentElement('afterbegin', summaryCard);
+    }
+  }
+
+  function ensureModalSurface() {
+    if (document.querySelector('[data-profile-modal]')) return;
+    const modal = buildModal();
+    document.body.appendChild(modal);
+  }
+
+  function buildSummaryCard() {
+    const section = document.createElement('section');
+    section.className = 'glass-card profile-summary-banner';
+    section.innerHTML = `
+      <div class="profile-summary__content" data-profile-summary>
+        <p class="eyebrow">Venue memory</p>
+        <p class="venue-profile__summary-message">Set your venue voice once. Tone, loyalty language, and non-negotiables follow you into every tool.</p>
+      </div>
+      <div class="profile-summary__actions">
+        <span class="status-pill" data-profile-status>Profile not set</span>
+        <button type="button" class="btn btn-ghost" data-profile-trigger>Edit profile</button>
+      </div>
+    `;
+    return section;
+  }
+
+  function buildModal() {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'profile-modal';
+    wrapper.setAttribute('data-profile-modal', '');
+    wrapper.setAttribute('hidden', '');
+    wrapper.innerHTML = `
+      <div class="profile-modal__dialog glass-panel">
+        <div class="profile-modal__header">
+          <p class="eyebrow">Venue memory</p>
+          <h2>Tell the tools who you are</h2>
+          <p class="muted">This context powers Review Responder, Recipe Costing, Rota Optimizer, and every AI workflow in Hospitality Pro.</p>
+          <button type="button" class="btn btn-ghost btn-icon" aria-label="Close profile editor" data-profile-dismiss data-profile-skip>×</button>
+        </div>
+        <div class="profile-modal__alert" data-profile-alert hidden></div>
+        <form class="stack" data-profile-form>
+          <label for="venueNameInput">Venue name
+            <input id="venueNameInput" name="venueName" type="text" placeholder="Hidden Café Bar Social" required />
+          </label>
+          <label for="venueTypeSelect">Venue type
+            <select id="venueTypeSelect" name="venueType">
+              <option value="">Select type</option>
+              <option value="Café &amp; Bar">Café &amp; Bar</option>
+              <option value="Restaurant">Restaurant</option>
+              <option value="Boutique Hotel">Boutique Hotel</option>
+              <option value="Members Club">Members Club</option>
+              <option value="Heritage Experience">Heritage Experience</option>
+              <option value="Event Space">Event Space</option>
+              <option value="Other">Other</option>
+            </select>
+          </label>
+          <label for="venueToneSelect">Tone of voice
+            <select id="venueToneSelect" name="venueTone">
+              <option value="">Select tone</option>
+              <option value="Warm &amp; boutique">Warm &amp; boutique</option>
+              <option value="Luxury &amp; formal">Luxury &amp; formal</option>
+              <option value="Casual &amp; friendly">Casual &amp; friendly</option>
+              <option value="Heritage &amp; classic">Heritage &amp; classic</option>
+              <option value="Playful &amp; bold">Playful &amp; bold</option>
+            </select>
+          </label>
+          <label for="venueRules">Non-negotiables &amp; loyalty language
+            <textarea id="venueRules" name="venueRules" rows="4" placeholder="Never say discount — extend a loyalty invitation. Names remembered. Espresso martini tickets under 6 minutes."></textarea>
+          </label>
+          <div class="profile-modal__actions">
+            <button type="button" class="btn btn-ghost" data-profile-reset>Reset profile</button>
+            <div class="profile-modal__actions-primary">
+              <button type="button" class="btn btn-ghost" data-profile-dismiss data-profile-skip>Cancel</button>
+              <button type="submit" class="btn btn-primary">Save profile</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    `;
+    return wrapper;
   }
 
   function loadProfile() {

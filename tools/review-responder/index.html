@@ -6,530 +6,72 @@
   <title>Review Responder · Hospitality Pro</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/assets/styles/system.css" />
-  <style>
-    :root {
-      color-scheme: dark;
-      --color-base: #0d0d0d;
-      --color-surface: #141414;
-      --color-panel: #1b1b1b;
-      --color-gold: #c9993f;
-      --color-text-primary: #f5f0e8;
-      --color-text-muted: rgba(245, 240, 232, 0.72);
-      --color-border: rgba(255, 255, 255, 0.08);
-      --color-danger: #f36b5d;
-      --color-success: #79c0a0;
-      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: var(--color-base);
-      color: var(--color-text-primary);
-      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      line-height: 1.5;
-    }
-
-    a {
-      color: var(--color-gold);
-      text-decoration: none;
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
-
-    .app-shell {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 32px 20px 64px;
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-    }
-
-    .page-header {
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-    }
-
-    .eyebrow {
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      font-size: 0.76rem;
-      color: var(--color-text-muted);
-    }
-
-    .page-header h1 {
-      margin: 4px 0;
-      font-size: clamp(1.9rem, 3vw, 2.6rem);
-      font-weight: 600;
-    }
-
-    .header-main {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 24px;
-      align-items: flex-end;
-    }
-
-    .header-copy {
-      max-width: 620px;
-      color: var(--color-text-muted);
-    }
-
-    .api-key-field {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      min-width: 280px;
-      flex: 1;
-    }
-
-    .api-key-field label {
-      font-size: 0.85rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--color-text-muted);
-    }
-
-    .api-key-field input {
-      border-radius: 12px;
-      border: 1px solid var(--color-border);
-      background: var(--color-surface);
-      padding: 14px 16px;
-      color: var(--color-text-primary);
-      font-size: 0.95rem;
-    }
-
-    .venue-profile-card {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 18px;
-      justify-content: space-between;
-      padding: 24px;
-      border-radius: 20px;
-      background: var(--color-panel);
-      border: 1px solid var(--color-border);
-    }
-
-    .venue-profile-card h2 {
-      margin: 4px 0 8px;
-      font-size: 1.5rem;
-    }
-
-    .venue-meta {
-      color: var(--color-text-muted);
-      margin: 0 0 12px;
-      font-size: 0.95rem;
-    }
-
-    .profile-highlights {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 12px;
-      margin: 0;
-      padding: 0;
-      list-style: none;
-      color: var(--color-text-muted);
-      font-size: 0.95rem;
-    }
-
-    .profile-highlights li {
-      padding: 12px;
-      border-radius: 14px;
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .ghost-button {
-      align-self: flex-start;
-      border-radius: 999px;
-      padding: 10px 18px;
-      border: 1px solid var(--color-border);
-      background: transparent;
-      color: var(--color-text-primary);
-      font-weight: 500;
-      cursor: pointer;
-    }
-
-    .ghost-button:hover {
-      border-color: var(--color-gold);
-      color: var(--color-gold);
-    }
-
-    .workspace {
-      display: grid;
-      grid-template-columns: minmax(320px, 1fr) minmax(360px, 1fr);
-      gap: 24px;
-      align-items: flex-start;
-    }
-
-    .card {
-      border-radius: 24px;
-      background: var(--color-panel);
-      border: 1px solid var(--color-border);
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    .group-label {
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--color-text-muted);
-      margin-bottom: 6px;
-    }
-
-    .pill-group,
-    .rating-group,
-    .tone-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .pill-button,
-    .tone-pill,
-    .rating-pill {
-      border: 1px solid var(--color-border);
-      border-radius: 999px;
-      padding: 10px 16px;
-      background: rgba(255, 255, 255, 0.02);
-      color: var(--color-text-primary);
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: border 0.2s ease, background 0.2s ease, color 0.2s ease;
-    }
-
-    .pill-button.is-active,
-    .tone-pill.is-active,
-    .rating-pill.is-active {
-      border-color: var(--color-gold);
-      background: rgba(201, 153, 63, 0.15);
-      color: var(--color-gold);
-    }
-
-    .rating-pill {
-      min-width: 120px;
-      text-align: left;
-    }
-
-    select,
-    textarea,
-    input[type="text"] {
-      width: 100%;
-      border-radius: 14px;
-      border: 1px solid var(--color-border);
-      background: var(--color-surface);
-      color: var(--color-text-primary);
-      padding: 14px 16px;
-      font-size: 0.95rem;
-      font-family: inherit;
-    }
-
-    textarea {
-      resize: vertical;
-      min-height: 140px;
-    }
-
-    .actions-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 8px;
-    }
-
-    .primary-btn,
-    .secondary-btn,
-    .tertiary-btn {
-      border-radius: 999px;
-      padding: 12px 20px;
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-      border: none;
-    }
-
-    .primary-btn {
-      background: linear-gradient(135deg, #e2b56b, #c9993f);
-      color: #0b0b0b;
-    }
-
-    .primary-btn:disabled,
-    .secondary-btn:disabled,
-    .tertiary-btn:disabled,
-    .ghost-button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    .secondary-btn {
-      background: transparent;
-      border: 1px solid var(--color-border);
-      color: var(--color-text-primary);
-    }
-
-    .tertiary-btn {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px dashed var(--color-border);
-      color: var(--color-text-muted);
-    }
-
-    .response-panel-header {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 16px;
-      align-items: center;
-    }
-
-    .response-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .response-region {
-      border-radius: 18px;
-      border: 1px solid var(--color-border);
-      background: rgba(0, 0, 0, 0.25);
-      padding: 18px;
-      min-height: 220px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .response-summary {
-      font-weight: 600;
-    }
-
-    .response-text {
-      font-family: 'JetBrains Mono', 'SFMono-Regular', Menlo, monospace;
-      font-size: 0.95rem;
-      white-space: pre-wrap;
-      line-height: 1.6;
-    }
-
-    .placeholder {
-      color: var(--color-text-muted);
-    }
-
-    .tone-badges {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .tone-badge {
-      border-radius: 999px;
-      padding: 6px 14px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      font-size: 0.85rem;
-    }
-
-    .platform-tip {
-      border-radius: 14px;
-      padding: 14px 16px;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      font-size: 0.9rem;
-      color: var(--color-text-muted);
-    }
-
-    .tone-meta {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 16px;
-      align-items: start;
-    }
-
-    .variant-stack {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .variant-card {
-      border-radius: 16px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 14px;
-      background: rgba(255, 255, 255, 0.02);
-    }
-
-    .variant-card.active {
-      border-color: var(--color-gold);
-    }
-
-    .variant-card button {
-      margin-top: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 999px;
-      background: transparent;
-      color: var(--color-text-primary);
-      padding: 6px 12px;
-      cursor: pointer;
-      font-size: 0.85rem;
-    }
-
-    .history-panel {
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      padding-top: 16px;
-    }
-
-    .history-heading {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--color-text-muted);
-      margin-bottom: 10px;
-    }
-
-    .history-list {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .history-item {
-      border-radius: 14px;
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      padding: 12px 14px;
-      background: rgba(255, 255, 255, 0.02);
-      font-size: 0.9rem;
-    }
-
-    .history-item strong {
-      color: var(--color-gold);
-    }
-
-    .callout {
-      border-radius: 16px;
-      border: 1px solid rgba(243, 107, 93, 0.4);
-      background: rgba(243, 107, 93, 0.08);
-      color: var(--color-text-primary);
-      padding: 14px 16px;
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      align-items: center;
-    }
-
-    .callout.hidden {
-      display: none;
-    }
-
-    .callout button {
-      border-radius: 999px;
-      border: 1px solid rgba(243, 107, 93, 0.6);
-      background: transparent;
-      color: var(--color-text-primary);
-      padding: 6px 14px;
-      cursor: pointer;
-    }
-
-    .skeleton-block {
-      border-radius: 12px;
-      background: linear-gradient(90deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.08));
-      background-size: 200% 100%;
-      animation: shimmer 1.2s infinite;
-      height: 18px;
-    }
-
-    .skeleton-block.large {
-      height: 60px;
-    }
-
-    @keyframes shimmer {
-      0% {
-        background-position: 200% 0;
-      }
-      100% {
-        background-position: -200% 0;
-      }
-    }
-
-    @media (max-width: 960px) {
-      .workspace {
-        grid-template-columns: 1fr;
-      }
-
-      .response-actions {
-        width: 100%;
-        justify-content: flex-start;
-      }
-    }
-
-    @media (max-width: 600px) {
-      .app-shell {
-        padding: 20px 16px 40px;
-      }
-
-      .venue-profile-card,
-      .card {
-        padding: 18px;
-        border-radius: 18px;
-      }
-
-      .rating-pill {
-        min-width: auto;
-      }
-    }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 </head>
 <body>
-  <div class="app-shell">
-    <header class="page-header">
-      <div class="eyebrow">Hospitality Pro · Guest Relations</div>
-      <div class="header-main">
-        <div>
-          <h1>Review Responder</h1>
-          <p class="header-copy">Context-aware replies that keep every guest touchpoint on-brand. Feed in the review, confirm the setting, and the tool handles tone, constraints, and loyalty language.</p>
+  <div id="apiBanner" class="callout callout-warning api-banner hidden" role="alert">
+    <span>Set your OpenRouter API key to generate responses. It's stored locally and never leaves this browser.</span>
+    <div class="cluster">
+      <button type="button" class="btn btn-primary" id="focusApiBtn">Set key</button>
+      <button type="button" class="btn btn-ghost" id="dismissApiBanner">Dismiss</button>
+    </div>
+  </div>
+  <nav class="site-nav">
+    <a class="nav-brand" href="/">Hospitality <span>Pro</span></a>
+    <div class="nav-links">
+      <a href="/#tools">Tools</a>
+      <a href="/#playbook">Playbook</a>
+      <a href="/#about">About</a>
+      <a class="nav-cta" href="/#tools">Get Started →</a>
+    </div>
+  </nav>
+
+  <main class="app-shell">
+    <a class="back-link" href="/#tools">Back to all tools</a>
+
+    <div data-profile-mount></div>
+
+    <header class="glass-panel hero-panel">
+      <div class="stack">
+        <p class="eyebrow">Hospitality Pro · Guest Relations</p>
+        <h1>Review Responder</h1>
+        <p class="muted">Context-aware replies that keep every guest touchpoint on-brand. Feed in the review, confirm the setting, and the tool handles tone, constraints, and loyalty language.</p>
+        <div class="cluster">
+          <span class="badge badge-success">Live sample loaded</span>
+          <span class="badge">Platform guardrails for Google · TripAdvisor · Booking</span>
         </div>
-        <div class="api-key-field">
-          <label for="apiKey">OpenRouter API Key</label>
-          <input id="apiKey" type="password" placeholder="sk-or-v1-…" autocomplete="off" />
-        </div>
+      </div>
+      <div class="glass-card glass-card--dense">
+        <label class="form-label" for="apiKey">OpenRouter API Key <span class="label-hint">Stored locally in your browser</span></label>
+        <input id="apiKey" type="password" placeholder="sk-or-v1-…" autocomplete="off" />
+        <p class="help-text">Generate a free key at openrouter.ai. We never log or transmit it anywhere else.</p>
       </div>
     </header>
 
-    <section class="venue-profile-card" aria-live="polite">
-      <div>
-        <div class="eyebrow">Current venue profile</div>
-        <h2 id="venueName">Hidden Café Bar Social</h2>
-        <p class="venue-meta" id="venueMeta">Wakefield, West Yorkshire · 42-cover neighbourhood cocktail bar</p>
-        <p id="venueNarrative">Independent day-to-night spot mixing single-origin coffee, low-intervention wines, and a listening bar soundscape. Service promise: names remembered, details anticipated, loyalty rewarded with private menu drops.</p>
-        <ul class="profile-highlights" id="venueHighlights">
-          <li>Signature serve: Burnt honey old fashioned</li>
-          <li>Hosts vinyl-led supper clubs each Thursday</li>
-          <li>Team mantra: “Warm, sharp, never scripted.”</li>
-        </ul>
+    <section class="glass-card stack" aria-live="polite">
+      <div class="flex-between">
+        <div>
+          <p class="eyebrow">Current venue profile</p>
+          <h2 id="venueName">Hidden Café Bar Social</h2>
+          <p class="muted" id="venueMeta">Wakefield, West Yorkshire · 42-cover neighbourhood cocktail bar</p>
+        </div>
+        <button class="btn btn-ghost" id="editProfileBtn" type="button" data-profile-trigger>Edit profile</button>
       </div>
-      <button class="ghost-button" id="editProfileBtn" type="button">Edit profile</button>
+      <p id="venueNarrative" class="muted">Independent day-to-night spot mixing single-origin coffee, low-intervention wines, and a listening bar soundscape. Service promise: names remembered, details anticipated, loyalty rewarded with private menu drops.</p>
+      <ul class="profile-highlights" id="venueHighlights">
+        <li>Signature serve: Burnt honey old fashioned</li>
+        <li>Hosts vinyl-led supper clubs each Thursday</li>
+        <li>Team mantra: “Warm, sharp, never scripted.”</li>
+      </ul>
     </section>
 
-    <main class="workspace">
-      <section class="card context-card" aria-label="Review context inputs">
+    <section class="grid-2 align-start">
+      <section class="glass-card stack" aria-label="Review context inputs">
         <div>
-          <div class="group-label">Platform</div>
+          <p class="eyebrow">Platform</p>
           <div class="pill-group" id="platformGroup" role="radiogroup" aria-label="Platform selector">
-            <button type="button" class="pill-button is-active" data-value="Google" aria-pressed="true">Google</button>
+            <button type="button" class="pill-button" data-value="Google" aria-pressed="false">Google</button>
             <button type="button" class="pill-button" data-value="TripAdvisor" aria-pressed="false">TripAdvisor</button>
             <button type="button" class="pill-button" data-value="Booking.com" aria-pressed="false">Booking.com</button>
             <button type="button" class="pill-button" data-value="Other" aria-pressed="false">Other</button>
@@ -537,9 +79,9 @@
         </div>
 
         <div>
-          <div class="group-label">Star rating</div>
-          <div class="rating-group" id="ratingGroup" role="radiogroup" aria-label="Star rating">
-            <button type="button" class="rating-pill is-active" data-value="5" aria-pressed="true">✨ 5★ · Ecstatic</button>
+          <p class="eyebrow">Star rating</p>
+          <div class="pill-group" id="ratingGroup" role="radiogroup" aria-label="Star rating">
+            <button type="button" class="rating-pill" data-value="5" aria-pressed="false">✨ 5★ · Ecstatic</button>
             <button type="button" class="rating-pill" data-value="4" aria-pressed="false">😊 4★ · Delighted</button>
             <button type="button" class="rating-pill" data-value="3" aria-pressed="false">😐 3★ · Mixed</button>
             <button type="button" class="rating-pill" data-value="2" aria-pressed="false">😕 2★ · Disappointed</button>
@@ -547,107 +89,116 @@
           </div>
         </div>
 
-        <label class="group-label" for="venueType">Venue type</label>
-        <select id="venueType">
-          <option value="Café & Bar" selected>Café & Bar</option>
-          <option value="Restaurant">Restaurant</option>
-          <option value="Boutique Hotel">Boutique Hotel</option>
-          <option value="Members Club">Members Club</option>
-          <option value="Heritage Experience">Heritage Experience</option>
-          <option value="Event Space">Event Space</option>
-          <option value="Other">Other</option>
-        </select>
+        <label for="venueType">Venue type
+          <select id="venueType">
+            <option value="Café &amp; Bar">Café &amp; Bar</option>
+            <option value="Restaurant">Restaurant</option>
+            <option value="Boutique Hotel">Boutique Hotel</option>
+            <option value="Members Club">Members Club</option>
+            <option value="Heritage Experience">Heritage Experience</option>
+            <option value="Event Space">Event Space</option>
+            <option value="Other">Other</option>
+          </select>
+        </label>
 
         <div>
-          <div class="group-label">Tone</div>
-          <div class="tone-group" id="toneGroup" role="radiogroup" aria-label="Tone selector">
-            <button type="button" class="tone-pill is-active" data-value="Luxury & Formal" aria-pressed="true">Luxury & Formal</button>
-            <button type="button" class="tone-pill" data-value="Warm & Boutique" aria-pressed="false">Warm & Boutique</button>
-            <button type="button" class="tone-pill" data-value="Casual & Friendly" aria-pressed="false">Casual & Friendly</button>
-            <button type="button" class="tone-pill" data-value="Heritage & Classic" aria-pressed="false">Heritage & Classic</button>
+          <p class="eyebrow">Tone</p>
+          <div class="pill-group" id="toneGroup" role="radiogroup" aria-label="Tone selector">
+            <button type="button" class="tone-pill" data-value="Luxury &amp; Formal" aria-pressed="false">Luxury &amp; Formal</button>
+            <button type="button" class="tone-pill" data-value="Warm &amp; Boutique" aria-pressed="false">Warm &amp; Boutique</button>
+            <button type="button" class="tone-pill" data-value="Casual &amp; Friendly" aria-pressed="false">Casual &amp; Friendly</button>
+            <button type="button" class="tone-pill" data-value="Heritage &amp; Classic" aria-pressed="false">Heritage &amp; Classic</button>
           </div>
         </div>
 
-        <div>
-          <label class="group-label" for="reviewField">Guest review</label>
-          <textarea id="reviewField" placeholder="Paste the guest review or load the sample to test the flow.">“Dropped into Hidden Café Bar Social after work and ended up staying four hours. Jazz on vinyl, superb small plates, and Abi somehow kept note of every table’s favourite pour. Only wish the espresso martini landed quicker once the room filled.”</textarea>
-          <div class="actions-row">
-            <button type="button" class="tertiary-btn" id="loadSampleBtn">Load sample</button>
-          </div>
+        <label for="reviewField">Guest review
+          <textarea id="reviewField" placeholder="Paste the guest review or load the sample to test the flow."></textarea>
+        </label>
+        <div class="cluster">
+          <button type="button" class="btn btn-ghost" id="loadSampleBtn">Load sample review</button>
         </div>
 
-        <div>
-          <label class="group-label" for="customPrompt">Custom prompt tweak <span style="text-transform:none;color:var(--color-text-muted);font-size:0.85rem;">(optional)</span></label>
-          <textarea id="customPrompt" rows="3" placeholder="e.g. emphasise our sustainability sourcing or invite them to a chef’s counter preview."></textarea>
-        </div>
+        <label for="customPrompt">Custom prompt tweak <span class="label-hint">Optional line to emphasise sustainability, loyalty invitations, etc.</span>
+          <textarea id="customPrompt" rows="3"></textarea>
+        </label>
 
-        <div class="actions-row">
-          <button type="button" class="primary-btn" id="generateBtn">Generate response</button>
-          <button type="button" class="secondary-btn" id="clearBtn">Clear inputs</button>
+        <div class="cluster">
+          <button type="button" class="btn btn-primary" id="generateBtn">Generate response</button>
+          <button type="button" class="btn btn-ghost" id="clearBtn">Clear inputs</button>
         </div>
       </section>
 
-      <section class="card response-panel" aria-label="AI response output">
-        <div class="response-panel-header">
+      <section class="glass-card stack" aria-label="AI response output">
+        <div class="flex-between">
           <div>
-            <div class="eyebrow">Output</div>
-            <h2 style="margin:6px 0 0;">AI-crafted reply</h2>
+            <p class="eyebrow">Output</p>
+            <h2>AI-crafted reply</h2>
           </div>
-          <div class="response-actions">
-            <button type="button" class="secondary-btn" id="copyBtn" disabled>Copy</button>
-            <button type="button" class="secondary-btn" id="regenerateBtn" disabled>Regenerate</button>
-            <button type="button" class="secondary-btn" id="variantBtn" disabled>Generate Variant</button>
+          <div class="cluster">
+            <button type="button" class="btn btn-ghost" id="copyBtn">Copy</button>
+            <button type="button" class="btn btn-ghost" id="regenerateBtn" disabled>Regenerate</button>
+            <button type="button" class="btn btn-ghost" id="variantBtn" disabled>Generate variant</button>
           </div>
         </div>
 
-        <div id="errorCallout" class="callout hidden" role="alert">
+        <div id="errorCallout" class="callout callout-error hidden" role="alert">
           <span id="errorMessage">Something went wrong.</span>
-          <button type="button" id="retryBtn">Retry</button>
+          <button type="button" class="btn btn-ghost" id="retryBtn">Retry</button>
         </div>
 
         <div id="responseRegion" class="response-region" aria-live="polite" aria-busy="false">
-          <p class="placeholder">Responses land here. Include specifics, correct issues, and invite them back with a loyalty gesture.</p>
+          <p class="response-summary">Sample response loaded. Copy, tweak, or generate a fresh draft.</p>
+          <p class="response-text">Dear Hidden Social guest,
+  Thank you for sitting with us for half the evening and for name-checking Abi and Luke — theyll be smiling at this. Im glad the vinyl-led plates landed exactly as intended and agree the espresso martini cadence must match the room when it fills. Weve already added an extra bartender during peak spins so the next round hits the table in pace with the soundtrack. Wed love to host you again soon; let us know when youre free and well extend a loyalty invitation to the next supper-club test menu.
+Warmly,
+Jordan · Hidden Caf E9 Bar Social</p>
         </div>
 
-        <div class="tone-meta">
+        <div class="grid-2">
           <div>
-            <div class="group-label">Tone badges</div>
+            <p class="eyebrow">Tone badges</p>
             <div class="tone-badges" id="toneBadges"></div>
           </div>
           <div>
-            <div class="group-label">Platform tip</div>
-            <div class="platform-tip" id="platformTip">Select a platform to view the guardrails.</div>
+            <p class="eyebrow">Platform tip</p>
+            <p class="help-text" id="platformTip">Select a platform to view the guardrails.</p>
           </div>
         </div>
 
         <div>
-          <div class="group-label">Variant stack (max 3)</div>
-          <div id="variantStack" class="variant-stack" aria-live="polite"></div>
+          <p class="eyebrow">Variant stack (max 3)</p>
+          <div id="variantStack" class="variant-stack" aria-live="polite">
+            <p class="placeholder">Variants will stack here. Use Generate Variant to explore alternates.</p>
+          </div>
         </div>
 
         <div class="history-panel">
-          <div class="history-heading">
-            <span>Recent responses</span>
-            <span id="historyCount">0 saved</span>
+          <div class="flex-between">
+            <span class="eyebrow" style="letter-spacing:0.2em;">Recent responses</span>
+            <span id="historyCount" class="muted">1 saved</span>
           </div>
           <ul id="historyList" class="history-list" aria-live="polite">
-            <li class="history-item">No responses yet. Generate one to start the log.</li>
+            <li class="history-item">
+              <strong>TripAdvisor · Warm &amp; Boutique</strong>
+              <p class="muted" style="margin:0.35rem 0 0;">Thank them for the four-star review, name-check Abi &amp; Luke, and explain the new espresso-martini prep line for peak covers.</p>
+            </li>
           </ul>
         </div>
       </section>
-    </main>
-  </div>
+    </section>
+  </main>
 
   <script src="/assets/scripts/venue-profile.js" defer></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const state = {
-        platform: 'Google',
-        rating: '5',
-        tone: 'Luxury & Formal',
+        platform: 'TripAdvisor',
+        rating: '4',
+        tone: 'Warm & Boutique',
         venueType: 'Café & Bar',
         customPrompt: '',
       };
+      const HP_DEFAULT_PROFILE = window.HP_VENUE_PROFILES?.hiddenCafeBarSocial;
 
       const selectors = {
         apiKey: document.getElementById('apiKey'),
@@ -677,6 +228,9 @@
         venueMeta: document.getElementById('venueMeta'),
         venueNarrative: document.getElementById('venueNarrative'),
         venueHighlights: document.getElementById('venueHighlights'),
+        apiBanner: document.getElementById('apiBanner'),
+        focusApiBtn: document.getElementById('focusApiBtn'),
+        dismissApiBanner: document.getElementById('dismissApiBanner'),
       };
 
       const platformRules = {
@@ -706,6 +260,11 @@
         review: '“Booked a table for Hidden Café Bar Social after a recommendation from a record collector friend. The playlists are unreal and the small plates tasted like someone raided a Michelin pantry. Abi and Luke were effortlessly on it all night. The only wobble was a 20-minute wait for the charred leeks when the room filled. Still an ace evening.”',
       };
 
+      const sampleResponse = {
+        text: 'Dear Hidden Social guest,\nThank you for sitting with us for half the evening and for name-checking Abi and Luke — they’ll be smiling at this. I’m glad the vinyl-led plates landed exactly as intended and agree the espresso martini cadence must match the room when it fills. We’ve already added an extra bartender during peak spins so the next round hits the table in pace with the soundtrack. We’d love to host you again soon; let us know when you’re free and we’ll extend a loyalty invitation to the next supper-club test menu.\nWarmly,\nJordan · Hidden Café Bar Social',
+        summary: 'Thank them for the four-star review, name-check Abi & Luke, and explain the new espresso-martini prep line for peak covers.',
+      };
+
       let lastPayload = null;
       let lastResponse = null;
       let pendingRetryArgs = null;
@@ -715,119 +274,76 @@
       initVenueProfile();
       hydrateApiKey();
       bindEvents();
-      refreshToneBadges();
-      updatePlatformTip();
+      loadSampleState({ initial: true });
 
       function initVenueProfile() {
         try {
           const profileModule = window.VenueProfile || window.HPVenueProfile;
-          const activeProfile = profileModule?.getActiveProfile?.();
-          if (activeProfile) {
-            selectors.venueName.textContent = activeProfile.name || selectors.venueName.textContent;
-            selectors.venueMeta.textContent = activeProfile.tagline || selectors.venueMeta.textContent;
-            selectors.venueNarrative.textContent = activeProfile.narrative || selectors.venueNarrative.textContent;
-            if (Array.isArray(activeProfile.highlights) && activeProfile.highlights.length) {
-              selectors.venueHighlights.innerHTML = '';
-              activeProfile.highlights.forEach((item) => {
-                const li = document.createElement('li');
-                li.textContent = item;
-                selectors.venueHighlights.appendChild(li);
-              });
-            }
+          const activeProfile = profileModule?.getProfile?.() || profileModule?.getActiveProfile?.();
+          if (activeProfile?.name) {
+            applyProfileDetails(activeProfile);
+          } else if (HP_DEFAULT_PROFILE) {
+          }
+          if (profileModule?.subscribe) {
+            profileModule.subscribe((snapshot) => {
+              applyProfileDetails(snapshot);
+            });
           }
         } catch (err) {
           console.warn('Venue profile not loaded yet.', err);
+          if (HP_DEFAULT_PROFILE) {
+            updateProfileSummary(HP_DEFAULT_PROFILE);
+          }
         }
       }
 
-      function hydrateApiKey() {
-        try {
-          const saved = localStorage.getItem('hp_openrouter_key');
-          if (saved) selectors.apiKey.value = saved;
-        } catch (err) {
-          console.warn('Unable to access localStorage', err);
+      function applyProfileDetails(profile) {
+        if (!profile) return;
+        selectors.venueName.textContent = profile.name || selectors.venueName.textContent;
+        selectors.venueMeta.textContent = profile.tagline || profile.type || selectors.venueMeta.textContent;
+        selectors.venueNarrative.textContent = profile.narrative || selectors.venueNarrative.textContent;
+        if (Array.isArray(profile.highlights) && profile.highlights.length) {
+          selectors.venueHighlights.innerHTML = '';
+          profile.highlights.forEach((item) => {
+            const li = document.createElement('li');
+            li.textContent = item;
+            selectors.venueHighlights.appendChild(li);
+          });
         }
       }
 
-      function bindEvents() {
-        selectors.apiKey.addEventListener('input', (event) => {
-          try {
-            localStorage.setItem('hp_openrouter_key', event.target.value.trim());
-          } catch (err) {
-            console.warn('Unable to persist API key', err);
-          }
-        });
+      }
 
-        selectors.platformGroup.addEventListener('click', (event) => {
-          const target = event.target.closest('button[data-value]');
-          if (!target) return;
-          state.platform = target.dataset.value;
-          setActiveButton(selectors.platformGroup, target);
-          updatePlatformTip();
-          refreshToneBadges();
-        });
-
-        selectors.ratingGroup.addEventListener('click', (event) => {
-          const target = event.target.closest('button[data-value]');
-          if (!target) return;
-          state.rating = target.dataset.value;
-          setActiveButton(selectors.ratingGroup, target);
-          refreshToneBadges();
-        });
-
-        selectors.toneGroup.addEventListener('click', (event) => {
-          const target = event.target.closest('button[data-value]');
-          if (!target) return;
-          state.tone = target.dataset.value;
-          setActiveButton(selectors.toneGroup, target);
-          refreshToneBadges();
-        });
-
-        selectors.venueType.addEventListener('change', (event) => {
-          state.venueType = event.target.value;
-          refreshToneBadges();
-        });
-
-        selectors.customPrompt.addEventListener('input', (event) => {
-          state.customPrompt = event.target.value;
-        });
-
-        selectors.loadSampleBtn.addEventListener('click', () => {
-          selectors.reviewField.value = sampleReview.review;
-          state.platform = sampleReview.platform;
-          state.rating = sampleReview.rating;
-          state.tone = sampleReview.tone;
-          state.venueType = sampleReview.venueType;
-          updateSelectionsFromState();
-          refreshToneBadges();
-          updatePlatformTip();
-        });
-
-        selectors.generateBtn.addEventListener('click', () => handleRequest({ mode: 'primary' }));
-        selectors.regenerateBtn.addEventListener('click', () => handleRequest({ mode: 'regenerate' }));
-        selectors.variantBtn.addEventListener('click', () => handleRequest({ mode: 'variant' }));
-        selectors.copyBtn.addEventListener('click', handleCopy);
-        selectors.clearBtn.addEventListener('click', handleClear);
-        selectors.retryBtn.addEventListener('click', () => {
-          if (pendingRetryArgs) {
-            handleRequest(pendingRetryArgs);
-          }
-        });
-        selectors.editProfileBtn.addEventListener('click', () => {
-          const profileModule = window.VenueProfile || window.HPVenueProfile;
-          if (profileModule?.openModal) {
-            profileModule.openModal();
-          } else {
-            alert('Profile editor will be available once the shared script loads.');
-          }
-        });
+      function applySampleResponse() {
+        const payload = { ...sampleReview, customPrompt: '' };
+        lastPayload = payload;
+        const responseObject = {
+          id: 'sample-' + Date.now(),
+          text: sampleResponse.text,
+          summary: sampleResponse.summary,
+          payload,
+          createdAt: new Date().toISOString(),
+          badges: [payload.tone, `${payload.rating}★`, payload.platform, payload.venueType],
+        };
+        lastResponse = responseObject;
+        selectors.copyBtn.disabled = false;
+        selectors.variantBtn.disabled = true;
+        selectors.regenerateBtn.disabled = true;
+        selectors.responseRegion.setAttribute('aria-busy', 'false');
+        renderResponse(responseObject);
+        refreshToneBadges(responseObject);
+        history.length = 0;
+        history.push(responseObject);
+        renderHistory();
+        renderVariants();
       }
 
       function updateSelectionsFromState() {
         const groups = [selectors.platformGroup, selectors.ratingGroup, selectors.toneGroup];
         groups.forEach((group) => {
           group.querySelectorAll('button[data-value]').forEach((btn) => {
-            const isActive = state[resolveStateKey(group)] === btn.dataset.value;
+            const key = resolveStateKey(group);
+            const isActive = state[key] === btn.dataset.value;
             btn.classList.toggle('is-active', isActive);
             btn.setAttribute('aria-pressed', isActive);
           });
@@ -990,10 +506,10 @@
         selectors.responseRegion.setAttribute('aria-busy', 'false');
         selectors.responseRegion.innerHTML = '';
         const summary = document.createElement('p');
-        summary.className = 'response-summary';
+        summary.className = 'response-summary result-enter';
         summary.textContent = response.summary;
         const textEl = document.createElement('p');
-        textEl.className = 'response-text';
+        textEl.className = 'response-text result-enter';
         textEl.textContent = response.text;
         selectors.responseRegion.append(summary, textEl);
       }
@@ -1013,7 +529,7 @@
           card.className = 'variant-card';
           if (index === 0) card.classList.add('active');
           const heading = document.createElement('p');
-          heading.style.margin = '0 0 6px';
+          heading.style.margin = '0 0 0.35rem';
           heading.style.fontWeight = '600';
           heading.textContent = `Variant ${index + 1}`;
           const snippet = document.createElement('p');
@@ -1022,6 +538,7 @@
           snippet.textContent = variant.text.slice(0, 140) + (variant.text.length > 140 ? '…' : '');
           const button = document.createElement('button');
           button.type = 'button';
+          button.className = 'btn btn-ghost';
           button.textContent = 'Load into editor';
           button.addEventListener('click', () => {
             renderResponse(variant);
@@ -1049,8 +566,8 @@
           const title = document.createElement('div');
           title.innerHTML = `<strong>${entry.payload.platform}</strong> · ${entry.payload.tone} · ${new Date(entry.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
           const snippet = document.createElement('p');
-          snippet.style.margin = '4px 0 0';
-          snippet.style.color = 'var(--color-text-muted)';
+          snippet.style.margin = '0.35rem 0 0';
+          snippet.className = 'muted';
           snippet.textContent = entry.text.slice(0, 120) + (entry.text.length > 120 ? '…' : '');
           li.append(title, snippet);
           selectors.historyList.appendChild(li);
@@ -1068,6 +585,31 @@
           console.error(err);
           showError('Unable to copy to clipboard.');
         });
+      }
+
+      function openProfileModal() {
+        const profileModule = window.VenueProfile || window.HPVenueProfile;
+        if (profileModule?.openModal) {
+          profileModule.openModal();
+        } else {
+          alert('Profile editor will be available once the shared script loads.');
+        }
+      }
+
+      function evaluateApiBanner(currentValue = selectors.apiKey.value) {
+        if (!selectors.apiBanner) return;
+        const keyValue = (currentValue || '').trim();
+        let dismissed = false;
+        try {
+          dismissed = localStorage.getItem('hp_api_banner_dismissed') === 'true';
+        } catch (err) {
+          dismissed = false;
+        }
+        if (!keyValue && !dismissed) {
+          selectors.apiBanner.classList.remove('hidden');
+        } else {
+          selectors.apiBanner.classList.add('hidden');
+        }
       }
 
       function setLoading(isLoading) {

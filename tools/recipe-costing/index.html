@@ -3,320 +3,153 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Recipe Costing Studio</title>
+  <title>Recipe Costing Studio · Hospitality Pro</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
-    rel="stylesheet"
-  />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/assets/styles/system.css" />
-  <style>
-    :root {
-      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-    }
-    body {
-      margin: 0;
-    }
-    .app-shell {
-      max-width: 1280px;
-      margin: 0 auto;
-      padding: 2rem 1.5rem 3rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-    .layout-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
-      gap: 1.5rem;
-      align-items: start;
-    }
-    .stack {
-      display: flex;
-      flex-direction: column;
-      gap: 1.25rem;
-    }
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      grid-gap: 1rem;
-    }
-    .form-field.full {
-      grid-column: 1 / -1;
-    }
-    .ingredient-table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    .ingredient-table th,
-    .ingredient-table td {
-      padding: 0.6rem;
-      text-align: left;
-    }
-    .ingredient-table th {
-      font-size: 0.75rem;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-    }
-    .ingredient-allergens {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.35rem;
-      margin-top: 0.35rem;
-    }
-    .metric-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 1rem;
-    }
-    .gp-gauge-wrapper {
-      margin-top: 1rem;
-    }
-    .gp-gauge {
-      position: relative;
-      height: 12px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.08);
-      overflow: hidden;
-      margin-top: 0.35rem;
-    }
-    .gp-gauge .fill {
-      height: 100%;
-      width: 0;
-      border-radius: 999px;
-      transition: width 0.3s ease;
-    }
-    .gp-gauge .fill.state-hit {
-      background: #22c55e;
-    }
-    .gp-gauge .fill.state-watch {
-      background: #facc15;
-    }
-    .gp-gauge .fill.state-miss {
-      background: #f87171;
-    }
-    .gp-gauge .marker {
-      position: absolute;
-      top: -6px;
-      width: 2px;
-      height: 24px;
-      background: currentColor;
-      opacity: 0.65;
-    }
-    .section-card-header {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 0.75rem;
-    }
-    .section-title-block {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-    }
-    .section-body[hidden] {
-      display: none;
-    }
-    .inline-messages {
-      list-style: none;
-      padding: 0;
-      margin: 1rem 0 0;
-      display: flex;
-      flex-direction: column;
-      gap: 0.4rem;
-    }
-    .inline-messages li {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-size: 0.9rem;
-    }
-    .button-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      margin-bottom: 0.75rem;
-    }
-    textarea.mono-block {
-      width: 100%;
-      min-height: 160px;
-      border-radius: 0.75rem;
-      padding: 1rem;
-      font-family: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace;
-      font-size: 0.85rem;
-    }
-    .tooltip-icon {
-      border: none;
-      background: transparent;
-      cursor: help;
-      font-weight: 600;
-      color: inherit;
-      padding: 0;
-      margin-left: 0.25rem;
-    }
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      border: 0;
-    }
-    @media (max-width: 960px) {
-      .layout-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-    @media (max-width: 640px) {
-      .form-grid {
-        grid-template-columns: 1fr;
-      }
-      .section-card-header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .button-row {
-        flex-direction: column;
-      }
-    }
-  </style>
 </head>
 <body>
-  <div class="app-shell">
-    <header class="page-header">
-      <div>
+  <nav class="site-nav">
+    <a class="nav-brand" href="/">Hospitality <span>Pro</span></a>
+    <div class="nav-links">
+      <a href="/#tools">Tools</a>
+      <a href="/#playbook">Playbook</a>
+      <a href="/#about">About</a>
+      <a class="nav-cta" href="/#tools">Get Started →</a>
+    </div>
+  </nav>
+
+  <main class="app-shell">
+    <a class="back-link" href="/#tools">Back to all tools</a>
+
+    <header class="glass-panel hero-panel">
+      <div class="stack">
         <p class="eyebrow">Hidden Café Bar Social ops</p>
         <h1>Recipe Costing Studio</h1>
-        <p class="muted">Two-column control centre for live GP, allergen compliance, and exportable prep sheets.</p>
+        <p class="muted">Two-column control centre for live GP, allergen compliance, and exportable prep sheets. A sample Wood-fired nduja pizza is pre-loaded so you can see the flow instantly.</p>
+        <div class="cluster">
+          <span class="badge badge-warning">Live GP target 72%</span>
+          <span class="badge">Allergen auto-detection active</span>
+        </div>
       </div>
-      <div class="header-actions" style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
-        <button type="button" class="btn ghost" id="startBlankBtn">Start blank</button>
-        <button type="button" class="btn primary" id="sampleDataBtn">Load sample dish</button>
+      <div class="cluster">
+        <button type="button" class="btn btn-ghost" id="startBlankBtn">Start blank</button>
+        <button type="button" class="btn btn-primary" id="sampleDataBtn">Reload sample dish</button>
       </div>
     </header>
 
-    <main class="layout-grid">
-      <section class="stack column-inputs">
-        <article class="card">
-          <header class="section-header" style="margin-bottom: 1rem;">
+    <section class="grid-2 align-start">
+      <section class="stack">
+        <article class="glass-card stack" aria-label="Dish context inputs">
+          <header class="flex-between">
             <div>
               <p class="eyebrow">Dish basics</p>
               <h2>Build context</h2>
             </div>
           </header>
-          <div class="form-grid">
-            <div class="form-field full">
-              <label for="dishName">Dish name</label>
+          <div class="grid-2">
+            <label class="full-width" for="dishName">Dish name
               <input id="dishName" type="text" placeholder="e.g., Wood-fired nduja pizza" />
-            </div>
-            <div class="form-field">
-              <label for="servings">Servings</label>
+            </label>
+            <label for="servings">Servings
               <input id="servings" type="number" min="1" inputmode="numeric" />
-            </div>
-            <div class="form-field">
-              <label for="targetGP">
-                Target GP%
-                <button type="button" class="tooltip-icon" title="Gross profit percentage you'd like this dish to achieve.">?</button>
-              </label>
+            </label>
+            <label for="targetGP">Target GP%
               <input id="targetGP" type="number" min="10" max="95" step="0.5" inputmode="decimal" />
-            </div>
-            <div class="form-field full">
-              <label for="cuisineTags">Cuisine tags</label>
+            </label>
+            <label class="full-width" for="cuisineTags">Cuisine tags
               <input id="cuisineTags" type="text" placeholder="pizza, nduja, sharing" />
-              <p class="help-text">Comma-separated tags power menu filters, prep boards, and search.</p>
-            </div>
+              <span class="help-text">Comma-separated tags power menu filters, prep boards, and search.</span>
+            </label>
           </div>
         </article>
 
-        <article class="card">
-          <header class="section-header" style="display:flex; justify-content:space-between; align-items:center; gap:1rem;">
+        <article class="glass-card stack" aria-label="Ingredient plan">
+          <header class="flex-between">
             <div>
               <p class="eyebrow">Ingredient plan</p>
               <h2>Cost builder</h2>
             </div>
-            <button type="button" class="btn ghost" id="addSubRecipeBtn">+ Sub-recipe</button>
+            <button type="button" class="btn btn-ghost" id="addSubRecipeBtn">+ Sub-recipe</button>
           </header>
           <div id="ingredientSections" class="stack"></div>
         </article>
       </section>
 
-      <section class="stack column-analysis">
-        <article class="card">
-          <header class="section-header" style="margin-bottom: 1rem;">
-            <div>
-              <p class="eyebrow">Live analysis</p>
-              <h2>Cost & GP</h2>
-            </div>
+      <section class="stack">
+        <article class="glass-card stack" aria-label="Live analysis">
+          <header>
+            <p class="eyebrow">Live analysis</p>
+            <h2>Cost &amp; GP</h2>
           </header>
           <div class="metric-grid">
-            <div class="metric">
-              <p class="muted">Batch cost</p>
-              <p class="stat" id="batchCostDisplay">£0.00</p>
+            <div class="metric-card">
+              <p class="metric-label">Batch cost</p>
+              <p class="metric-value" id="batchCostDisplay">£0.00</p>
             </div>
-            <div class="metric">
-              <p class="muted">Cost per portion</p>
-              <p class="stat" id="portionCostDisplay">£0.00</p>
+            <div class="metric-card">
+              <p class="metric-label">Cost per portion</p>
+              <p class="metric-value" id="portionCostDisplay">£0.00</p>
             </div>
-            <div class="metric">
-              <p class="muted">Recommended sell (£)</p>
-              <p class="stat" id="recommendedPriceDisplay">£0.00</p>
+            <div class="metric-card">
+              <p class="metric-label">Recommended sell (£)</p>
+              <p class="metric-value" id="recommendedPriceDisplay">£0.00</p>
             </div>
-            <div class="metric">
-              <label for="actualPriceInput">Actual sell (£)</label>
-              <input id="actualPriceInput" type="number" min="0" step="0.1" inputmode="decimal" />
+            <div class="metric-card">
+              <label for="actualPriceInput">Actual sell (£)
+                <input id="actualPriceInput" type="number" min="0" step="0.1" inputmode="decimal" />
+              </label>
             </div>
-            <div class="metric">
-              <p class="muted">Actual GP%</p>
-              <p class="stat" id="actualGpDisplay">—</p>
+            <div class="metric-card">
+              <p class="metric-label">Actual GP%</p>
+              <p class="metric-value" id="actualGpDisplay">—</p>
             </div>
           </div>
-          <div class="gp-gauge-wrapper">
-            <div style="display:flex; justify-content:space-between; font-size:0.9rem;">
+          <div class="stack">
+            <div class="flex-between">
               <span>Actual GP vs target</span>
               <span id="gpGaugeLabel" class="muted">0% vs target</span>
             </div>
-            <div class="gp-gauge" role="img" aria-live="polite" aria-label="Gross profit comparison">
-              <div class="fill state-miss" id="gpGaugeFill"></div>
-              <div class="marker" id="gpMarker"></div>
+            <div class="gp-dial" role="img" aria-live="polite" aria-label="Gross profit comparison">
+              <svg viewBox="0 0 200 110" aria-hidden="true">
+                <path class="gp-track" d="M10 100 A90 90 0 0 1 190 100"></path>
+                <path class="gp-progress" id="gpDialArc" d="M10 100 A90 90 0 0 1 190 100"></path>
+              </svg>
+              <div class="gp-dial__label">
+                <p class="stat" id="gpDialValue">—</p>
+                <p class="muted" style="font-size:0.85rem;">Target <span id="gpDialTarget">0%</span></p>
+              </div>
             </div>
           </div>
-          <ul class="inline-messages" id="warningList" aria-live="polite"></ul>
+          <ul class="list-reset" id="warningList" aria-live="polite"></ul>
           <div id="summaryLiveRegion" class="sr-only" aria-live="polite"></div>
         </article>
 
-        <article class="card">
-          <header class="section-header" style="margin-bottom: 0.5rem;">
-            <div>
-              <p class="eyebrow">Allergens</p>
-              <h2>Automatic detection</h2>
-            </div>
+        <article class="glass-card stack" aria-label="Allergen summary">
+          <header>
+            <p class="eyebrow">Allergens</p>
+            <h2>Automatic detection</h2>
           </header>
           <div id="allergenSummary" class="pill-group" aria-live="polite"></div>
-          <p class="help-text">Allergen badges also sit inside each ingredient row for prep sheets.</p>
+          <p class="help-text">Badges also sit inside each ingredient row for prep sheets.</p>
         </article>
 
-        <article class="card">
-          <header class="section-header" style="margin-bottom: 0.5rem;">
-            <div>
-              <p class="eyebrow">Exports</p>
-              <h2>Share & print</h2>
-            </div>
+        <article class="glass-card stack" aria-label="Exports">
+          <header>
+            <p class="eyebrow">Exports</p>
+            <h2>Share &amp; print</h2>
           </header>
-          <div class="button-row">
-            <button type="button" class="btn secondary" id="copyRecipeCard">Copy recipe card</button>
-            <button type="button" class="btn primary" id="printFriendly">Print-friendly view</button>
+          <div class="cluster">
+            <button type="button" class="btn btn-ghost" id="copyRecipeCard">Copy recipe card</button>
+            <button type="button" class="btn btn-primary" id="printFriendly">Print-friendly view</button>
           </div>
           <textarea id="recipeCardOutput" class="mono-block" rows="12" readonly></textarea>
           <p id="copyFeedback" class="help-text" aria-live="polite"></p>
         </article>
       </section>
-    </main>
-  </div>
+    </section>
+  </main>
 
   <script src="/assets/scripts/venue-profile.js" defer></script>
   <script defer>
@@ -332,9 +165,10 @@
         recommendedPrice: document.getElementById('recommendedPriceDisplay'),
         actualPrice: document.getElementById('actualPriceInput'),
         actualGp: document.getElementById('actualGpDisplay'),
-        gaugeFill: document.getElementById('gpGaugeFill'),
-        gaugeMarker: document.getElementById('gpMarker'),
         gaugeLabel: document.getElementById('gpGaugeLabel'),
+        gpDialArc: document.getElementById('gpDialArc'),
+        gpDialValue: document.getElementById('gpDialValue'),
+        gpDialTarget: document.getElementById('gpDialTarget'),
         warningList: document.getElementById('warningList'),
         allergenSummary: document.getElementById('allergenSummary'),
         recipeCardOutput: document.getElementById('recipeCardOutput'),
@@ -347,9 +181,11 @@
         addSubRecipe: document.getElementById('addSubRecipeBtn')
       };
 
+      let gpDialArcLength = 0;
+
       const allergenCatalog = [
         { key: 'gluten', label: 'Gluten', keywords: ['flour', 'bread', 'dough', 'wheat', 'barley', 'rye', 'pasta', 'pastry', 'breadcrumbs', 'panko'] },
-        { key: 'dairy', label: 'Dairy', keywords: ['milk', 'cream', 'butter', 'cheese', 'mozzarella', 'yoghurt', 'ghee'] },
+        { key: 'milk', label: 'Milk', keywords: ['milk', 'cream', 'butter', 'cheese', 'mozzarella', 'latte', 'ricotta', 'yoghurt', 'ghee'] },
         { key: 'peanuts', label: 'Peanuts', keywords: ['peanut', 'groundnut'] },
         { key: 'treenuts', label: 'Tree nuts', keywords: ['almond', 'hazelnut', 'walnut', 'cashew', 'pecan', 'pistachio', 'macadamia', 'brazil', 'pine nut'] },
         { key: 'eggs', label: 'Eggs', keywords: ['egg', 'meringue', 'mayonnaise', 'aioli'] },
@@ -365,42 +201,31 @@
       ];
 
       const sampleRecipe = () => ({
-        dishName: 'Wood-fired nduja pizza',
-        servings: 12,
+        dishName: 'Nduja & Wild Garlic Pizza',
+        servings: 14,
         targetGP: 72,
-        cuisineTags: 'pizza, nduja, Hidden Social, sharing',
-        actualPrice: 16,
+        cuisineTags: 'pizza, nduja, wild garlic, Hidden Social',
+        actualPrice: 17.5,
         sections: [
           {
             id: generateId(),
-            name: 'Main build',
+            name: 'Wood-fired build',
             type: 'base',
             yieldPercent: 100,
             collapsed: false,
             ingredients: [
-              ingredientSeed({ name: 'Fermented dough ball', supplier: 'Hidden Bakehouse', quantity: 12, unit: 'x 280g', costPerUnit: 0.92, yieldPercent: 100 }),
-              ingredientSeed({ name: 'San Marzano sugo', supplier: 'House prep', quantity: 1.8, unit: 'kg', costPerUnit: 2.4, yieldPercent: 100 }),
-              ingredientSeed({ name: 'Fior di latte mozzarella', supplier: 'Casa Formaggio', quantity: 1.2, unit: 'kg', costPerUnit: 6.5, yieldPercent: 95 }),
-              ingredientSeed({ name: 'Nduja di Spilinga', supplier: 'Calabria Imports', quantity: 0.9, unit: 'kg', costPerUnit: 11.2, yieldPercent: 100 }),
-              ingredientSeed({ name: 'Charred spring onions', supplier: 'Leeds Market', quantity: 0.6, unit: 'kg', costPerUnit: 3.2, yieldPercent: 85 })
-            ]
-          },
-          {
-            id: generateId(),
-            name: 'Hot honey drizzle',
-            type: 'sub',
-            yieldPercent: 85,
-            collapsed: false,
-            ingredients: [
-              ingredientSeed({ name: 'Wildflower honey', supplier: 'Northern Apiary', quantity: 0.5, unit: 'kg', costPerUnit: 6.8, yieldPercent: 100 }),
-              ingredientSeed({ name: 'Calabrian chillies', supplier: 'Sous Chef', quantity: 0.08, unit: 'kg', costPerUnit: 18, yieldPercent: 100 }),
-              ingredientSeed({ name: 'Organic cider vinegar', supplier: 'Hedgerow', quantity: 0.1, unit: 'kg', costPerUnit: 1.4, yieldPercent: 100 })
+              ingredientSeed({ name: 'Fermented dough ball (280g)', supplier: 'Hidden Bakehouse', quantity: 14, unit: 'x balls', costPerUnit: 0.95, yieldPercent: 98 }),
+              ingredientSeed({ name: 'San Marzano tomato sugo', supplier: 'House prep', quantity: 1.6, unit: 'kg', costPerUnit: 2.8, yieldPercent: 100 }),
+              ingredientSeed({ name: 'Fior di latte mozzarella', supplier: 'Casa Formaggio', quantity: 1.25, unit: 'kg', costPerUnit: 6.6, yieldPercent: 95 }),
+              ingredientSeed({ name: 'Spilinga nduja', supplier: 'Calabria Imports', quantity: 0.85, unit: 'kg', costPerUnit: 11.5, yieldPercent: 100 }),
+              ingredientSeed({ name: 'Wild garlic pesto', supplier: 'Foraged, house prep', quantity: 0.45, unit: 'kg', costPerUnit: 5.2, yieldPercent: 85 }),
+              ingredientSeed({ name: 'Extra virgin olive oil', supplier: 'Liguria Gold', quantity: 0.5, unit: 'kg', costPerUnit: 7.8, yieldPercent: 100 })
             ]
           }
         ]
       });
 
-      let state = createBlankState();
+      let state = sampleRecipe();
 
       elements.dishName.addEventListener('input', (event) => {
         state.dishName = event.target.value;
@@ -459,11 +284,19 @@
       elements.ingredientSections.addEventListener('input', handleSectionInput);
       elements.ingredientSections.addEventListener('click', handleSectionClick);
 
+      initGpDial();
       refresh();
+
+      function initGpDial() {
+        if (!elements.gpDialArc) return;
+        gpDialArcLength = elements.gpDialArc.getTotalLength();
+        elements.gpDialArc.style.strokeDasharray = gpDialArcLength;
+        elements.gpDialArc.style.strokeDashoffset = gpDialArcLength;
+      }
 
       function createBlankState() {
         return {
-          dishName: '',
+          dishName: 'New dish',
           servings: 8,
           targetGP: 70,
           cuisineTags: '',
@@ -519,36 +352,35 @@
             const sectionCost = computeSectionTotal(section);
             const sectionBody = section.collapsed ? 'hidden' : '';
             return `
-              <article class="card surface-muted" data-section-id="${section.id}">
-                <div class="section-card-header">
-                  <div class="section-title-block">
-                    <button type="button" class="btn icon" data-action="toggle-section" data-section-id="${section.id}" aria-expanded="${!section.collapsed}" aria-label="Toggle ${escapeHtml(section.name)}">
+              <article class="glass-card stack" data-section-id="${section.id}">
+                <div class="flex-between">
+                  <div class="cluster">
+                    <button type="button" class="btn btn-ghost btn-icon" data-action="toggle-section" data-section-id="${section.id}" aria-expanded="${!section.collapsed}" aria-label="Toggle ${escapeHtml(section.name)}">
                       ${section.collapsed ? '▶' : '▼'}
                     </button>
                     <div>
                       <label class="sr-only" for="section-name-${section.id}">Section name</label>
                       <input id="section-name-${section.id}" type="text" value="${escapeHtml(section.name)}" data-section-id="${section.id}" data-field="section-name" />
-                      <p class="muted" style="margin:0; font-size:0.8rem;">${section.type === 'sub' ? 'Sub-recipe' : 'Primary dish'}</p>
+                      <p class="help-text" style="margin:0;">${section.type === 'sub' ? 'Sub-recipe' : 'Primary dish'}</p>
                     </div>
                   </div>
-                  <div style="display:flex; align-items:center; gap:0.65rem;">
+                  <div class="cluster">
                     <label for="section-yield-${section.id}">Yield %
-                      <button type="button" class="tooltip-icon" title="Use this for prep loss or batch yield vs usage.">?</button>
+                      <input id="section-yield-${section.id}" type="number" min="0" max="200" inputmode="decimal" value="${section.yieldPercent === '' ? '' : section.yieldPercent}" data-section-id="${section.id}" data-field="section-yield" />
                     </label>
-                    <input id="section-yield-${section.id}" type="number" min="0" max="200" inputmode="decimal" value="${section.yieldPercent === '' ? '' : section.yieldPercent}" data-section-id="${section.id}" data-field="section-yield" />
-                    <div>
-                      <p class="muted" style="margin:0; font-size:0.75rem;">Section cost</p>
-                      <p style="margin:0; font-weight:600;">£${formatCurrency(sectionCost)}</p>
+                    <div class="text-right">
+                      <p class="help-text" style="margin:0;">Section cost</p>
+                      <p class="stat" style="font-size:1rem;">£${formatCurrency(sectionCost)}</p>
                     </div>
-                    ${section.type === 'sub' ? `<button type="button" class="btn ghost" data-action="remove-section" data-section-id="${section.id}">Remove</button>` : ''}
+                    ${section.type === 'sub' ? `<button type="button" class="btn btn-ghost" data-action="remove-section" data-section-id="${section.id}">Remove</button>` : ''}
                   </div>
                 </div>
                 <div class="section-body" ${sectionBody}>
                   <div class="table-wrapper">
-                    <table class="ingredient-table">
+                    <table class="data-table">
                       <thead>
                         <tr>
-                          <th>Ingredient & Supplier</th>
+                          <th>Ingredient &amp; Supplier</th>
                           <th>Qty</th>
                           <th>Unit</th>
                           <th>Cost / unit (£)</th>
@@ -562,7 +394,7 @@
                       </tbody>
                     </table>
                   </div>
-                  <button type="button" class="btn secondary" data-action="add-ingredient" data-section-id="${section.id}">+ Add ingredient row</button>
+                  <button type="button" class="btn btn-ghost" data-action="add-ingredient" data-section-id="${section.id}">+ Add ingredient row</button>
                 </div>
               </article>
             `;
@@ -575,8 +407,8 @@
       function renderIngredientRow(sectionId, ingredient) {
         const ingredientAllergens = detectAllergens(ingredient.name);
         const allergenBadges = ingredientAllergens.length
-          ? ingredientAllergens.map((item) => `<span class="pill subtle">${item.label}</span>`).join('')
-          : '<span class="muted">No allergens</span>';
+          ? ingredientAllergens.map((item) => `<span class="pill highlight">${item.label}</span>`).join('')
+          : '<span class="pill subtle">No allergens</span>';
         const netCost = computeIngredientNetCost(ingredient);
         return `
           <tr>
@@ -605,7 +437,7 @@
             </td>
             <td>£${formatCurrency(netCost)}</td>
             <td>
-              <button type="button" class="btn ghost" title="Remove ingredient" data-action="remove-ingredient" data-section-id="${sectionId}" data-ingredient-id="${ingredient.id}">×</button>
+              <button type="button" class="btn btn-ghost" title="Remove ingredient" data-action="remove-ingredient" data-section-id="${sectionId}" data-ingredient-id="${ingredient.id}">×</button>
             </td>
           </tr>
         `;
@@ -655,7 +487,7 @@
           warnings.push('Actual GP is more than 5% below target. Consider a price lift or yield fix.');
         }
         if (!warnings.length) {
-          elements.warningList.innerHTML = '<li class="text-positive">All metrics tracking within tolerance.</li>';
+          elements.warningList.innerHTML = '<li class="badge badge-success">All metrics tracking within tolerance.</li>';
           return;
         }
         elements.warningList.innerHTML = warnings.map((warning) => `<li>⚠️ ${warning}</li>`).join('');
@@ -851,6 +683,10 @@
         const cost = Number(ingredient.costPerUnit) || 0;
         const yieldFactor = (Number(ingredient.yieldPercent) || 0) / 100;
         return qty * cost * yieldFactor;
+      }
+
+      function computeSectionTotal(section) {
+        return section.ingredients.reduce((sum, ingredient) => sum + computeIngredientNetCost(ingredient), 0);
       }
 
       function detectAllergens(text) {
