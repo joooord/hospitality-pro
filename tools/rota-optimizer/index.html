@@ -3,366 +3,64 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI Rota Optimizer</title>
+  <title>AI Rota Optimizer · Hospitality Pro</title>
+  <link rel="stylesheet" href="/assets/styles/system.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  
   <style>
-    :root {
-      color-scheme: dark;
-      --bg: #0f0f0f;
-      --card: #181818;
-      --accent: #d4a85a;
-      --text: #f5f5f5;
-      --muted: rgba(255, 255, 255, 0.65);
-      --border: rgba(255, 255, 255, 0.08);
-      --danger: #5c2525;
-      --amber: rgba(212, 168, 90, 0.25);
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: radial-gradient(circle at top, rgba(212, 168, 90, 0.08), transparent 45%), var(--bg);
-      color: var(--text);
-      padding: 48px 16px 64px;
-      display: flex;
-      justify-content: center;
-    }
-
-    .app-shell {
-      width: min(1200px, 100%);
-      display: flex;
-      flex-direction: column;
-      gap: 32px;
-    }
-
-    header {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    header h1 {
-      font-size: clamp(2rem, 4vw, 3rem);
-      margin: 0;
-      letter-spacing: -0.02em;
-    }
-
-    header p {
-      margin: 0;
-      color: var(--muted);
-      max-width: 720px;
-    }
-
-    .grid {
-      display: grid;
-      gap: 24px;
-    }
-
-    @media (min-width: 900px) {
-      .grid.two-col {
-        grid-template-columns: 2fr 1fr;
-      }
-    }
-
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 24px;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.45);
-    }
-
-    .card h2 {
-      margin-top: 0;
-      margin-bottom: 4px;
-      font-size: 1.25rem;
-    }
-
-    .card p.subtitle {
-      margin: 0 0 20px;
-      color: var(--muted);
-      font-size: 0.95rem;
-    }
-
-    label {
-      font-size: 0.9rem;
-      color: var(--muted);
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    input,
-    textarea,
-    select {
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      background: #111;
-      color: var(--text);
-      padding: 12px 14px;
-      font-family: inherit;
-      font-size: 1rem;
-    }
-
-    textarea {
-      resize: vertical;
-      min-height: 120px;
-    }
-
-    .stack {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .inline-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 16px;
-    }
-
-    button,
-    .ghost-btn {
-      font-family: inherit;
-      font-size: 1rem;
-      border-radius: 999px;
-      padding: 12px 20px;
-      border: none;
-      cursor: pointer;
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
-    }
-
-    button.primary {
-      background: var(--accent);
-      color: #0c0c0c;
-      font-weight: 600;
-      box-shadow: 0 10px 25px rgba(212, 168, 90, 0.35);
-    }
-
-    button.primary:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-      box-shadow: none;
-    }
-
-    .ghost-btn {
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--text);
-    }
-
-    button:hover:not(:disabled),
-    .ghost-btn:hover {
-      transform: translateY(-2px);
-    }
-
-    .staff-row {
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      background: #131313;
-    }
-
-    .staff-row__header {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    @media (min-width: 640px) {
-      .staff-row__header {
-        flex-direction: row;
-        align-items: center;
-      }
-
-      .staff-row__header input,
-      .staff-row__header select {
-        flex: 1;
-      }
-    }
-
-    .availability-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
-      gap: 8px;
-    }
-
-    .availability-grid label {
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 10px;
-      text-align: center;
-      cursor: pointer;
-      transition: border 0.2s ease, background 0.2s ease;
-      font-size: 0.85rem;
-      gap: 8px;
-    }
-
-    .availability-grid input[type="checkbox"] {
-      accent-color: var(--accent);
-      width: 18px;
-      height: 18px;
-      margin: 0 auto;
-    }
-
-    .api-key-row {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-bottom: 24px;
-    }
-
-    @media (min-width: 520px) {
-      .api-key-row {
-        flex-direction: row;
-        align-items: center;
-      }
-
-      .api-key-row input {
-        flex: 1;
-      }
-
-      .api-key-row button {
-        width: auto;
-      }
-    }
-
-    table {
-      width: 100%;
-      border-collapse: separate;
-      border-spacing: 0;
-      background: #111;
-      border-radius: 18px;
-      overflow: hidden;
-      border: 1px solid var(--border);
-    }
-
-    th,
-    td {
-      padding: 12px 10px;
-      text-align: center;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      font-size: 0.95rem;
-    }
-
-    th {
-      text-transform: uppercase;
-      font-size: 0.8rem;
-      letter-spacing: 0.08em;
-      color: var(--muted);
-      background: rgba(255, 255, 255, 0.02);
-    }
-
-    tr:last-child td {
-      border-bottom: none;
-    }
-
-    .rota-table .overtime-row {
-      background: rgba(92, 37, 37, 0.35);
-    }
-
-    .rota-table td.understaffed {
-      background: var(--amber);
-    }
-
-    .rota-table th.understaffed {
-      background: var(--amber);
-      color: var(--text);
-    }
-
-    .tags {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-top: 12px;
-    }
-
-    .tag {
-      font-size: 0.8rem;
-      border-radius: 999px;
-      padding: 6px 12px;
-      border: 1px solid var(--border);
-      color: var(--muted);
-    }
-
-    .status-text {
-      font-size: 0.9rem;
-      color: var(--muted);
-      min-height: 20px;
-    }
-
-    .notes-card ul {
-      padding-left: 20px;
-      margin: 12px 0 0;
-    }
-
-    .notes-card li {
-      margin-bottom: 8px;
-      line-height: 1.5;
-    }
-
-    .export-block {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    pre {
-      margin: 0;
-      background: #111;
-      padding: 16px;
-      border-radius: 16px;
-      border: 1px solid var(--border);
-      overflow-x: auto;
-      font-size: 0.85rem;
-      line-height: 1.45;
-    }
-
-    .hidden {
-      display: none !important;
-    }
+    .inline-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: var(--space-sm); }
+    .staff-row { border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-sm); display: flex; flex-direction: column; gap: var(--space-sm); background: rgba(255,255,255,0.02); }
+    .staff-row__header { display: flex; flex-wrap: wrap; gap: var(--space-sm); align-items: center; }
+    .staff-row__header input, .staff-row__header select { flex: 1; min-width: 140px; margin: 0; }
+    .availability-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(70px, 1fr)); gap: 8px; }
+    .availability-grid label { border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: var(--space-xs); text-align: center; cursor: pointer; transition: background var(--transition-fast); font-size: 0.85rem; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .availability-grid label:hover { background: rgba(255,255,255,0.05); }
+    .availability-grid input[type="checkbox"] { accent-color: var(--color-gold); width: 16px; height: 16px; margin-top: 4px; }
+    .rota-table { overflow-x: auto; width: 100%; border-radius: var(--radius-md); border: 1px solid var(--color-border); }
+    .rota-table table { width: 100%; border-collapse: collapse; min-width: 600px; font-size: 0.9rem; }
+    .rota-table th { background: rgba(255,255,255,0.03); color: var(--color-text-muted); font-weight: 600; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em; padding: var(--space-sm); text-align: left; border-bottom: 1px solid var(--color-border); }
+    .rota-table td { padding: var(--space-sm); border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .overtime-row { background: rgba(192, 69, 58, 0.15); }
+    td.understaffed, th.understaffed { background: rgba(212, 136, 74, 0.15); }
+    .tags { display: flex; gap: var(--space-xs); flex-wrap: wrap; margin-top: var(--space-xs); }
+    .tag { border-radius: var(--radius-pill); border: 1px solid var(--color-border); padding: 0.35rem 0.8rem; font-size: 0.85rem; color: var(--color-text-muted); }
   </style>
 </head>
 <body>
-  <main class="app-shell">
-    <header>
-      <h1>AI Rota Optimizer</h1>
-      <p>Feed in forecasts, availability, and role minimums, then let Claude engineer a service-ready weekly rota with risk highlights and manager notes.</p>
+  <nav class="site-nav"><a class="nav-brand" href="/">Hospitality <span>Pro</span></a><div class="nav-links"><a href="/#tools">Tools</a><a href="/#playbook">Playbook</a><a href="/#about">About</a><a class="nav-cta" href="/#tools">Get Started →</a></div></nav><main class="app-shell"><a class="back-link" href="/#tools">Back to all tools</a>
+    <header class="glass-panel hero-panel">
+      <div class="stack">
+        <p class="eyebrow">Team & Ops</p>
+        <h1>AI Rota Optimizer</h1>
+        <p class="muted">Feed in forecasts, availability, and role minimums, then let Claude engineer a service-ready weekly rota with risk highlights and manager notes.</p>
+        <div class="cluster">
+          <span class="badge badge-warning">AI-Assisted Scheduling</span>
+          <span class="badge">Overtime warnings</span>
+        </div>
+      </div>
+      <div class="glass-card glass-card--dense stack">
+        <label class="form-label" for="apiKey">OpenRouter API Key <span class="label-hint">Stored locally</span></label>
+        <input type="password" id="apiKeyHeader" placeholder="sk-or-..." autocomplete="off" />
+        <p class="help-text">We never log or transmit it anywhere else.</p>
+        <div class="cluster">
+            <button type="button" class="btn btn-ghost" id="saveKeyBtnHeader">Save Key</button>
+        </div>
+        <div id="keyStatusHeader" class="callout hidden" role="alert"></div>
+      </div>
     </header>
 
-    <section class="glass-card stack">
-      <div class="stack">
-        <div>
-          <h2>API Access</h2>
-          <p class="subtitle">Store your OpenRouter API key securely in your browser. It's required for rota generation.</p>
-        </div>
-        <div class="api-key-row">
-          <input type="password" id="apiKey" placeholder="sk-or-..." autocomplete="off" />
-          <button class="ghost-btn" id="saveKeyBtn" type="button">Save Key</button>
-        </div>
-        <span class="status-text" id="keyStatus"></span>
-      </div>
-    </section>
+    
 
-    <form id="rotaForm" class="grid two-col">
+    <form id="rotaForm" class="grid-2 align-start">
       <section class="glass-card stack">
         <div>
-          <h2>Venue &amp; Demand</h2>
-          <p class="subtitle">Baseline context for the model.</p>
+          <h2 class="section-title">Venue &amp; Demand</h2>
+          <p class="muted">Baseline context for the model.</p>
         </div>
         <div class="stack">
-          <label>
-            Venue Name
+          <label for="venueName">Venue Name
             <input type="text" id="venueName" placeholder="Maison du Nord" required />
           </label>
           <label>
@@ -370,7 +68,7 @@
             <input type="date" id="weekCommencing" required />
           </label>
           <div>
-            <p class="subtitle" style="margin-bottom: 8px;">Expected Covers per Day</p>
+            <p class="muted" style="margin-bottom: 8px;">Expected Covers per Day</p>
             <div class="inline-grid" id="coversGrid"></div>
           </div>
         </div>
@@ -378,8 +76,8 @@
 
       <section class="glass-card stack">
         <div>
-          <h2>Role Minimums &amp; Notes</h2>
-          <p class="subtitle">Let the model know your floor for safe service.</p>
+          <h2 class="section-title">Role Minimums &amp; Notes</h2>
+          <p class="muted">Let the model know your floor for safe service.</p>
         </div>
         <div class="stack">
           <div class="inline-grid">
@@ -394,34 +92,34 @@
         </div>
       </section>
 
-      <section class="glass-card stack" style="grid-column: 1 / -1;">
+      <section class="glass-card stack full-width" style="grid-column: 1 / -1;">
         <div class="header-row" style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;">
           <div>
-            <h2>Team Availability</h2>
-            <p class="subtitle">Add each staff member with their role and realistic availability.</p>
+            <h2 class="section-title">Team Availability</h2>
+            <p class="muted">Add each staff member with their role and realistic availability.</p>
           </div>
-          <button class="ghost-btn" type="button" id="addStaffBtn">+ Add Team Member</button>
+          <button class="btn btn-ghost" type="button" id="addStaffBtn">+ Add Team Member</button>
         </div>
         <div class="stack" id="staffList"></div>
       </section>
 
-      <section class="glass-card stack" style="grid-column: 1 / -1;">
+      <section class="glass-card stack full-width" style="grid-column: 1 / -1;">
         <div class="stack">
           <div>
-            <h2>Generate Rota</h2>
-            <p class="subtitle">All inputs are bundled for Claude with a system prompt tuned for hospitality operations.</p>
+            <h2 class="section-title">Generate Rota</h2>
+            <p class="muted">All inputs are bundled for Claude with a system prompt tuned for hospitality operations.</p>
           </div>
-          <button class="primary" type="submit" id="generateBtn">Generate Weekly Rota</button>
-          <span class="status-text" id="generationStatus"></span>
+          <button class="btn btn-primary" type="submit" id="generateBtn">Generate Weekly Rota</button>
+          <div id="generationStatus" class="callout hidden" role="alert"></div>
         </div>
       </section>
     </form>
 
-    <section class="grid" id="outputGrid">
+    <section class="grid-2 align-start" id="outputGrid">
       <section class="glass-card stack hidden" id="rotaCard">
         <div>
-          <h2>Optimised Schedule</h2>
-          <p class="subtitle">Understaffed days glow amber. Overtime risks are muted red.</p>
+          <h2 class="section-title">Optimised Schedule</h2>
+          <p class="muted">Understaffed days glow amber. Overtime risks are muted red.</p>
         </div>
         <div class="tags" id="summaryTags"></div>
         <div class="rota-table" id="rotaTable"></div>
@@ -429,34 +127,35 @@
 
       <section class="glass-card stack hidden" id="notesCard">
         <div>
-          <h2>Shift Manager Notes</h2>
-          <p class="subtitle">Top-line guidance surfaced by the model.</p>
+          <h2 class="section-title">Shift Manager Notes</h2>
+          <p class="muted">Top-line guidance surfaced by the model.</p>
         </div>
         <div class="notes-card" id="managerNotes"></div>
       </section>
 
-      <section class="glass-card stack hidden" id="exportCard" style="grid-column: 1 / -1;">
+      <section class="glass-card stack hidden full-width" id="exportCard" style="grid-column: 1 / -1;">
         <div>
-          <h2>Export</h2>
-          <p class="subtitle">Copy a plain-text summary for WhatsApp or email.</p>
+          <h2 class="section-title">Export</h2>
+          <p class="muted">Copy a plain-text summary for WhatsApp or email.</p>
         </div>
         <div class="export-block">
-          <button class="ghost-btn" type="button" id="copyBtn">Copy Plain Text</button>
+          <button class="btn btn-ghost" type="button" id="copyBtn">Copy Plain Text</button>
           <pre id="plainTextExport"></pre>
         </div>
       </section>
     </section>
   </main>
 
+  <script src="/assets/scripts/venue-profile.js" defer></script>
   <script>
     const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
     const coversGrid = document.getElementById('coversGrid');
     const staffList = document.getElementById('staffList');
     const addStaffBtn = document.getElementById('addStaffBtn');
-    const apiKeyInput = document.getElementById('apiKey');
-    const saveKeyBtn = document.getElementById('saveKeyBtn');
-    const keyStatus = document.getElementById('keyStatus');
+    const apiKeyInput = document.getElementById('apiKeyHeader');
+    const saveKeyBtn = document.getElementById('saveKeyBtnHeader');
+    const keyStatus = document.getElementById('keyStatusHeader');
     const rotaForm = document.getElementById('rotaForm');
     const generateBtn = document.getElementById('generateBtn');
     const generationStatus = document.getElementById('generationStatus');
@@ -528,16 +227,22 @@
       if (stored) {
         apiKeyInput.value = stored;
         keyStatus.textContent = 'API key loaded from local storage. Ready to generate rotas.';
+        keyStatus.classList.remove('hidden');
+        keyStatus.className = 'callout callout-success';
       }
     }
 
     function saveApiKey() {
       if (!apiKeyInput.value.trim()) {
         keyStatus.textContent = 'Enter a valid key before saving.';
+        keyStatus.classList.remove('hidden');
+        keyStatus.className = 'callout callout-error';
         return;
       }
       localStorage.setItem('openrouter_api_key', apiKeyInput.value.trim());
       keyStatus.textContent = 'API key saved locally.';
+      keyStatus.classList.remove('hidden');
+      keyStatus.className = 'callout callout-success';
     }
 
     function collectFormData() {
@@ -569,11 +274,14 @@
 
     function buildUserPrompt(data) {
       const { venueName, weekCommencing, expectedCovers, staff, minRequirements, notes } = data;
+      const contextModule = window.VenueProfile || window.HPVenueProfile;
+      const contextOverride = typeof contextModule?.buildPromptContext === 'function' ? contextModule.buildPromptContext() : '';
+
       const staffLines = staff.map(member => {
         return `- ${member.name} (${member.role}) available: ${member.availability.length ? member.availability.join(', ') : 'None'}`;
       }).join('\n');
 
-      return `Create a weekly rota for ${venueName} for the week commencing ${weekCommencing}.
+      return `${contextOverride ? contextOverride + '\n\n' : ''}Create a weekly rota for ${venueName} for the week commencing ${weekCommencing}.
 Expected covers per day: ${days.map(day => `${day} ${expectedCovers[day]}`).join(', ')}.
 Minimum staffing per shift: Front of House ${minRequirements.frontOfHouse}, Kitchen ${minRequirements.kitchen}, Bar ${minRequirements.bar}.
 Staff availability:\n${staffLines || 'No staff provided'}.
@@ -739,17 +447,24 @@ Assignments must be '-' for days off. Mark overtime true if totalDays >= 5. Esti
       const apiKey = apiKeyInput.value.trim() || localStorage.getItem('openrouter_api_key');
       if (!apiKey) {
         generationStatus.textContent = 'Add your OpenRouter API key first.';
+        generationStatus.classList.remove('hidden');
+        generationStatus.className = 'callout callout-warning';
         return;
       }
 
+      generationStatus.classList.add('hidden');
       const data = collectFormData();
       lastContext = data;
       if (!data.staff.length) {
         generationStatus.textContent = 'Add at least one team member.';
+        generationStatus.classList.remove('hidden');
+        generationStatus.className = 'callout callout-warning';
         return;
       }
 
       generationStatus.textContent = 'Sending brief to Claude…';
+        generationStatus.classList.remove('hidden');
+        generationStatus.className = 'callout callout-warning';
       generateBtn.disabled = true;
       generateBtn.textContent = 'Generating…';
 
@@ -785,9 +500,15 @@ Assignments must be '-' for days off. Mark overtime true if totalDays >= 5. Esti
         renderRota(parsed);
         renderNotes(parsed.notes);
         generationStatus.textContent = 'Rota generated successfully.';
+        generationStatus.classList.remove('hidden');
+        generationStatus.className = 'callout callout-success';
+        generationStatus.classList.remove('hidden');
+        generationStatus.className = 'callout callout-warning';
       } catch (error) {
         console.error(error);
         generationStatus.textContent = error.message || 'Failed to generate rota.';
+        generationStatus.classList.remove('hidden');
+        generationStatus.className = 'callout callout-error';
       } finally {
         generateBtn.disabled = false;
         generateBtn.textContent = 'Generate Weekly Rota';
@@ -828,8 +549,33 @@ Assignments must be '-' for days off. Mark overtime true if totalDays >= 5. Esti
       }
     }
 
+    
+    const HP_DEFAULT_PROFILE = window.HP_VENUE_PROFILES?.hiddenCafeBarSocial;
+    function initVenueProfile() {
+      try {
+        const profileModule = window.VenueProfile || window.HPVenueProfile;
+        const activeProfile = profileModule?.getProfile?.() || profileModule?.getActiveProfile?.();
+        if (activeProfile?.name) {
+          document.getElementById('venueName').value = activeProfile.name;
+        } else if (HP_DEFAULT_PROFILE) {
+          document.getElementById('venueName').value = HP_DEFAULT_PROFILE.name;
+        }
+        if (profileModule?.subscribe) {
+          profileModule.subscribe((snapshot) => {
+            if (snapshot?.name) {
+              document.getElementById('venueName').value = snapshot.name;
+            }
+          });
+        }
+      } catch (err) {
+        console.warn('Venue profile not loaded yet.', err);
+      }
+    }
+
+
     // Initialise UI
     initCoversInputs();
+    initVenueProfile();
     loadApiKey();
     createStaffRow({ name: 'Sarah Patel', role: 'Front of House', availability: ['Mon', 'Wed', 'Fri', 'Sat'] });
     createStaffRow({ name: 'Luca Romano', role: 'Kitchen', availability: ['Tue', 'Wed', 'Thu', 'Fri', 'Sat'] });
