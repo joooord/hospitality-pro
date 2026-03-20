@@ -8,490 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/assets/styles/system.css" />
-  <style>
-    :root {
-      color-scheme: dark;
-      --color-base: #0d0d0d;
-      --color-surface: #141414;
-      --color-panel: #1b1b1b;
-      --color-gold: #c9993f;
-      --color-text-primary: #f5f0e8;
-      --color-text-muted: rgba(245, 240, 232, 0.72);
-      --color-border: rgba(255, 255, 255, 0.08);
-      --color-danger: #f36b5d;
-      --color-success: #79c0a0;
-      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: var(--color-base);
-      color: var(--color-text-primary);
-      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      line-height: 1.5;
-    }
-
-    a {
-      color: var(--color-gold);
-      text-decoration: none;
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
-
-    .app-shell {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 32px 20px 64px;
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-    }
-
-    .page-header {
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-    }
-
-    .eyebrow {
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      font-size: 0.76rem;
-      color: var(--color-text-muted);
-    }
-
-    .page-header h1 {
-      margin: 4px 0;
-      font-size: clamp(1.9rem, 3vw, 2.6rem);
-      font-weight: 600;
-    }
-
-    .header-main {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 24px;
-      align-items: flex-end;
-    }
-
-    .header-copy {
-      max-width: 620px;
-      color: var(--color-text-muted);
-    }
-
-    .api-key-field {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      min-width: 280px;
-      flex: 1;
-    }
-
-    .api-key-field label {
-      font-size: 0.85rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--color-text-muted);
-    }
-
-    .api-key-field input {
-      border-radius: 12px;
-      border: 1px solid var(--color-border);
-      background: var(--color-surface);
-      padding: 14px 16px;
-      color: var(--color-text-primary);
-      font-size: 0.95rem;
-    }
-
-    .venue-profile-card {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 18px;
-      justify-content: space-between;
-      padding: 24px;
-      border-radius: 20px;
-      background: var(--color-panel);
-      border: 1px solid var(--color-border);
-    }
-
-    .venue-profile-card h2 {
-      margin: 4px 0 8px;
-      font-size: 1.5rem;
-    }
-
-    .venue-meta {
-      color: var(--color-text-muted);
-      margin: 0 0 12px;
-      font-size: 0.95rem;
-    }
-
-    .profile-highlights {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 12px;
-      margin: 0;
-      padding: 0;
-      list-style: none;
-      color: var(--color-text-muted);
-      font-size: 0.95rem;
-    }
-
-    .profile-highlights li {
-      padding: 12px;
-      border-radius: 14px;
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .ghost-button {
-      align-self: flex-start;
-      border-radius: 999px;
-      padding: 10px 18px;
-      border: 1px solid var(--color-border);
-      background: transparent;
-      color: var(--color-text-primary);
-      font-weight: 500;
-      cursor: pointer;
-    }
-
-    .ghost-button:hover {
-      border-color: var(--color-gold);
-      color: var(--color-gold);
-    }
-
-    .workspace {
-      display: grid;
-      grid-template-columns: minmax(320px, 1fr) minmax(360px, 1fr);
-      gap: 24px;
-      align-items: flex-start;
-    }
-
-    .card {
-      border-radius: 24px;
-      background: var(--color-panel);
-      border: 1px solid var(--color-border);
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    .group-label {
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--color-text-muted);
-      margin-bottom: 6px;
-    }
-
-    .pill-group,
-    .rating-group,
-    .tone-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .pill-button,
-    .tone-pill,
-    .rating-pill {
-      border: 1px solid var(--color-border);
-      border-radius: 999px;
-      padding: 10px 16px;
-      background: rgba(255, 255, 255, 0.02);
-      color: var(--color-text-primary);
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: border 0.2s ease, background 0.2s ease, color 0.2s ease;
-    }
-
-    .pill-button.is-active,
-    .tone-pill.is-active,
-    .rating-pill.is-active {
-      border-color: var(--color-gold);
-      background: rgba(201, 153, 63, 0.15);
-      color: var(--color-gold);
-    }
-
-    .rating-pill {
-      min-width: 120px;
-      text-align: left;
-    }
-
-    select,
-    textarea,
-    input[type="text"] {
-      width: 100%;
-      border-radius: 14px;
-      border: 1px solid var(--color-border);
-      background: var(--color-surface);
-      color: var(--color-text-primary);
-      padding: 14px 16px;
-      font-size: 0.95rem;
-      font-family: inherit;
-    }
-
-    textarea {
-      resize: vertical;
-      min-height: 140px;
-    }
-
-    .actions-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 8px;
-    }
-
-    .primary-btn,
-    .secondary-btn,
-    .tertiary-btn {
-      border-radius: 999px;
-      padding: 12px 20px;
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-      border: none;
-    }
-
-    .primary-btn {
-      background: linear-gradient(135deg, #e2b56b, #c9993f);
-      color: #0b0b0b;
-    }
-
-    .primary-btn:disabled,
-    .secondary-btn:disabled,
-    .tertiary-btn:disabled,
-    .ghost-button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    .secondary-btn {
-      background: transparent;
-      border: 1px solid var(--color-border);
-      color: var(--color-text-primary);
-    }
-
-    .tertiary-btn {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px dashed var(--color-border);
-      color: var(--color-text-muted);
-    }
-
-    .response-panel-header {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 16px;
-      align-items: center;
-    }
-
-    .response-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .response-region {
-      border-radius: 18px;
-      border: 1px solid var(--color-border);
-      background: rgba(0, 0, 0, 0.25);
-      padding: 18px;
-      min-height: 220px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .response-summary {
-      font-weight: 600;
-    }
-
-    .response-text {
-      font-family: 'JetBrains Mono', 'SFMono-Regular', Menlo, monospace;
-      font-size: 0.95rem;
-      white-space: pre-wrap;
-      line-height: 1.6;
-    }
-
-    .placeholder {
-      color: var(--color-text-muted);
-    }
-
-    .tone-badges {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .tone-badge {
-      border-radius: 999px;
-      padding: 6px 14px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      font-size: 0.85rem;
-    }
-
-    .platform-tip {
-      border-radius: 14px;
-      padding: 14px 16px;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      font-size: 0.9rem;
-      color: var(--color-text-muted);
-    }
-
-    .tone-meta {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 16px;
-      align-items: start;
-    }
-
-    .variant-stack {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .variant-card {
-      border-radius: 16px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 14px;
-      background: rgba(255, 255, 255, 0.02);
-    }
-
-    .variant-card.active {
-      border-color: var(--color-gold);
-    }
-
-    .variant-card button {
-      margin-top: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 999px;
-      background: transparent;
-      color: var(--color-text-primary);
-      padding: 6px 12px;
-      cursor: pointer;
-      font-size: 0.85rem;
-    }
-
-    .history-panel {
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      padding-top: 16px;
-    }
-
-    .history-heading {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--color-text-muted);
-      margin-bottom: 10px;
-    }
-
-    .history-list {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .history-item {
-      border-radius: 14px;
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      padding: 12px 14px;
-      background: rgba(255, 255, 255, 0.02);
-      font-size: 0.9rem;
-    }
-
-    .history-item strong {
-      color: var(--color-gold);
-    }
-
-    .callout {
-      border-radius: 16px;
-      border: 1px solid rgba(243, 107, 93, 0.4);
-      background: rgba(243, 107, 93, 0.08);
-      color: var(--color-text-primary);
-      padding: 14px 16px;
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      align-items: center;
-    }
-
-    .callout.hidden {
-      display: none;
-    }
-
-    .callout button {
-      border-radius: 999px;
-      border: 1px solid rgba(243, 107, 93, 0.6);
-      background: transparent;
-      color: var(--color-text-primary);
-      padding: 6px 14px;
-      cursor: pointer;
-    }
-
-    .skeleton-block {
-      border-radius: 12px;
-      background: linear-gradient(90deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.08));
-      background-size: 200% 100%;
-      animation: shimmer 1.2s infinite;
-      height: 18px;
-    }
-
-    .skeleton-block.large {
-      height: 60px;
-    }
-
-    @keyframes shimmer {
-      0% {
-        background-position: 200% 0;
-      }
-      100% {
-        background-position: -200% 0;
-      }
-    }
-
-    @media (max-width: 960px) {
-      .workspace {
-        grid-template-columns: 1fr;
-      }
-
-      .response-actions {
-        width: 100%;
-        justify-content: flex-start;
-      }
-    }
-
-    @media (max-width: 600px) {
-      .app-shell {
-        padding: 20px 16px 40px;
-      }
-
-      .venue-profile-card,
-      .card {
-        padding: 18px;
-        border-radius: 18px;
-      }
-
-      .rating-pill {
-        min-width: auto;
-      }
-    }
-  </style>
+  
 </head>
 <body>
   <div class="app-shell">
@@ -509,23 +26,19 @@
       </div>
     </header>
 
-    <section class="venue-profile-card" aria-live="polite">
+    <section class="glass-card stack" aria-live="polite">
       <div>
         <div class="eyebrow">Current venue profile</div>
-        <h2 id="venueName">Hidden Café Bar Social</h2>
-        <p class="venue-meta" id="venueMeta">Wakefield, West Yorkshire · 42-cover neighbourhood cocktail bar</p>
-        <p id="venueNarrative">Independent day-to-night spot mixing single-origin coffee, low-intervention wines, and a listening bar soundscape. Service promise: names remembered, details anticipated, loyalty rewarded with private menu drops.</p>
-        <ul class="profile-highlights" id="venueHighlights">
-          <li>Signature serve: Burnt honey old fashioned</li>
-          <li>Hosts vinyl-led supper clubs each Thursday</li>
-          <li>Team mantra: “Warm, sharp, never scripted.”</li>
-        </ul>
+        <h2 id="venueName">Set your venue profile</h2>
+        <p class="muted" id="venueMeta">Your context powers every AI generation</p>
+        <p id="venueNarrative" class="muted">Add your tone of voice and non-negotiables to keep replies on-brand.</p>
+        <ul class="profile-highlights" id="venueHighlights"></ul>
       </div>
-      <button class="ghost-button" id="editProfileBtn" type="button">Edit profile</button>
+      <button class="btn btn-ghost" id="editProfileBtn" type="button">Edit profile</button>
     </section>
 
-    <main class="workspace">
-      <section class="card context-card" aria-label="Review context inputs">
+    <main class="grid-2 align-start">
+      <section class="glass-card stack context-card" aria-label="Review context inputs">
         <div>
           <div class="group-label">Platform</div>
           <div class="pill-group" id="platformGroup" role="radiogroup" aria-label="Platform selector">
@@ -572,7 +85,7 @@
           <label class="group-label" for="reviewField">Guest review</label>
           <textarea id="reviewField" placeholder="Paste the guest review or load the sample to test the flow.">“Dropped into Hidden Café Bar Social after work and ended up staying four hours. Jazz on vinyl, superb small plates, and Abi somehow kept note of every table’s favourite pour. Only wish the espresso martini landed quicker once the room filled.”</textarea>
           <div class="actions-row">
-            <button type="button" class="tertiary-btn" id="loadSampleBtn">Load sample</button>
+            <button type="button" class="btn btn-ghost" id="loadSampleBtn">Load sample</button>
           </div>
         </div>
 
@@ -582,21 +95,21 @@
         </div>
 
         <div class="actions-row">
-          <button type="button" class="primary-btn" id="generateBtn">Generate response</button>
-          <button type="button" class="secondary-btn" id="clearBtn">Clear inputs</button>
+          <button type="button" class="btn btn-primary" id="generateBtn">Generate response</button>
+          <button type="button" class="btn btn-ghost" id="clearBtn">Clear inputs</button>
         </div>
       </section>
 
-      <section class="card response-panel" aria-label="AI response output">
+      <section class="glass-card stack response-panel" aria-label="AI response output">
         <div class="response-panel-header">
           <div>
             <div class="eyebrow">Output</div>
             <h2 style="margin:6px 0 0;">AI-crafted reply</h2>
           </div>
           <div class="response-actions">
-            <button type="button" class="secondary-btn" id="copyBtn" disabled>Copy</button>
-            <button type="button" class="secondary-btn" id="regenerateBtn" disabled>Regenerate</button>
-            <button type="button" class="secondary-btn" id="variantBtn" disabled>Generate Variant</button>
+            <button type="button" class="btn btn-ghost" id="copyBtn" disabled>Copy</button>
+            <button type="button" class="btn btn-ghost" id="regenerateBtn" disabled>Regenerate</button>
+            <button type="button" class="btn btn-ghost" id="variantBtn" disabled>Generate Variant</button>
           </div>
         </div>
 
@@ -723,9 +236,9 @@
           const profileModule = window.VenueProfile || window.HPVenueProfile;
           const activeProfile = profileModule?.getActiveProfile?.();
           if (activeProfile) {
-            selectors.venueName.textContent = activeProfile.name || selectors.venueName.textContent;
-            selectors.venueMeta.textContent = activeProfile.tagline || selectors.venueMeta.textContent;
-            selectors.venueNarrative.textContent = activeProfile.narrative || selectors.venueNarrative.textContent;
+            selectors.venueName.textContent = activeProfile.name || "Set your venue profile";
+            selectors.venueMeta.textContent = activeProfile.type || "Your context powers every AI generation";
+            selectors.venueNarrative.textContent = activeProfile.nonNegotiables || "Add your tone of voice and non-negotiables to keep replies on-brand.";
             if (Array.isArray(activeProfile.highlights) && activeProfile.highlights.length) {
               selectors.venueHighlights.innerHTML = '';
               activeProfile.highlights.forEach((item) => {

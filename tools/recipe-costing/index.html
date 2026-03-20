@@ -11,180 +11,7 @@
     rel="stylesheet"
   />
   <link rel="stylesheet" href="/assets/styles/system.css" />
-  <style>
-    :root {
-      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-    }
-    body {
-      margin: 0;
-    }
-    .app-shell {
-      max-width: 1280px;
-      margin: 0 auto;
-      padding: 2rem 1.5rem 3rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-    .layout-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
-      gap: 1.5rem;
-      align-items: start;
-    }
-    .stack {
-      display: flex;
-      flex-direction: column;
-      gap: 1.25rem;
-    }
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      grid-gap: 1rem;
-    }
-    .form-field.full {
-      grid-column: 1 / -1;
-    }
-    .ingredient-table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    .ingredient-table th,
-    .ingredient-table td {
-      padding: 0.6rem;
-      text-align: left;
-    }
-    .ingredient-table th {
-      font-size: 0.75rem;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-    }
-    .ingredient-allergens {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.35rem;
-      margin-top: 0.35rem;
-    }
-    .metric-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 1rem;
-    }
-    .gp-gauge-wrapper {
-      margin-top: 1rem;
-    }
-    .gp-gauge {
-      position: relative;
-      height: 12px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.08);
-      overflow: hidden;
-      margin-top: 0.35rem;
-    }
-    .gp-gauge .fill {
-      height: 100%;
-      width: 0;
-      border-radius: 999px;
-      transition: width 0.3s ease;
-    }
-    .gp-gauge .fill.state-hit {
-      background: #22c55e;
-    }
-    .gp-gauge .fill.state-watch {
-      background: #facc15;
-    }
-    .gp-gauge .fill.state-miss {
-      background: #f87171;
-    }
-    .gp-gauge .marker {
-      position: absolute;
-      top: -6px;
-      width: 2px;
-      height: 24px;
-      background: currentColor;
-      opacity: 0.65;
-    }
-    .section-card-header {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 0.75rem;
-    }
-    .section-title-block {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-    }
-    .section-body[hidden] {
-      display: none;
-    }
-    .inline-messages {
-      list-style: none;
-      padding: 0;
-      margin: 1rem 0 0;
-      display: flex;
-      flex-direction: column;
-      gap: 0.4rem;
-    }
-    .inline-messages li {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-size: 0.9rem;
-    }
-    .button-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      margin-bottom: 0.75rem;
-    }
-    textarea.mono-block {
-      width: 100%;
-      min-height: 160px;
-      border-radius: 0.75rem;
-      padding: 1rem;
-      font-family: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace;
-      font-size: 0.85rem;
-    }
-    .tooltip-icon {
-      border: none;
-      background: transparent;
-      cursor: help;
-      font-weight: 600;
-      color: inherit;
-      padding: 0;
-      margin-left: 0.25rem;
-    }
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      border: 0;
-    }
-    @media (max-width: 960px) {
-      .layout-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-    @media (max-width: 640px) {
-      .form-grid {
-        grid-template-columns: 1fr;
-      }
-      .section-card-header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .button-row {
-        flex-direction: column;
-      }
-    }
-  </style>
+  
 </head>
 <body>
   <div class="app-shell">
@@ -202,7 +29,7 @@
 
     <main class="layout-grid">
       <section class="stack column-inputs">
-        <article class="card">
+        <article class="glass-card stack">
           <header class="section-header" style="margin-bottom: 1rem;">
             <div>
               <p class="eyebrow">Dish basics</p>
@@ -233,7 +60,7 @@
           </div>
         </article>
 
-        <article class="card">
+        <article class="glass-card stack">
           <header class="section-header" style="display:flex; justify-content:space-between; align-items:center; gap:1rem;">
             <div>
               <p class="eyebrow">Ingredient plan</p>
@@ -246,7 +73,7 @@
       </section>
 
       <section class="stack column-analysis">
-        <article class="card">
+        <article class="glass-card stack">
           <header class="section-header" style="margin-bottom: 1rem;">
             <div>
               <p class="eyebrow">Live analysis</p>
@@ -289,7 +116,7 @@
           <div id="summaryLiveRegion" class="sr-only" aria-live="polite"></div>
         </article>
 
-        <article class="card">
+        <article class="glass-card stack">
           <header class="section-header" style="margin-bottom: 0.5rem;">
             <div>
               <p class="eyebrow">Allergens</p>
@@ -300,7 +127,7 @@
           <p class="help-text">Allergen badges also sit inside each ingredient row for prep sheets.</p>
         </article>
 
-        <article class="card">
+        <article class="glass-card stack">
           <header class="section-header" style="margin-bottom: 0.5rem;">
             <div>
               <p class="eyebrow">Exports</p>
@@ -519,7 +346,7 @@
             const sectionCost = computeSectionTotal(section);
             const sectionBody = section.collapsed ? 'hidden' : '';
             return `
-              <article class="card surface-muted" data-section-id="${section.id}">
+              <article class="glass-card stack surface-muted" data-section-id="${section.id}">
                 <div class="section-card-header">
                   <div class="section-title-block">
                     <button type="button" class="btn icon" data-action="toggle-section" data-section-id="${section.id}" aria-expanded="${!section.collapsed}" aria-label="Toggle ${escapeHtml(section.name)}">

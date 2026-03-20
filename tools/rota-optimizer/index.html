@@ -766,9 +766,7 @@ Assignments must be '-' for days off. Mark overtime true if totalDays >= 5. Esti
             model: 'anthropic/claude-3-5-haiku',
             messages: [
               {
-                role: 'system',
-                content: 'You are an expert hospitality operations manager. Generate an optimised weekly rota based on the covers, staff availability, and role minimums provided. Output as a clean table (Name | Mon | Tue | Wed | Thu | Fri | Sat | Sun | Total Days). Mark days off as \'-\'. Then provide 2-3 Shift Manager Notes highlighting any risks, overtime concerns, or recommendations.'
-              },
+                role: 'system', content: 'You are an expert hospitality operations manager. Generate an optimised weekly rota based on the covers, staff availability, and role minimums provided. Return ONLY minified JSON without markdown formatting or preamble, matching the exact schema requested by the user.' },
               { role: 'user', content: userPrompt }
             ]
           })

@@ -160,10 +160,10 @@
     wrapper.setAttribute('data-profile-modal', '');
     wrapper.setAttribute('hidden', '');
     wrapper.innerHTML = `
-      <div class="profile-modal__dialog glass-panel">
+      <div class="profile-modal__dialog glass-panel" role="dialog" aria-modal="true" aria-labelledby="modal-title">
         <div class="profile-modal__header">
           <p class="eyebrow">Venue memory</p>
-          <h2>Tell the tools who you are</h2>
+          <h2 id="modal-title">Tell the tools who you are</h2>
           <p class="muted">This context powers Review Responder, Recipe Costing, Rota Optimizer, and every AI workflow in Hospitality Pro.</p>
           <button type="button" class="btn btn-ghost btn-icon" aria-label="Close profile editor" data-profile-dismiss data-profile-skip>×</button>
         </div>
@@ -322,6 +322,13 @@
 
   window.VenueProfile = {
     getProfile: () => JSON.parse(JSON.stringify(profileState)),
+    getActiveProfile: () => JSON.parse(JSON.stringify(profileState)),
+    openModal: () => openModal(),
+    buildPromptContext: () => {
+      const p = profileState;
+      if (!p || !p.name) return "";
+      return `Venue context: ${p.name}. Type: ${p.type}. Tone: ${p.tone}.\nNotes & Non-negotiables: ${p.nonNegotiables}`;
+    },
     subscribe(callback) {
       if (typeof callback !== 'function') return () => {};
       subscribers.add(callback);
