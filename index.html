@@ -37,28 +37,44 @@
         </div>
       </div>
       <div class="hero__scene" aria-hidden="true">
-        <div class="stitch-board">
-          <div class="stitch-board__felt">
-            <span class="stitch-cue"></span>
-            <span class="stitch-ball" style="--x: 68%; --y: 46%; --ball-color: #111111;">8</span>
-            <span class="stitch-ball" style="--x: 38%; --y: 60%; --ball-color: #ffb700;">1</span>
-            <span class="stitch-ball" style="--x: 22%; --y: 35%; --ball-color: #ff2dd9;">3</span>
-            <span class="stitch-ball stitch-ball--ghost" style="--x: 80%; --y: 65%;">●</span>
-            <div class="hero-host-card">
-              <div class="hero-host-card__avatar">JP</div>
+        <div class="hero-insight-grid">
+          <article class="hero-insight-card hero-insight-card--prime">
+            <p class="eyebrow">Ops signal</p>
+            <h3>Service health · 91%</h3>
+            <ul class="insight-list">
+              <li>Prep locked · rota signed off</li>
+              <li>Reviews cleared in 12 minutes</li>
+              <li>Procurement buffer sitting at +10%</li>
+            </ul>
+          </article>
+          <article class="hero-insight-card">
+            <p class="eyebrow">Today’s agenda</p>
+            <dl class="insight-timeline">
               <div>
-                <p class="hero-host-card__label">Host</p>
-                <p class="hero-host-card__name">Jordan Pitts</p>
-                <p class="hero-host-card__meta">Service orchestrator</p>
+                <dt>09:00</dt>
+                <dd>Finalise rota · push updates to FOH</dd>
               </div>
-              <span class="hero-host-card__badge">LIVE</span>
+              <div>
+                <dt>12:30</dt>
+                <dd>Lunch covers at 78% · drive walk-ins</dd>
+              </div>
+              <div>
+                <dt>17:00</dt>
+                <dd>Menu costing review · 3 dishes flagged</dd>
+              </div>
+            </dl>
+          </article>
+          <article class="hero-insight-card hero-insight-card--accent">
+            <p class="eyebrow">Toolkit</p>
+            <h3>10 AI workflows</h3>
+            <p class="muted">Zero logins. Your OpenRouter key stays local. Drop in, execute, get back to service.</p>
+            <div class="hero-progress">
+              <span class="hero-progress__label">Set up</span>
+              <div class="hero-progress__track">
+                <span class="hero-progress__fill" style="width:92%"></span>
+              </div>
             </div>
-            <div class="hero-score-card glass-card glass-card--tight">
-              <p class="eyebrow">Ops Health</p>
-              <p class="hero-score-card__value">91%</p>
-              <p class="muted">Prep · Rota · Reviews in flow</p>
-            </div>
-          </div>
+          </article>
         </div>
       </div>
     </section>
