@@ -3,140 +3,370 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Weekly Financial Narrative · Hospitality Pro</title>
+  <title>Weekly Financial Narrative Generator</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/styles/system.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0f0f0f;
+      --panel: #161616;
+      --panel-soft: #1d1d1d;
+      --text: #f5f2eb;
+      --muted: #b9b3a5;
+      --accent: #d4a85a;
+      --accent-dark: #9b7a3d;
+      --amber: #ffb347;
+      --gold: #f6d78c;
+      --danger: #ff8a65;
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: clamp(1.5rem, 2.5vw, 3rem);
+    }
+
+    h1 {
+      font-size: clamp(1.75rem, 3vw, 2.65rem);
+      letter-spacing: -0.02em;
+      margin: 0 0 0.25rem;
+    }
+
+    p.description {
+      color: var(--muted);
+      margin: 0 0 2rem;
+      max-width: 720px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid rgba(212, 168, 90, 0.18);
+      border-radius: 18px;
+      padding: 1.5rem;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.35);
+    }
+
+    fieldset {
+      border: none;
+      margin: 0 0 1.5rem;
+      padding: 0;
+    }
+
+    fieldset legend {
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.85rem;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 0.35rem;
+    }
+
+    input, textarea {
+      width: 100%;
+      background: var(--panel-soft);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 0.75rem 0.85rem;
+      color: var(--text);
+      font: inherit;
+    }
+
+    input:focus, textarea:focus {
+      outline: 1px solid var(--accent);
+      border-color: var(--accent);
+    }
+
+    textarea {
+      min-height: 140px;
+      resize: vertical;
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 0.85rem;
+      margin-top: 1rem;
+    }
+
+    .metric-card {
+      background: var(--panel-soft);
+      border-radius: 12px;
+      padding: 0.9rem;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .metric-label {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+
+    .metric-value {
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin-top: 0.35rem;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 0.85rem 1.6rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+    }
+
+    button.primary {
+      background: linear-gradient(120deg, var(--accent), #f6d78c);
+      color: #181818;
+    }
+
+    button.secondary {
+      background: transparent;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    button:not(:disabled):hover {
+      transform: translateY(-1px);
+    }
+
+    .output-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .status-pill {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      padding: 0.35rem 0.85rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--muted);
+    }
+
+    .narrative {
+      margin-top: 1.5rem;
+      line-height: 1.65;
+      font-size: 1rem;
+    }
+
+    .directives {
+      margin-top: 1.5rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 1rem;
+    }
+
+    .directives h3 {
+      margin-top: 0;
+      letter-spacing: 0.05em;
+      color: var(--accent);
+      font-size: 1rem;
+    }
+
+    .directives ol {
+      margin: 0;
+      padding-left: 1.2rem;
+      line-height: 1.6;
+    }
+
+    .callouts {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+
+    .callout {
+      border-radius: 12px;
+      padding: 0.9rem 1rem;
+      font-weight: 500;
+    }
+
+    .callout.red {
+      background: rgba(255, 138, 101, 0.1);
+      color: var(--amber);
+      border: 1px solid rgba(255, 179, 71, 0.3);
+    }
+
+    .callout.green {
+      background: rgba(246, 215, 140, 0.08);
+      color: var(--gold);
+      border: 1px solid rgba(246, 215, 140, 0.4);
+    }
+
+    .print-note {
+      margin-top: 2rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    @media print {
+      body {
+        background: white;
+        color: black;
+        font-size: 12pt;
+      }
+      .panel {
+        box-shadow: none;
+        border: 1px solid #ccc;
+        background: white;
+      }
+      button, .print-note {
+        display: none;
+      }
+    }
+  </style>
 </head>
 <body>
-  <nav class="site-nav">
-    <a class="nav-brand" href="/">Hospitality <span>Pro</span></a>
-    <div class="nav-links">
-      <a href="/#tools">Tools</a>
-      <a href="/#playbook">Playbook</a>
-      <a href="/#about">About</a>
-      <a class="nav-cta" href="/#tools">Get Started →</a>
-    </div>
-  </nav>
+  <header>
+    <h1>Weekly Financial Narrative</h1>
+    <p class="description">Transform raw P&amp;L inputs into an investor-ready executive readout and directives in minutes. Built for hospitality operators who demand clarity every week.</p>
+  </header>
 
-  <main class="app-shell">
-    <a class="back-link" href="/#tools">Back to all tools</a>
+  <main class="grid">
+    <section class="panel" aria-label="Input form">
+      <form id="finance-form">
+        <fieldset>
+          <legend>Essentials</legend>
+          <label>
+            Venue name
+            <input type="text" name="venue" required placeholder="e.g. The Gilded Swan" />
+          </label>
+          <label>
+            Week ending
+            <input type="date" name="week" required />
+          </label>
+          <label>
+            Total revenue (£)
+            <input type="number" name="totalRevenue" min="0" step="0.01" required />
+          </label>
+          <label>
+            Total covers
+            <input type="number" name="covers" min="0" step="1" required />
+          </label>
+        </fieldset>
 
-    <header class="glass-panel hero-panel">
-      <div class="stack">
-        <p class="eyebrow">Finance &amp; Ops</p>
-        <h1>Weekly Financial Narrative</h1>
-        <p class="muted">Transform raw P&amp;L into an investor-ready executive readout, directives, and red flag callouts. A sample Hidden Café Bar Social week is pre-populated so you can see the finished output before running your own numbers.</p>
-        <div class="cluster">
-          <span class="badge badge-warning">Week ending 15 Mar 2026</span>
-          <span class="badge">Revenue £48.6k · Covers 612</span>
+        <fieldset>
+          <legend>Revenue mix</legend>
+          <label>
+            Food revenue (£)
+            <input type="number" name="foodRevenue" min="0" step="0.01" required />
+          </label>
+          <label>
+            Beverage revenue (£)
+            <input type="number" name="bevRevenue" min="0" step="0.01" required />
+          </label>
+          <label>
+            Other revenue (£)
+            <input type="number" name="otherRevenue" min="0" step="0.01" placeholder="Optional" />
+          </label>
+          <label>
+            Last week's revenue (£)
+            <input type="number" name="priorRevenue" min="0" step="0.01" placeholder="Optional" />
+          </label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Cost base</legend>
+          <label>
+            Total wage cost (£)
+            <input type="number" name="wageCost" min="0" step="0.01" required />
+          </label>
+          <label>
+            Total food cost (£)
+            <input type="number" name="foodCost" min="0" step="0.01" required />
+          </label>
+          <label>
+            Total beverage cost (£)
+            <input type="number" name="bevCost" min="0" step="0.01" required />
+          </label>
+          <label>
+            Other costs (£)
+            <input type="number" name="otherCost" min="0" step="0.01" placeholder="Optional" />
+          </label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Context</legend>
+          <label>
+            Trading notes, events, anomalies
+            <textarea name="context" placeholder="e.g. Spring menu launched Thursday, head chef off sick, rail strike Saturday"></textarea>
+          </label>
+        </fieldset>
+
+        <div class="metrics-grid" id="metric-cards"></div>
+
+        <div class="actions">
+          <button type="button" class="secondary" id="api-key-btn">Set API Key</button>
+          <button type="submit" class="primary" id="generate-btn">Generate Narrative</button>
         </div>
+      </form>
+      <p class="print-note">Tip: Generate, review, and print directly. Layout is optimised for board packs.</p>
+    </section>
+
+    <section class="panel" aria-live="polite">
+      <div class="output-header">
+        <h2 style="margin:0">Executive Output</h2>
+        <span class="status-pill" id="status-pill">Awaiting inputs</span>
       </div>
-      <div class="cluster">
-        <button type="button" class="btn btn-ghost" id="api-key-btn">Set API Key</button>
-        <button type="button" class="btn btn-primary" id="generate-btn">Generate Narrative</button>
+      <article class="narrative" id="narrative">Input the week's trading data to surface the performance storyline, operational directives, and investor-ready commentary.</article>
+      <div class="directives">
+        <h3>Directive Stack</h3>
+        <ol id="directives-list">
+          <li>Directive 1 will land here.</li>
+          <li>Directive 2 will land here.</li>
+          <li>Directive 3 will land here.</li>
+        </ol>
       </div>
-    </header>
-
-    <section class="grid-2 align-start">
-      <section class="glass-card" aria-label="Input form">
-        <form id="finance-form" class="stack">
-          <fieldset>
-            <legend>Essentials</legend>
-            <div class="grid-2">
-              <label>Venue name
-                <input type="text" name="venue" required value="Hidden Café Bar Social" />
-              </label>
-              <label>Week ending
-                <input type="date" name="week" required value="2026-03-15" />
-              </label>
-            </div>
-            <div class="grid-3">
-              <label>Total revenue (£)
-                <input type="number" name="totalRevenue" min="0" step="0.01" required value="48650" />
-              </label>
-              <label>Total covers
-                <input type="number" name="covers" min="0" step="1" required value="612" />
-              </label>
-              <label>Last week's revenue (£)
-                <input type="number" name="priorRevenue" min="0" step="0.01" value="45200" />
-              </label>
-            </div>
-          </fieldset>
-
-          <fieldset>
-            <legend>Revenue mix</legend>
-            <div class="grid-3">
-              <label>Food revenue (£)
-                <input type="number" name="foodRevenue" min="0" step="0.01" required value="28400" />
-              </label>
-              <label>Beverage revenue (£)
-                <input type="number" name="bevRevenue" min="0" step="0.01" required value="17250" />
-              </label>
-              <label>Other revenue (£)
-                <input type="number" name="otherRevenue" min="0" step="0.01" value="3000" />
-              </label>
-            </div>
-          </fieldset>
-
-          <fieldset>
-            <legend>Cost base</legend>
-            <div class="grid-3">
-              <label>Total wage cost (£)
-                <input type="number" name="wageCost" min="0" step="0.01" required value="15750" />
-              </label>
-              <label>Total food cost (£)
-                <input type="number" name="foodCost" min="0" step="0.01" required value="9920" />
-              </label>
-              <label>Total beverage cost (£)
-                <input type="number" name="bevCost" min="0" step="0.01" required value="5350" />
-              </label>
-              <label>Other costs (£)
-                <input type="number" name="otherCost" min="0" step="0.01" value="3120" />
-              </label>
-            </div>
-          </fieldset>
-
-          <fieldset>
-            <legend>Context</legend>
-            <label>Trading notes, events, anomalies
-              <textarea name="context" rows="3" placeholder="e.g. Spring menu launched Thursday, head chef off sick, rail strike Saturday">Spring menu launched Thursday, Abi hosted two influencer tables, Saturday service affected by a late-evening rail disruption.</textarea>
-            </label>
-          </fieldset>
-
-          <div class="metric-grid" id="metric-cards"></div>
-          <p class="help-text">Metrics update live as you type. Benchmark flags trigger automatically when thresholds are breached.</p>
-        </form>
-      </section>
-
-      <section class="glass-card stack" aria-live="polite">
-        <div class="flex-between">
-          <div>
-            <p class="eyebrow">Executive output</p>
-            <h2>Sample narrative</h2>
-          </div>
-          <span class="status-pill" id="status-pill">Sample narrative ready</span>
-        </div>
-        <article class="narrative" id="narrative">
-          <p>Hidden Café Bar Social closed the week ending 15 March at £48.6k turnover across 612 covers, up 7.6% on prior week and £3.2k ahead of forecast. Food drove 58% of revenue and maintained a 65% GP after the spring small plates launch landed mid-week. Beverage delivered £17.2k with a 69% GP despite running the vinyl supper club pour programme.</p>
-          <p>Wage spend landed at £15.7k or 32.4% of revenue — inside tolerance after trimming late-shift support on Sunday. Food cost sat at 34.9% due to nduja and dairy inflation, partially offset by the hot-honey drizzle batch prep. Beverage cost tracked 31%, mainly due to sparkling allocations for the private listening group. All-in GP finished at 67% with £3k of other revenue from the day-part coffee subscription pilot.</p>
-          <p>Rail disruption on Saturday suppressed late-night trade by ~40 covers but was balanced by a strong Thursday influencer push led by Abi. Guest sentiment stayed positive with loyalty invites converting 18% of follow-ups.</p>
-        </article>
-        <div class="directives">
-          <h3>Directive Stack</h3>
-          <ol id="directives-list">
-            <li>Lock the espresso martini prep line changes into the SOP so peak covers stay sub-6 minute ticket times.</li>
-            <li>Reprice the nduja pizza by £1 to protect GP against dairy inflation and heavy honey usage.</li>
-            <li>Extend the coffee subscription pilot to Sunday breakfast slots to backfill rail-related volatility.</li>
-          </ol>
-        </div>
-        <div class="callouts">
-          <div class="callout callout-error" id="red-flag">Food cost sitting at 34.9% (>32% benchmark) after nduja + dairy inflation; monitor next delivery cycle.</div>
-          <div class="callout callout-success" id="green-light">Total GP solid at 67% with WoW revenue up 7.6%; loyalty invites converting at 18%.</div>
-        </div>
-        <p class="help-text">Tip: Generate, review, then print. Layout is optimised for board packs and PDF handoff.</p>
-      </section>
+      <div class="callouts">
+        <div class="callout red" id="red-flag">Red Flag metrics will appear here.</div>
+        <div class="callout green" id="green-light">Green Light highlights will appear here.</div>
+      </div>
     </section>
   </main>
 
@@ -338,7 +568,7 @@
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${apiKey}`,
-            'HTTP-Referer': 'https://hospitality-pro.tools',
+            'HTTP-Referer': 'https://hospitality-ai-toolkit.local',
             'X-Title': 'Weekly Financial Narrative Generator'
           },
           body: JSON.stringify(payload)
@@ -366,9 +596,6 @@
     }
 
     form.addEventListener('submit', generateNarrative);
-
-    const bootstrapEvent = new Event('input', { bubbles: true });
-    form.dispatchEvent(bootstrapEvent);
 
     function renderOutput(content) {
       const paragraphs = content
