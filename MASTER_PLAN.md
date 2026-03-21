@@ -40,9 +40,9 @@ Premium, dark, editorial, restrained. Clean typography. Liquid-glass UI elements
 - End-of-night summary: One-tap copyable/printable report for WhatsApp/email.
 - Mobile-first, Liquid Glass dark premium aesthetic. Close in under 3 minutes.
 
-### 6. Review Management
-- AI-assisted review responses (Google/TripAdvisor).
-- Sentiment tracking and trend analysis.
+### 6. Review Management ✅ SHIPPED
+- AI-assisted review responses (Google/TripAdvisor/Booking.com).
+- Platform-specific tone. Never says "discount". Brand voice locked.
 
 ### 7. Food Waste Audit Tracker
 - Log waste events (item, quantity, reason, value).
@@ -50,16 +50,38 @@ Premium, dark, editorial, restrained. Clean typography. Liquid-glass UI elements
 - Trend chart — top wasted items, root cause tagging.
 - Pairs with Supplier Automation Console for intelligent re-ordering.
 
+### 8. Staff Tip Pool & Distribution Calculator ✅ SHIPPED
+- Weighted distribution by role (Bartender 1.0, Bar Back 0.5, etc.) × hours worked.
+- Calculates to the penny using remainder rounding on last person.
+- Role weights editable by manager. Custom roles supported.
+- Per-night localStorage history with expandable detail cards.
+- EOD Reconciliation cross-reference banner.
+- Print/share modal — one-tap copy for WhatsApp or email.
+- Mobile-first, Liquid Glass dark premium aesthetic.
+
+### 9. Private Event & Hire Planner ← NEXT
+- Lightweight Tripleseat replacement for small premium venues.
+- Quote generator, min spend calculator, deposit tracker.
+- Event log with status pipeline (enquiry → confirmed → invoiced → complete).
+- Pairs with Rota Optimizer, EOD Reconciliation, and Financial Narrative.
+
 ## Infinite Loop · Immediate Next Build
-**Staff Tip Pool & Distribution Calculator**
-- `tools/tip-pool/index.html`
-- The biggest manual nightmare at end of service — zero good tools exist for small venues
-- Directly pairs with the EOD Reconciliation Console (same workflow, same moment)
-- Input: total tips collected (cash + card), staff on shift, hours worked per person, role weights (bartender vs server vs barback)
-- Logic: weighted distribution by role tier + hours — fair, transparent, auditable
-- Output: per-person tip amount, printable/shareable breakdown, localStorage history per night
-- Pair with EOD: pull tonight's date automatically, link back to that night's close
-- Mobile-first, Liquid Glass, sub-60-second to complete
+**Private Event & Hire Planner**
+- `tools/event-planner/index.html`
+- Enterprise tools (Tripleseat, iVvy) cost £300–£600/month — zero lightweight options exist for small premium venues
+- Hidden does private hires regularly; every speakeasy/cocktail bar does. Currently managed with email + mental maths
+- Input: event type (private hire, birthday, corporate, tasting), date, guest count, package (drinks only / food + drinks / buyout), duration
+- Calculates: minimum spend, deposit required (usually 25–50%), per-head rate, recommended staffing level
+- Generates: professional quote/proposal text (copy/paste ready for email or WhatsApp), event confirmation summary
+- Event log: localStorage calendar of upcoming events, status (enquiry → confirmed → invoiced → completed)
+- Pairs with: Rota Optimizer (auto-flag event on rota), EOD Reconciliation (event performance vs projected min spend)
+- Mobile-first, Liquid Glass, sub-2-minute to produce a professional quote
+
+### Why This Wins
+- **Direct revenue impact**: faster, more professional quoting = more bookings, higher conversion
+- **No lightweight competitor**: Tripleseat starts at $299/mo; nothing exists in the zero-cost tier
+- **Pairs with 3 existing tools**: Rota, EOD, and Financial Narrative
+- **Hospitality operators' #2 pain point**: attracting and converting customers (35% of owners in 2025 surveys)
 
 ## Execution Strategy
 - **Autonomy**: Jim and the agents will continually build, test, refine, and deploy this app without asking for permission.
@@ -87,7 +109,8 @@ Premium, dark, editorial, restrained. Clean typography. Liquid-glass UI elements
 | Allergen Matrix Builder | /tools/allergen-matrix/ | ✅ Live |
 | SOP Generator | /tools/sop-generator/ | ✅ Live |
 | End-of-Night Reconciliation | /tools/eod-reconciliation/ | ✅ Live |
-| Staff Tip Pool & Distribution | /tools/tip-pool/ | 🔨 Next |
+| Staff Tip Pool & Distribution | /tools/tip-pool/ | ✅ Live |
+| Private Event & Hire Planner | /tools/event-planner/ | 🔨 Next |
 
 ## The Infinite Loop Protocol
 At the end of every task list, the system MUST execute the following sequence indefinitely:
