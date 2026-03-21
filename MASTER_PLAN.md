@@ -52,19 +52,14 @@ Premium, dark, editorial, restrained. Clean typography. Liquid-glass UI elements
 
 ### 8. Staff Tip Pool & Distribution Calculator ✅ SHIPPED
 
-### 10. Guest Micro-CRM ← NEXT
+### 10. Guest Micro-CRM ✅ SHIPPED
 - "Little black book" for premium venues — remember your regulars.
-- Log guest name, visit history, preferences (drinks, dietary, seating), special occasions.
-- VIP flag, spend tier, notes field.
-- Quick-lookup by name — usable mid-service on mobile.
-- Pairs with Private Event Planner (link guest records to events).
-- No logins, no cloud — 100% localStorage, 100% private.
-- Weighted distribution by role (Bartender 1.0, Bar Back 0.5, etc.) × hours worked.
-- Calculates to the penny using remainder rounding on last person.
-- Role weights editable by manager. Custom roles supported.
-- Per-night localStorage history with expandable detail cards.
-- EOD Reconciliation cross-reference banner.
-- Print/share modal — one-tap copy for WhatsApp or email.
+- Full guest profiles: name, phone, email, birthday, anniversary, dietary, preferred drink, preferred seating, VIP status, notes.
+- Visit log: date, party size, spend, notes. Auto-calculates lifetime value and visit frequency.
+- Smart alerts: upcoming birthdays/anniversaries (within 30 days), regulars gone quiet (30+ days).
+- Quick Add mid-service mode with live timer — capture intel in 15 seconds without breaking flow.
+- Search & filter: instant name search, VIP/regular/new/quiet filters, birthday month filter.
+- 100% localStorage, no cloud, no server, GDPR-friendly by design.
 - Mobile-first, Liquid Glass dark premium aesthetic.
 
 ### 9. Private Event & Hire Planner ✅ SHIPPED
@@ -76,21 +71,24 @@ Premium, dark, editorial, restrained. Clean typography. Liquid-glass UI elements
 - Pairs with Rota Optimizer, EOD Reconciliation, and Financial Narrative.
 
 ## Infinite Loop · Immediate Next Build
-**Guest Micro-CRM**
-- `tools/guest-crm/index.html`
-- Full CRM platforms (Salesforce, HubSpot) are overkill and expensive; hospitality-specific tools (SevenRooms, Resy) lock behind expensive subscriptions
-- Premium cocktail bars and speakeasies live and die by their regulars; personalized service is the primary loyalty driver
-- Input: guest name, visit date, drink preferences, dietary flags, birthday/occasion, spend level, VIP status
-- Features: quick-search by name (usable in seconds mid-service on mobile), visit count + last seen, notes field, VIP/regular/new badge, optional event linkage
-- Export/share: printable "shift briefing" of expected guests tonight with preferences visible
-- 100% localStorage, zero backend, zero logins — completely private
+**Food Waste Audit Tracker**
+- `tools/food-waste/index.html`
+- UK hospitality businesses lose an average of £10,000/year to food waste (WRAP study). Zero tools in this suite currently address it.
+- Log waste events: item name, category (prep waste / spoilage / over-production / plate waste), quantity, unit cost, calculated waste value, responsible section, reason.
+- Weekly waste value vs theoretical waste allowance (configurable % of food revenue).
+- Trend chart: top wasted items, root cause tagging, day-of-week patterns.
+- Live waste cost tracker: total weekly waste £, waste as % of food revenue, comparison vs industry benchmark (avg 4-8%).
+- Pairs with Supplier Automation Console: flag high-waste items for reduced PAR level recommendation.
+- Printable weekly waste report — for kitchen brigade accountability and owner visibility.
+- 100% localStorage, mobile-first, Liquid Glass dark premium aesthetic.
+- Export: one-tap clipboard copy for WhatsApp/manager briefings.
 
 ### Why This Wins
-- **Service quality multiplier**: knowing a guest's preferences = higher tips, more loyalty, word-of-mouth
-- **No privacy risk**: data never leaves the device — huge for GDPR-conscious operators
-- **Zero-cost tier**: SevenRooms starts at $1,000+/month for the guest profiling features
-- **Uniquely positioned**: no tool in this suite's tier does this today
-- **Mobile-first use case**: manager grabs the phone before service, checks tonight's regulars
+- **Direct P&L impact**: a £10k/year waste problem solved in a browser tool = immediate ROI argument for new customers
+- **Compliance angle**: environmental reporting requirements for UK hospitality increasing under Defra Food Waste legislation
+- **Bridges to procurement**: waste data feeds directly back into PAR and ordering decisions
+- **No competition at this price point**: professional food waste trackers (Winnow, Leanpath) cost £1,000+/month
+- **Kitchen culture**: accountability without blame — data-driven conversations instead of guesswork
 
 ## Execution Strategy
 - **Autonomy**: Jim and the agents will continually build, test, refine, and deploy this app without asking for permission.
@@ -101,7 +99,7 @@ Premium, dark, editorial, restrained. Clean typography. Liquid-glass UI elements
 - **Production**: https://hospitality-pro.vercel.app
 - **Repo**: https://github.com/joooord/hospitality-pro
 
-## Tools Live (as of 2026-03-21)
+## Tools Live (as of 2026-03-21, updated 2026-03-21)
 | Tool | URL | Status |
 |------|-----|--------|
 | Cocktail & Costing Engine | /tools/cocktail-calculator/ | ✅ Live |
@@ -120,7 +118,8 @@ Premium, dark, editorial, restrained. Clean typography. Liquid-glass UI elements
 | End-of-Night Reconciliation | /tools/eod-reconciliation/ | ✅ Live |
 | Staff Tip Pool & Distribution | /tools/tip-pool/ | ✅ Live |
 | Private Event & Hire Planner | /tools/event-planner/ | ✅ Live |
-| Guest Micro-CRM | /tools/guest-crm/ | 🔨 Next |
+| Guest Micro-CRM | /tools/guest-crm/ | ✅ Live |
+| Food Waste Audit Tracker | /tools/food-waste/ | 🔨 Next |
 
 ## The Infinite Loop Protocol
 At the end of every task list, the system MUST execute the following sequence indefinitely:
