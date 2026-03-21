@@ -2,323 +2,46 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Hospitality Pro — Liquid Glass Control Centre</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hospitality Pro · Dashboard</title>
   <link rel="stylesheet" href="/assets/styles/system.css" />
-  <link rel="stylesheet" href="/assets/styles/landing.css" />
+  <style>
+    .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+    .tool-card { background: rgba(255,255,255,0.03); border: 1px solid var(--color-border); padding: 1.5rem; border-radius: var(--radius-lg); text-decoration: none; color: inherit; transition: transform 0.2s, background 0.2s; }
+    .tool-card:hover { transform: translateY(-2px); background: rgba(255,255,255,0.05); }
+    .tool-card h3 { margin-top: 0; color: var(--color-text); }
+    .tool-card p { color: var(--color-text-muted); font-size: 0.9rem; line-height: 1.5; }
+  </style>
 </head>
 <body>
-  <nav class="site-nav">
-    <a class="nav-brand smooth-link" href="#top">Hospitality <span>Pro</span></a>
-    <div class="nav-links">
-      <a class="smooth-link" href="#tools">Tools</a>
-      <a class="smooth-link" href="#playbook">Playbook</a>
-      <a class="smooth-link" href="#about">About</a>
-      <a class="nav-cta smooth-link" href="#tools">Launch Suite →</a>
+  <nav class="site-nav"><a class="nav-brand" href="/">Hospitality <span>Pro</span></a></nav>
+  <main class="app-shell">
+    <header class="glass-panel hero-panel">
+      <h1>Operations Dashboard</h1>
+      <p class="muted">All your premium hospitality tools in one unified workspace.</p>
+    </header>
+    
+    <div class="dashboard-grid">
+      <a href="/tools/cocktail-calculator" class="tool-card glass-card">
+        <h3>Liquid Glass Calculator</h3>
+        <p>Advanced ROI, ABV%, and dilution math for premium cocktails.</p>
+      </a>
+      
+      <a href="/tools/rota-optimizer" class="tool-card glass-card">
+        <h3>AI Rota Optimizer</h3>
+        <p>Production-ready shift planning and labor tracking for "Hidden".</p>
+      </a>
+      
+      <a href="/tools/inventory-ordering" class="tool-card glass-card">
+        <h3>Inventory &amp; Ordering</h3>
+        <p>Manage stock counts, par levels, and supplier orders.</p>
+      </a>
+      
+      <a href="/tools/daily-ops" class="tool-card glass-card">
+        <h3>Daily Ops &amp; Prep</h3>
+        <p>Opening/closing checklists and prep list management.</p>
+      </a>
     </div>
-  </nav>
-
-  <main id="top" class="landing-shell">
-    <section class="hero hero-marquee glass-panel">
-      <div class="hero__content stack">
-        <p class="hero__eyebrow eyebrow">Hidden Café Bar · Middlestown</p>
-        <h1 class="page-title">The calm control centre for Hidden — precision automation that still feels hand-built.</h1>
-        <p class="hero__description muted">Venue memory sealed inside a liquid-glass shell. Twenty-one workflows, one interface. Rota drafts, GP guardrails, procurement buffers, waste tracking, review tone, private event pipelines — all handled in-browser so service keeps its composure.</p>
-        <div class="pill-group hero__stats">
-          <span class="pill highlight">Venue memory locked</span>
-          <span class="pill subtle">Suite: cocktails · daily ops · inventory · compliance · events · guests</span>
-          <span class="pill subtle">Claude via OpenRouter · runs locally</span>
-        </div>
-        <div class="hero__actions cluster">
-          <a class="btn btn-primary smooth-link" href="#tools">Explore the glass cards</a>
-          <a class="btn btn-ghost smooth-link" href="#playbook">Browse the field playbook</a>
-        </div>
-      </div>
-      <div class="hero__scene" aria-hidden="true">
-        <div class="hero-insight-grid">
-          <article class="hero-insight-card hero-insight-card--prime">
-            <p class="eyebrow">Hidden signal</p>
-            <h3>Service health · 92%</h3>
-            <ul class="insight-list">
-              <li>Daily Ops issued · 12 KPIs green</li>
-              <li>Reviews cleared in 11 minutes</li>
-              <li>Procurement buffer floating at +9%</li>
-            </ul>
-          </article>
-          <article class="hero-insight-card">
-            <p class="eyebrow">Today's cadence</p>
-            <dl class="insight-timeline">
-              <div>
-                <dt>08:45</dt>
-                <dd>Claude rebuilds rota · Beth signs off</dd>
-              </div>
-              <div>
-                <dt>12:30</dt>
-                <dd>Lunch covers 81% · WhatsApp push goes live</dd>
-              </div>
-              <div>
-                <dt>17:10</dt>
-                <dd>Inventory board flags low-waste garnish</dd>
-              </div>
-            </dl>
-          </article>
-          <article class="hero-insight-card hero-insight-card--accent">
-            <p class="eyebrow">Toolkit</p>
-            <h3>21 liquid-glass workflows</h3>
-            <p class="muted">No logins. Venue memory + OpenRouter key stay on your machine so the suite speaks exactly like Hidden every time.</p>
-            <div class="hero-progress">
-              <span class="hero-progress__label">Onboarding</span>
-              <div class="hero-progress__track">
-                <span class="hero-progress__fill" style="width:95%"></span>
-              </div>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <div data-profile-mount></div>
-
-    <section class="trust-strip glass-card" aria-label="Trust markers">
-      <p class="trust-strip__label">Operators rely on Hospitality Pro for</p>
-      <div class="trust-strip__logos">
-        <span>Glassmorphism UI · zero SaaS logins</span>
-        <span>Runs entirely in your browser</span>
-        <span>Operator-owned data + API keys</span>
-        <span>Claude + venue memory paired locally</span>
-        <span>Built by a Michelin-trained operator</span>
-      </div>
-    </section>
-
-    <section class="section" id="tools">
-      <div class="section__header">
-        <p class="section__eyebrow">Liquid Glass Suite</p>
-        <h2 class="section__title">Command Hidden from one velvet dashboard.</h2>
-        <p class="section__description muted">Every card opens inside your browser. Add a free OpenRouter API key in any tool to unlock AI assistance — it never leaves your machine.</p>
-      </div>
-
-      <div class="tool-categories">
-        <article class="tool-category glass-panel">
-          <header class="tool-category__header">
-            <p class="section-eyebrow">Signature consoles</p>
-            <h3 class="tool-category__title">The boards Hidden touches every single service</h3>
-            <p class="tool-category__description muted">Cocktail profitability, the Ops heartbeat, and inventory discipline — surfaced as translucent tiles.</p>
-          </header>
-          <div class="tool-grid">
-            <a class="tool-card" href="tools/cocktail-calculator/index.html">
-              <span class="pill highlight">Hidden launch</span>
-              <h3>Cocktail Profit &amp; ABV Console</h3>
-              <p>Liquid-glass calculator for signature serves. ROI, dilution-aware ABV, and GP targets in one view.</p>
-              <span class="card-cta">Launch →</span>
-            </a>
-            <a class="tool-card" href="tools/daily-ops/index.html">
-              <span class="pill highlight">Live inside service</span>
-              <h3>Daily Ops Command Board</h3>
-              <p>Hidden's daily ritual — open KPIs, cover forecasts, briefing prompts, and autotuned WhatsApp nudges.</p>
-              <span class="card-cta">Launch →</span>
-            </a>
-            <a class="tool-card" href="tools/eod-reconciliation/index.html">
-              <span class="pill highlight">New</span>
-              <h3>End-of-Night Reconciliation</h3>
-              <p>Close the night in under 3 minutes. Till variance, cash/card split, comps, live GP%, and a one-tap WhatsApp-ready summary.</p>
-              <span class="card-cta">Launch →</span>
-            </a>
-            <a class="tool-card" href="tools/tip-pool/index.html">
-              <span class="pill highlight">New</span>
-              <h3>Staff Tip Pool Calculator</h3>
-              <p>Fair, weighted tip distribution in under 60 seconds. Role weights, hours worked, penny-accurate splits, and per-night history.</p>
-              <span class="card-cta">Launch →</span>
-            </a>
-            <a class="tool-card" href="tools/supplier-orders/index.html">
-              <span class="pill highlight">New</span>
-              <h3>Supplier Automation Console</h3>
-              <p>Live PAR tracking against your ingredient database. Auto-generates ready-to-send order sheets per supplier with spend forecasting.</p>
-              <span class="card-cta">Launch →</span>
-            </a>
-            <a class="tool-card" href="tools/recipe-costing/index.html">
-              <h3>GP &amp; Recipe Costing Suite</h3>
-              <p>Ingredient roll-ups, yield factors, target GP, allergen flags, and print-ready kitchen cards.</p>
-              <span class="card-cta">Launch →</span>
-            </a>
-          </div>
-        </article>
-
-        <article class="tool-category glass-panel">
-          <header class="tool-category__header">
-            <p class="section-eyebrow">Kitchen &amp; Finance</p>
-            <h3 class="tool-category__title">Guard GP, prep rhythm, and procurement buffers</h3>
-            <p class="tool-category__description muted">For chefs who still cook and owners who watch net cash. Every decision shows its margin impact immediately.</p>
-          </header>
-          <div class="tool-grid">
-            <a class="tool-card" href="tools/food-waste/index.html">
-              <span class="pill highlight">New</span>
-              <h3>Food Waste Audit Tracker</h3>
-              <p>Log waste in seconds, see the cost clearly. Daily/weekly/monthly tracking, category breakdown, targets, and one-tap waste reports. UK venues lose £10k+/year — make it visible.</p>
-              <span class="card-cta">Launch →</span>
-            </a>
-            <a class="tool-card" href="tools/menu-engineering/index.html">
-              <span class="pill highlight">Menu science</span>
-              <h3>Menu Engineering Analyzer</h3>
-              <p>Stars, Ploughhorses, Puzzles, Dogs — with AI-generated directives for each dish.</p>
-              <span class="card-cta">Launch →</span>
-            </a>
-            <a class="tool-card" href="tools/procurement-generator/index.html">
-              <h3>Smart Procurement Generator</h3>
-              <p>Turn next week's covers into a supplier-ready order list with a smart buffer baked in.</p>
-              <span class="card-cta">Launch →</span>
-            </a>
-            <a class="tool-card" href="tools/delivery-pricing/index.html">
-              <h3>Delivery Pricing Optimizer</h3>
-              <p>Real GP after Uber Eats / Deliveroo commission. Fix pricing, build high-margin bundles.</p>
-              <span class="card-cta">Launch →</span>
-            </a>
-            <a class="tool-card" href="tools/financial-narrative/index.html">
-              <h3>Financial Narrative Generator</h3>
-              <p>Raw weekly P&amp;L → plain-English executive summary with directives and red-flag alerts.</p>
-              <span class="card-cta">Launch →</span>
-            </a>
-          </div>
-        </article>
-
-        <article class="tool-category glass-panel">
-          <header class="tool-category__header">
-            <p class="section-eyebrow">Guest Experience &amp; Team</p>
-            <h3 class="tool-category__title">Protect the brand voice and keep the rota humane</h3>
-            <p class="tool-category__description muted">Reviews, pre-arrival, allergen compliance, SOPs, and schedules — tuned for tone, regulation, and morale.</p>
-          </header>
-          <div class="tool-grid">
-            <a class="tool-card" href="tools/review-responder/index.html">
-              <span class="pill highlight">Start here</span>
-              <h3>AI Review Responder</h3>
-              <p>Platform-specific, on-brand replies to TripAdvisor, Google &amp; Booking.com. Never says "discount".</p>
-              <span class="card-cta">Launch →</span>
-            </a>
-            <a class="tool-card" href="tools/pre-arrival-email/index.html">
-              <h3>Pre-Arrival Email Builder</h3>
-              <p>Concierge-grade sequences that build anticipation and invite natural upsells.</p>
-              <span class="card-cta">Launch →</span>
-            </a>
-            <a class="tool-card" href="tools/allergen-matrix/index.html">
-              <h3>Allergen Matrix Builder</h3>
-              <p>All 14 allergens auto-detected. Compliance-ready matrix with CSV and print export.</p>
-              <span class="card-cta">Launch →</span>
-            </a>
-            <a class="tool-card" href="tools/rota-optimizer/index.html">
-              <h3>AI Rota Optimizer</h3>
-              <p>Availability-aware scheduling with cover minimums, overtime warnings, and manager notes.</p>
-              <span class="card-cta">Launch →</span>
-            </a>
-            <a class="tool-card" href="tools/sop-generator/index.html">
-              <h3>SOP Generator</h3>
-              <p>Rough notes → numbered, print-ready Standard Operating Procedure in 90 seconds.</p>
-              <span class="card-cta">Launch →</span>
-            </a>
-            <a class="tool-card" href="tools/event-planner/index.html">
-              <h3>Private Event & Hire Planner</h3>
-              <p>Enquiry-to-complete pipeline, quote generator, min spend calculator, deposit tracker — Tripleseat without the £300/month bill.</p>
-              <span class="card-cta">Launch →</span>
-            </a>
-            <a class="tool-card" href="tools/guest-crm/index.html">
-              <h3>Guest Micro-CRM</h3>
-              <p>The little black book. Remember every regular — preferences, occasions, lifetime value. SevenRooms-tier features, 100% private, zero cost.</p>
-              <span class="card-cta">Launch →</span>
-            </a>
-            <a class="tool-card" href="tools/staff-training/index.html">
-              <span class="pill highlight">New</span>
-              <h3>Staff Training & Onboarding Hub</h3>
-              <p>Induction checklists, menu knowledge base, competency assessments, and a manager progress dashboard. Trainual-quality onboarding — free, private, mobile-first.</p>
-              <span class="card-cta">Launch →</span>
-            </a>
-            <a class="tool-card" href="tools/food-safety/index.html">
-              <span class="pill highlight">New</span>
-              <h3>Food Safety & HACCP Compliance Logger</h3>
-              <p>Temperature logs, cleaning schedules, corrective actions, and allergen awareness — all in one EHO-ready compliance record. UK legal requirement for every food business.</p>
-              <span class="card-cta">Launch →</span>
-            </a>
-            <a class="tool-card" href="tools/venue-safety/index.html">
-              <span class="pill highlight">New</span>
-              <h3>Martyn's Law & Venue Safety Hub</h3>
-              <p>Counter-terrorism risk assessment, emergency procedures, staff training records, and compliance dashboard. UK law since April 2025 — criminal liability for non-compliance. The only free tool built for independent venues.</p>
-              <span class="card-cta">Launch →</span>
-            </a>
-            <a class="tool-card" href="tools/employment-rights/index.html">
-              <span class="pill highlight">New</span>
-              <h3>Employment Rights Compliance Console</h3>
-              <p>Zero-hour contract oversight, 4-week holiday entitlement maths, Tip Act Phase 2 logging, predictable pattern requests, and a documentation locker in one audit-ready glass card.</p>
-              <span class="card-cta">Launch →</span>
-            </a>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <section class="section" id="playbook">
-      <div class="section__header">
-        <p class="section__eyebrow">Field Guide</p>
-        <h2 class="section__title">The Hospitality Pro Playbook</h2>
-        <p class="section__description muted">9,000+ words. 50+ prompts. Seven department cadences. Built by someone who's done the service, not just observed it.</p>
-      </div>
-      <article class="glass-panel playbook-panel">
-        <div>
-          <h3>What's inside</h3>
-          <ul class="feature-list">
-            <li><span>10 daily workflows — pre-arrival, rota, procurement, finance, reviews.</span></li>
-            <li><span>Marketing, Revenue, HR, Procurement, Events, Sustainability &amp; Sales modules.</span></li>
-            <li><span>ROI calculator, onboarding map, and "no guesswork" implementation notes.</span></li>
-            <li><span>50+ prompts — copy/paste ready, zero AI learning curve.</span></li>
-          </ul>
-        </div>
-        <div class="playbook-actions">
-          <a class="btn btn-primary" href="guide.md" target="_blank" rel="noreferrer">Read the playbook</a>
-          <a class="btn btn-ghost" href="guide.md" download>Download markdown</a>
-        </div>
-      </article>
-    </section>
-
-    <section class="section" id="about">
-      <div class="section__header">
-        <p class="section__eyebrow">About</p>
-        <h2 class="section__title">Built by Jordan Pitts</h2>
-        <p class="section__description muted">Michelin kitchens. 23-property hotel groups. Eight-figure revenue systems. Then AI. Every tool here solved a live-fire problem before it landed on this page.</p>
-      </div>
-      <div class="about-grid">
-        <article class="about-panel glass-panel">
-          <p class="muted">
-            "I've cooked on the pass at a Michelin-starred restaurant, steered purchasing across 23 hotels during a pandemic, and built automation that took a business from £800k to £12M. Hospitality Pro keeps that muscle memory intact — it's designed for someone mid-service, not someone sat in a meeting."
-          </p>
-          <p class="signature">— Jordan Pitts</p>
-        </article>
-        <article class="cta-panel glass-panel">
-          <h3 class="cta-panel__title">Need bespoke automation?</h3>
-          <p class="cta-panel__description muted">Jordan deploys these systems for independent operators, multi-site groups, and heritage experiences. If you need the suite tuned to your venues or integrated with your PMS/POS, let's design it.</p>
-          <div class="cta-panel__actions">
-            <a class="btn btn-primary" href="https://jordanpitts.com" target="_blank" rel="noreferrer">Work with Jordan →</a>
-          </div>
-        </article>
-      </div>
-    </section>
   </main>
-
-  <footer class="footer">
-    Built by <a href="https://jordanpitts.com" target="_blank" rel="noreferrer">Jordan Pitts</a> · Hospitality Pro © <span id="year"></span>
-  </footer>
-
-  <script src="/assets/scripts/venue-profile.js" defer></script>
-  <script>
-    const currentYearEl = document.getElementById('year');
-    if (currentYearEl) currentYearEl.textContent = new Date().getFullYear();
-    document.querySelectorAll('a.smooth-link').forEach((anchor) => {
-      anchor.addEventListener('click', (event) => {
-        const targetId = anchor.getAttribute('href');
-        if (!targetId || !targetId.startsWith('#')) return;
-        const target = document.querySelector(targetId);
-        if (!target) return;
-        event.preventDefault();
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      });
-    });
-  </script>
 </body>
 </html>
