@@ -77,6 +77,13 @@ Premium, dark, editorial, restrained. Clean typography. Liquid-glass UI elements
 - EHO / authority-ready export compiling the entire compliance package plus JSON backup/restore.
 - 100% localStorage, Liquid Glass dark premium UI, mobile-first, serious/official tone to match Martyn's Law legal stakes (Royal Assent April 2025).
 
+### 14. Employment Rights Act Compliance Console ✅ SHIPPED
+- Contract & schedule tracker logging contract type, rota reality, and breach detection with liquid glass status flags.
+- Rolling 4-week average holiday entitlement engine with ledger, remaining balance, and negative liability warnings.
+- Tip Allocation (Phase 2) compliance log — consultation evidence, payout timing, distribution math, and instant red/amber/green scoring.
+- Predictable working pattern request board with statutory deadline reminders plus documentation locker for signed contracts, RTW evidence, and policy receipts.
+- Export-grade inspection pack summarising the entire compliance posture for owners, HR, or Fair Work Agency officers.
+
 
 ### 10. Guest Micro-CRM ✅ SHIPPED
 - "Little black book" for premium venues — remember your regulars.
@@ -97,20 +104,20 @@ Premium, dark, editorial, restrained. Clean typography. Liquid-glass UI elements
 - Pairs with Rota Optimizer, EOD Reconciliation, and Financial Narrative.
 
 ## Infinite Loop · Immediate Next Build
-**Employment Rights Act Compliance Console**
-- `tools/employment-rights/index.html`
-- **Why now:** The Employment Rights Act 2025 received Royal Assent in December 2025 with day-one sick pay/paternity entitlement, Fair Work Agency oversight, and zero-hour reforms rolling in from April 2026, plus Phase 2 of the Employment (Allocation of Tips) Act landing October 2026 (Morning Advertiser, Moore Kingston Smith, TroncMaster Solutions). Operators must evidence compliance before inspections start.
+**Premises Licence & Incident Assurance Console**
+- `tools/licence-assurance/index.html`
+- **Why now:** Late-night licensing reviews have spiked since the Home Office spiking guidance (2025) and police-led "Safer Nights" operations. Councils are conditioning renewals on watertight refusal logs, CCTV maintenance evidence, and TEN oversight. Hidden needs a single source of truth before Wakefield licensing officers come knocking.
 - **Core modules:**
-  - Day-One Rights register — capture SSP eligibility, paternity requests, and onboarding attestations the moment a staff member starts.
-  - Sick pay & leave cost forecaster — model SSP / paternity cost exposure as staffing levels shift.
-  - Shift notice & cancellation log — record rota publication dates, short-notice changes, and calculate compensation owed under the upcoming zero-hour fairness rules.
-  - Tip policy consultation tracker — document worker consultations, distribute anonymised summaries, and store signed policies ahead of Phase 2 audits.
-  - Fair Work Agency audit export — one-click dossier covering contracts issued, notice logs, tip distribution evidence, and grievance resolutions.
-  - Worker status board — flag agency/zero-hour staff needing guaranteed hours offers, track exclusivity clauses and deadlines.
-- **Legal context:** Employment Rights Act 2025 staggers obligations through 2026–27: day-one rights + Fair Work Agency (Apr 2026), stricter zero-hour protections and "fire & rehire" limits (late 2026), plus tipping consultations (Oct 2026). Documentation failures risk tribunal losses and civil penalties.
-- **Competitive gap:** HR SaaS suites charge £3k+/yr and ignore independent venues. No lightweight, local-first console exists that translates the legislation into actionable checklists + evidence logs.
-- 100% localStorage, mobile-first, Liquid Glass aesthetic — but with audit-grade seriousness.
-- Direct upsell path: Employment law readiness retainer for Jordan's clients.
+  - Premises licence register — DPS, permitted hours, embedded conditions, CCTV requirements, noise and door staffing ratios with renewal countdowns.
+  - Challenge 25 refusal + ejection log with intoxication/spiking markers and instant police reference export.
+  - TEN planner + incident calendar — track submissions, granted dates, trading hour variations, and required stewarding levels.
+  - CCTV & equipment audit — weekly test log, fault tracking, engineer call-outs, retention checks.
+  - Door/SIA roster + training proofs (search, bag checks, incident handling) with expiries.
+  - Authority export — bundle last 90 days of refusals, incidents, CCTV tests, TEN paperwork, and condition compliance evidence in one click.
+- **Legal context:** Licensing Act 2003 reviews routinely impose extra conditions; missing refusal logs or CCTV maintenance can lead to suspension or reduced hours. The 2026 Government alcohol strategy is expected to tighten record keeping further.
+- **Competitive gap:** Third-party "incident books" are still paper pads. No digital, offline-first, audit-grade solution exists for single-site premium venues that need EHO + police-ready packs instantly.
+- 100% localStorage, mobile-first, same Liquid Glass aesthetic with a more formal, official tone.
+- Consultable asset: positions Jordan to sell "licensing assurance" engagements bundled with Martyn's Law + Employment Rights readiness.
 
 ### Why This Wins
 - **Unavoidable mandate**: employment-law reforms hit *every* venue regardless of size — unlike Martyn's Law tiering.
@@ -151,6 +158,7 @@ Premium, dark, editorial, restrained. Clean typography. Liquid-glass UI elements
 | Staff Training & Onboarding Hub | /tools/staff-training/ | ✅ Live |
 | Food Safety & HACCP Compliance Logger | /tools/food-safety/ | ✅ Live |
 | Martyn's Law & Venue Safety Hub | /tools/venue-safety/ | ✅ Live |
+| Employment Rights Compliance Console | /tools/employment-rights/ | ✅ Live |
 
 ## The Infinite Loop Protocol
 At the end of every task list, the system MUST execute the following sequence indefinitely:

@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Employment Rights Act Compliance Console · Hospitality Pro</title>
+  <link rel="stylesheet" href="/assets/styles/system.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --card-bg: rgba(255, 255, 255, 0.035);
+      --border: rgba(255, 255, 255, 0.12);
+      --glass-blur: 18px;
+      --red: #f87171;
+      --amber: #f5b74c;
+      --green: #4ade80;
+    }
+    body { font-family: var(--font-sans, 'Inter', system-ui); }
+    .page-shell { max-width: 1080px; margin: 0 auto; padding: var(--space-md); }
+    .back-link { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--color-text-muted); text-decoration: none; font-size: 0.85rem; margin-bottom: var(--space-md); }
+    .back-link:hover { color: var(--color-gold); }
+    .page-header { text-align: center; padding-bottom: var(--space-md); }
+    .page-header .eyebrow { letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-text-muted); font-size: 0.75rem; }
+    .page-header h1 { font-family: var(--font-serif); font-size: clamp(1.8rem, 4vw, 2.9rem); margin: 0.25rem 0; }
+    .page-header p { color: var(--color-text-muted); max-width: 720px; margin: 0.5rem auto 1.25rem; }
+    .law-badge { display: inline-flex; gap: 0.6rem; align-items: center; padding: 0.55rem 0.95rem; border-radius: 999px; border: 1px solid rgba(248, 246, 227, 0.35); color: #f5e6c4; font-size: 0.78rem; background: rgba(248, 246, 227, 0.08); }
+
+    .glass-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: var(--space-md); backdrop-filter: blur(var(--glass-blur)); -webkit-backdrop-filter: blur(var(--glass-blur)); margin-bottom: var(--space-md); }
+    .section-title { font-family: var(--font-serif); margin: 0 0 0.35rem; font-size: 1.3rem; }
+    .section-desc { margin: 0 0 var(--space-sm); color: var(--color-text-muted); font-size: 0.9rem; }
+
+    .status-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--space-sm); margin-top: var(--space-sm); }
+    .status-card { border: 1px solid var(--border); border-radius: var(--radius-md); padding: 0.9rem; position: relative; overflow: hidden; background: rgba(255,255,255,0.03); }
+    .status-card::before { content: ""; position: absolute; top: 0; left: 0; height: 3px; width: 100%; background: rgba(255,255,255,0.08); }
+    .status-card.green::before { background: var(--green); }
+    .status-card.amber::before { background: var(--amber); }
+    .status-card.red::before { background: var(--red); }
+    .status-card.grey::before { background: rgba(255,255,255,0.12); }
+    .status-label { font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-text-muted); }
+    .status-value { font-size: 1.9rem; font-family: var(--font-mono); margin: 0.3rem 0; }
+    .status-note { font-size: 0.78rem; color: var(--color-text-muted); }
+
+    .alert-board { display: flex; flex-direction: column; gap: 0.6rem; }
+    .alert-pill { border-radius: var(--radius-md); border: 1px solid rgba(255,255,255,0.1); padding: 0.6rem 0.8rem; font-size: 0.82rem; display: flex; gap: 0.6rem; align-items: center; }
+    .alert-pill .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .alert-pill.green .dot { background: var(--green); }
+    .alert-pill.amber .dot { background: var(--amber); }
+    .alert-pill.red .dot { background: var(--red); }
+
+    .tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); overflow-x: auto; margin-bottom: var(--space-md); }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab-btn { padding: 0.9rem 1.1rem; color: var(--color-text-muted); background: transparent; border: none; border-bottom: 2px solid transparent; font-weight: 600; font-size: 0.82rem; letter-spacing: 0.05em; text-transform: uppercase; cursor: pointer; }
+    .tab-btn.active { color: var(--color-gold); border-bottom-color: var(--color-gold); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--space-sm); }
+    label { font-size: 0.78rem; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
+    input[type="text"], input[type="number"], input[type="date"], input[type="week"], textarea, select {
+      width: 100%; padding: 0.6rem 0.75rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); color: var(--color-text); font-size: 0.9rem; font-family: inherit; box-sizing: border-box;
+    }
+    textarea { min-height: 70px; resize: vertical; }
+    input:focus, textarea:focus, select:focus { outline: none; border-color: rgba(243,201,139,0.6); }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; padding: 0.65rem 1.1rem; border-radius: var(--radius-sm); border: none; font-weight: 600; cursor: pointer; }
+    .btn-primary { background: var(--color-gold); color: #0b0b0b; }
+    .btn-ghost { background: rgba(255,255,255,0.05); color: var(--color-text); border: 1px solid var(--border); }
+    .btn-danger { background: rgba(248,113,113,0.1); color: var(--red); border: 1px solid rgba(248,113,113,0.3); }
+    .btn-sm { padding: 0.35rem 0.7rem; font-size: 0.76rem; }
+    .btn-row { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+    .table-wrap { overflow-x: auto; border-radius: var(--radius-md); border: 1px solid rgba(255,255,255,0.06); }
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    th { text-align: left; padding: 0.7rem 0.9rem; text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.7rem; color: var(--color-text-muted); background: rgba(255,255,255,0.03); }
+    td { padding: 0.65rem 0.9rem; border-top: 1px solid rgba(255,255,255,0.05); vertical-align: top; }
+
+    .badge { display: inline-flex; align-items: center; padding: 0.1rem 0.5rem; border-radius: 999px; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
+    .badge.green { background: rgba(74, 222, 128, 0.12); color: var(--green); border: 1px solid rgba(74, 222, 128, 0.4); }
+    .badge.amber { background: rgba(245, 183, 76, 0.12); color: var(--amber); border: 1px solid rgba(245, 183, 76, 0.4); }
+    .badge.red { background: rgba(248, 113, 113, 0.12); color: var(--red); border: 1px solid rgba(248, 113, 113, 0.4); }
+    .badge.grey { background: rgba(255,255,255,0.06); color: var(--color-text-muted); border: 1px solid rgba(255,255,255,0.15); }
+
+    .list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.4rem; }
+    .list-item { padding: 0.55rem 0.65rem; border-radius: var(--radius-sm); background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); display: flex; gap: 0.7rem; justify-content: space-between; align-items: center; }
+    .list-item strong { display: block; font-size: 0.85rem; }
+    .list-item span { font-size: 0.78rem; color: var(--color-text-muted); }
+
+    .export-area textarea { width: 100%; min-height: 220px; font-family: var(--font-mono); font-size: 0.85rem; }
+
+    .empty { text-align: center; padding: 1rem; color: var(--color-text-muted); font-size: 0.85rem; border: 1px dashed rgba(255,255,255,0.1); border-radius: var(--radius-md); }
+
+    @media (max-width: 720px) {
+      .page-shell { padding: var(--space-sm); }
+      .tabs { flex-wrap: nowrap; }
+      th, td { white-space: nowrap; }
+      .list-item { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <a class="back-link" href="/">← Hospitality Pro</a>
+    <header class="page-header">
+      <p class="eyebrow">Employment Rights Act 2025 · Tip Act Phase 2</p>
+      <h1>Employment Rights Compliance Console</h1>
+      <p>Track contracts, rota reality, holiday liability, predictable working requests, tip allocations, and statutory paperwork inside one liquid-glass console. Built for onsite inspections—100% local, no SaaS.</p>
+      <div class="law-badge">
+        <span>⚖️</span>
+        Fair Work Agency-ready · Day-one rights · Zero-hour reforms · Tip allocation audits
+      </div>
+    </header>
+
+    <section class="glass-card">
+      <h2 class="section-title">Compliance posture</h2>
+      <p class="section-desc">Live signal on the four stress points inspectors will test first.</p>
+      <div class="status-grid" id="statusGrid">
+        <div class="status-card grey">
+          <p class="status-label">Contracts vs rota</p>
+          <p class="status-value" id="statusContract">—</p>
+          <p class="status-note" id="statusContractNote">No data recorded</p>
+        </div>
+        <div class="status-card grey">
+          <p class="status-label">Holiday liability</p>
+          <p class="status-value" id="statusHoliday">—</p>
+          <p class="status-note" id="statusHolidayNote">Awaiting hours</p>
+        </div>
+        <div class="status-card grey">
+          <p class="status-label">Tip compliance</p>
+          <p class="status-value" id="statusTips">—</p>
+          <p class="status-note" id="statusTipsNote">No distributions logged</p>
+        </div>
+        <div class="status-card grey">
+          <p class="status-label">Predictable requests</p>
+          <p class="status-value" id="statusRequests">—</p>
+          <p class="status-note" id="statusRequestsNote">No requests logged</p>
+        </div>
+      </div>
+      <div class="alert-board" id="alertBoard" style="margin-top:1rem;"></div>
+    </section>
+
+    <nav class="tabs" role="tablist">
+      <button class="tab-btn active" role="tab" onclick="showTab('dashboard', this)">📊 Dashboard</button>
+      <button class="tab-btn" role="tab" onclick="showTab('contracts', this)">📄 Contracts & Hours</button>
+      <button class="tab-btn" role="tab" onclick="showTab('holiday', this)">🌤 Holiday & Leave</button>
+      <button class="tab-btn" role="tab" onclick="showTab('tips', this)">💷 Tip Allocation</button>
+      <button class="tab-btn" role="tab" onclick="showTab('predictable', this)">⏱ Predictable Pattern</button>
+      <button class="tab-btn" role="tab" onclick="showTab('documents', this)">🗂 Documentation Locker</button>
+      <button class="tab-btn" role="tab" onclick="showTab('export', this)">📤 Export</button>
+    </nav>
+
+    <section id="tab-dashboard" class="tab-panel active">
+      <div class="glass-card">
+        <h3 class="section-title">Inspection triage</h3>
+        <p class="section-desc">Critical blockers summarised for owners, HR, or the Fair Work Agency.</p>
+        <ul class="list" id="issueList"></ul>
+      </div>
+      <div class="glass-card">
+        <h3 class="section-title">Upcoming statutory deadlines</h3>
+        <p class="section-desc">30-day window for predictable pattern requests and 4-week tip distribution rule.</p>
+        <div id="deadlineList" class="list"></div>
+      </div>
+    </section>
+
+    <section id="tab-contracts" class="tab-panel">
+      <div class="glass-card">
+        <h3 class="section-title">Staff contract register</h3>
+        <p class="section-desc">Log contract status, contracted hours, and actual rota exposure. Breaches are flagged automatically when rota data consistently outpaces contractual hours.</p>
+        <form id="staffForm" class="form-grid" onsubmit="addStaff(event)">
+          <div>
+            <label for="staffName">Name</label>
+            <input id="staffName" name="staffName" type="text" placeholder="e.g. Beth Carter" required />
+          </div>
+          <div>
+            <label for="staffRole">Role</label>
+            <input id="staffRole" name="staffRole" type="text" placeholder="e.g. Floor Manager" required />
+          </div>
+          <div>
+            <label for="staffContractType">Status</label>
+            <select id="staffContractType" required>
+              <option value="employee">Employee</option>
+              <option value="worker">Worker</option>
+            </select>
+          </div>
+          <div>
+            <label for="staffArrangement">Contract</label>
+            <select id="staffArrangement" required>
+              <option value="fixed">Fixed hours</option>
+              <option value="zero">Zero-hour</option>
+            </select>
+          </div>
+          <div>
+            <label for="staffHours">Contracted hours (per week)</label>
+            <input id="staffHours" type="number" step="0.1" min="1" placeholder="e.g. 38.5" required />
+          </div>
+          <div>
+            <label for="staffStart">Start date</label>
+            <input id="staffStart" type="date" />
+          </div>
+          <div style="grid-column: span 2;">
+            <label for="staffNotes">Notes</label>
+            <textarea id="staffNotes" placeholder="Key clauses, exclusivity, probation milestones"></textarea>
+          </div>
+          <div>
+            <button class="btn btn-primary" type="submit">Add staff member</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="glass-card">
+        <h3 class="section-title">Log weeks worked</h3>
+        <p class="section-desc">Pull hours from the rota optimizer or enter manually. Rolling averages power contract breach and holiday entitlement calculations.</p>
+        <form id="hoursForm" class="form-grid" onsubmit="logHours(event)">
+          <div>
+            <label for="hoursStaff">Staff member</label>
+            <select id="hoursStaff" required></select>
+          </div>
+          <div>
+            <label for="hoursWeek">Week ending</label>
+            <input id="hoursWeek" type="date" required />
+          </div>
+          <div>
+            <label for="hoursWorked">Actual hours</label>
+            <input id="hoursWorked" type="number" step="0.1" min="0" required />
+          </div>
+          <div>
+            <label for="hoursSource">Source</label>
+            <input id="hoursSource" type="text" placeholder="e.g. Rota v14 / manual" />
+          </div>
+          <div>
+            <button class="btn btn-ghost" type="submit">Save week</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="glass-card">
+        <h3 class="section-title">Contract vs rota reality</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Staff</th>
+                <th>Contract</th>
+                <th>Contracted hrs</th>
+                <th>4-week avg</th>
+                <th>Variance</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="staffTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-holiday" class="tab-panel">
+      <div class="glass-card">
+        <h3 class="section-title">Holiday entitlement calculator</h3>
+        <p class="section-desc">Entitlement uses a 4-week rolling average of hours worked × 5.6 weeks (UK statutory). Use the log below to deduct leave as it is approved.</p>
+        <form id="holidayForm" class="form-grid" onsubmit="logHoliday(event)">
+          <div>
+            <label for="holidayStaff">Staff member</label>
+            <select id="holidayStaff" required></select>
+          </div>
+          <div>
+            <label for="holidayDate">Holiday start</label>
+            <input id="holidayDate" type="date" required />
+          </div>
+          <div>
+            <label for="holidayHours">Hours allocated</label>
+            <input id="holidayHours" type="number" step="0.1" min="0" required />
+          </div>
+          <div>
+            <label for="holidayNotes">Notes</label>
+            <input id="holidayNotes" type="text" placeholder="e.g. Annual leave week 19" />
+          </div>
+          <div>
+            <button class="btn btn-ghost" type="submit">Deduct holiday</button>
+          </div>
+        </form>
+      </div>
+      <div class="glass-card">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Staff</th>
+                <th>Entitlement (hrs)</th>
+                <th>Taken</th>
+                <th>Remaining</th>
+                <th>Days (approx)</th>
+              </tr>
+            </thead>
+            <tbody id="holidayTable"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="glass-card">
+        <h3 class="section-title">Holiday ledger</h3>
+        <div id="holidayLedger" class="list"></div>
+      </div>
+    </section>
+
+    <section id="tab-tips" class="tab-panel">
+      <div class="glass-card">
+        <h3 class="section-title">Tip allocation log</h3>
+        <p class="section-desc">Document total tips collected, how they were distributed, consultation evidence, and payout timing. Non-compliance is flagged automatically.</p>
+        <form id="tipForm" class="form-grid" onsubmit="addTipLog(event)">
+          <div>
+            <label for="tipDate">Period ending</label>
+            <input id="tipDate" type="date" required />
+          </div>
+          <div>
+            <label for="tipTotal">Tips collected (£)</label>
+            <input id="tipTotal" type="number" step="0.01" min="0" required />
+          </div>
+          <div>
+            <label for="tipDistributed">Distributed (£)</label>
+            <input id="tipDistributed" type="number" step="0.01" min="0" required />
+          </div>
+          <div>
+            <label for="tipDistributionDate">Distribution date</label>
+            <input id="tipDistributionDate" type="date" required />
+          </div>
+          <div>
+            <label for="tipMethod">Method</label>
+            <select id="tipMethod">
+              <option value="tronc">Tronc payroll</option>
+              <option value="payroll">Payroll</option>
+              <option value="cash">Cash envelopes</option>
+            </select>
+          </div>
+          <div>
+            <label for="tipConsulted">Consultation completed?</label>
+            <select id="tipConsulted">
+              <option value="yes">Yes</option>
+              <option value="no">No</option>
+            </select>
+          </div>
+          <div style="grid-column: span 2;">
+            <label for="tipNotes">Notes</label>
+            <textarea id="tipNotes" placeholder="Who attended consultation, objections raised, adjustments"></textarea>
+          </div>
+          <div>
+            <button class="btn btn-ghost" type="submit">Record distribution</button>
+          </div>
+        </form>
+      </div>
+      <div class="glass-card">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Tips vs distributed</th>
+                <th>Delay</th>
+                <th>Consultation</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="tipTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-predictable" class="tab-panel">
+      <div class="glass-card">
+        <h3 class="section-title">Right to request predictable working pattern</h3>
+        <p class="section-desc">Requests must be acknowledged and resolved within one month. Use this tracker to prove response discipline and outcomes.</p>
+        <form id="requestForm" class="form-grid" onsubmit="addPatternRequest(event)">
+          <div>
+            <label for="requestName">Worker</label>
+            <input id="requestName" type="text" placeholder="e.g. Luca" required />
+          </div>
+          <div>
+            <label for="requestDate">Request date</label>
+            <input id="requestDate" type="date" required />
+          </div>
+          <div>
+            <label for="currentPattern">Current pattern</label>
+            <textarea id="currentPattern" placeholder="e.g. Zero-hour, 2 days notice" required></textarea>
+          </div>
+          <div>
+            <label for="requestedPattern">Requested pattern</label>
+            <textarea id="requestedPattern" placeholder="e.g. Guaranteed 20 hrs, rota 2 weeks ahead" required></textarea>
+          </div>
+          <div>
+            <label for="requestNotes">Manager notes</label>
+            <textarea id="requestNotes" placeholder="Impact on rota, consultation steps"></textarea>
+          </div>
+          <div>
+            <button class="btn btn-primary" type="submit">Log request</button>
+          </div>
+        </form>
+      </div>
+      <div class="glass-card">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Worker</th>
+                <th>Submitted</th>
+                <th>Deadline</th>
+                <th>Status</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody id="requestTable"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="glass-card">
+        <h3 class="section-title">Auto-reminders</h3>
+        <div id="reminderList" class="list"></div>
+      </div>
+    </section>
+
+    <section id="tab-documents" class="tab-panel">
+      <div class="glass-card">
+        <h3 class="section-title">Documentation locker</h3>
+        <p class="section-desc">Store references for signed contracts, P45/P60 acknowledgements, visas, RTW checks. Files stay wherever you store them—this locker records metadata for audits.</p>
+        <form id="docForm" class="form-grid" onsubmit="addDocument(event)">
+          <div>
+            <label for="docStaff">Staff</label>
+            <input id="docStaff" type="text" placeholder="e.g. Priya" required />
+          </div>
+          <div>
+            <label for="docType">Document</label>
+            <select id="docType">
+              <option value="contract">Signed contract</option>
+              <option value="p45">P45 / P60 confirmation</option>
+              <option value="visa">RTW / visa evidence</option>
+              <option value="policy">Policy acknowledgement</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div>
+            <label for="docReference">Location / reference</label>
+            <input id="docReference" type="text" placeholder="Drive › HR › Contracts › Beth.pdf" required />
+          </div>
+          <div>
+            <label for="docDate">Captured</label>
+            <input id="docDate" type="date" />
+          </div>
+          <div>
+            <label for="docExpiry">Expiry / review</label>
+            <input id="docExpiry" type="date" />
+          </div>
+          <div style="grid-column: span 2;">
+            <label for="docNotes">Notes</label>
+            <textarea id="docNotes" placeholder="Who verified RTW, ID used, follow-up needed"></textarea>
+          </div>
+          <div>
+            <button class="btn btn-ghost" type="submit">Save document</button>
+          </div>
+        </form>
+      </div>
+      <div class="glass-card">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Staff</th>
+                <th>Document</th>
+                <th>Reference</th>
+                <th>Captured</th>
+                <th>Expiry</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="docTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-export" class="tab-panel">
+      <div class="glass-card export-area">
+        <h3 class="section-title">Fair Work Agency dossier</h3>
+        <p class="section-desc">Generate a one-tap narrative for owners, lawyers, or inspectors. Copies to your clipboard and can be printed.</p>
+        <div class="btn-row" style="margin-bottom:0.5rem;">
+          <button class="btn btn-primary" onclick="generateExport()">Generate report</button>
+          <button class="btn btn-ghost" onclick="copyExport()">Copy to clipboard</button>
+          <button class="btn btn-ghost" onclick="window.print()">Print / PDF</button>
+        </div>
+        <textarea id="exportOutput" placeholder="Run report to populate snapshot"></textarea>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'hp_employment_rights_v1';
+    let state = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
+      staff: [],
+      tipLogs: [],
+      patternRequests: [],
+      documents: []
+    };
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      render();
+    }
+
+    function uuid() {
+      return crypto.randomUUID ? crypto.randomUUID() : 'id-' + Math.random().toString(16).slice(2);
+    }
+
+    function showTab(target, el) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      el.classList.add('active');
+      document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
+      document.getElementById('tab-' + target)?.classList.add('active');
+    }
+
+    function addStaff(event) {
+      event.preventDefault();
+      const staff = {
+        id: uuid(),
+        name: document.getElementById('staffName').value.trim(),
+        role: document.getElementById('staffRole').value.trim(),
+        contractType: document.getElementById('staffContractType').value,
+        arrangement: document.getElementById('staffArrangement').value,
+        contractedHours: Number(document.getElementById('staffHours').value) || 0,
+        startDate: document.getElementById('staffStart').value || null,
+        notes: document.getElementById('staffNotes').value.trim(),
+        actualLogs: [],
+        holidayLogs: []
+      };
+      state.staff.push(staff);
+      event.target.reset();
+      saveState();
+    }
+
+    function logHours(event) {
+      event.preventDefault();
+      const staffId = document.getElementById('hoursStaff').value;
+      const staff = state.staff.find(s => s.id === staffId);
+      if (!staff) return;
+      staff.actualLogs.push({
+        id: uuid(),
+        weekEnding: document.getElementById('hoursWeek').value,
+        hours: Number(document.getElementById('hoursWorked').value) || 0,
+        source: document.getElementById('hoursSource').value.trim()
+      });
+      staff.actualLogs.sort((a, b) => new Date(a.weekEnding) - new Date(b.weekEnding));
+      event.target.reset();
+      saveState();
+    }
+
+    function logHoliday(event) {
+      event.preventDefault();
+      const staff = state.staff.find(s => s.id === document.getElementById('holidayStaff').value);
+      if (!staff) return;
+      staff.holidayLogs.push({
+        id: uuid(),
+        date: document.getElementById('holidayDate').value,
+        hours: Number(document.getElementById('holidayHours').value) || 0,
+        notes: document.getElementById('holidayNotes').value.trim()
+      });
+      staff.holidayLogs.sort((a, b) => new Date(b.date) - new Date(a.date));
+      event.target.reset();
+      saveState();
+    }
+
+    function addTipLog(event) {
+      event.preventDefault();
+      state.tipLogs.push({
+        id: uuid(),
+        period: document.getElementById('tipDate').value,
+        total: Number(document.getElementById('tipTotal').value) || 0,
+        distributed: Number(document.getElementById('tipDistributed').value) || 0,
+        distributionDate: document.getElementById('tipDistributionDate').value,
+        method: document.getElementById('tipMethod').value,
+        consulted: document.getElementById('tipConsulted').value === 'yes',
+        notes: document.getElementById('tipNotes').value.trim()
+      });
+      event.target.reset();
+      saveState();
+    }
+
+    function addPatternRequest(event) {
+      event.preventDefault();
+      state.patternRequests.push({
+        id: uuid(),
+        worker: document.getElementById('requestName').value.trim(),
+        submitted: document.getElementById('requestDate').value,
+        currentPattern: document.getElementById('currentPattern').value.trim(),
+        requestedPattern: document.getElementById('requestedPattern').value.trim(),
+        notes: document.getElementById('requestNotes').value.trim(),
+        status: 'pending',
+        responseDate: null
+      });
+      event.target.reset();
+      saveState();
+    }
+
+    function changeRequestStatus(id, status) {
+      const request = state.patternRequests.find(r => r.id === id);
+      if (!request) return;
+      request.status = status;
+      if (status !== 'pending' && !request.responseDate) {
+        request.responseDate = new Date().toISOString().split('T')[0];
+      }
+      saveState();
+    }
+
+    function addDocument(event) {
+      event.preventDefault();
+      state.documents.push({
+        id: uuid(),
+        staff: document.getElementById('docStaff').value.trim(),
+        type: document.getElementById('docType').value,
+        reference: document.getElementById('docReference').value.trim(),
+        captured: document.getElementById('docDate').value,
+        expiry: document.getElementById('docExpiry').value,
+        notes: document.getElementById('docNotes').value.trim(),
+        verified: false
+      });
+      event.target.reset();
+      saveState();
+    }
+
+    function toggleDocument(id) {
+      const doc = state.documents.find(d => d.id === id);
+      if (!doc) return;
+      doc.verified = !doc.verified;
+      saveState();
+    }
+
+    function getAverageHours(staff) {
+      if (!staff.actualLogs.length) return staff.contractedHours;
+      const recent = [...staff.actualLogs].sort((a, b) => new Date(b.weekEnding) - new Date(a.weekEnding)).slice(0, 4);
+      const avg = recent.reduce((sum, log) => sum + (Number(log.hours) || 0), 0) / recent.length;
+      return Math.round(avg * 10) / 10;
+    }
+
+    function getBreachStatus(staff) {
+      if (!staff.actualLogs.length) return { label: 'No rota data', level: 'grey', note: 'Log hours to monitor' };
+      const recent = [...staff.actualLogs].sort((a, b) => new Date(b.weekEnding) - new Date(a.weekEnding)).slice(0, 4);
+      const breachWeeks = recent.filter(log => log.hours > staff.contractedHours * 1.05);
+      const latest = recent[0];
+      const variance = latest.hours - staff.contractedHours;
+      if (breachWeeks.length >= 3 || latest.hours > staff.contractedHours * 1.25) {
+        return { label: 'Red', level: 'red', note: `+${variance.toFixed(1)} hrs last logged week` };
+      }
+      if (breachWeeks.length >= 1) {
+        return { label: 'Amber', level: 'amber', note: `+${variance.toFixed(1)} hrs trend forming` };
+      }
+      return { label: 'Compliant', level: 'green', note: 'Within contractual bandwidth' };
+    }
+
+    function getHolidayStats(staff) {
+      const avgHours = getAverageHours(staff);
+      const entitlement = Math.round(avgHours * 5.6 * 10) / 10;
+      const taken = staff.holidayLogs.reduce((sum, log) => sum + (Number(log.hours) || 0), 0);
+      const remaining = Math.round((entitlement - taken) * 10) / 10;
+      return { avgHours, entitlement, taken, remaining };
+    }
+
+    function computeTipStatus(log) {
+      const pct = log.total ? (log.distributed / log.total) * 100 : 0;
+      const delay = log.distributionDate ? Math.round((new Date(log.distributionDate) - new Date(log.period)) / 86400000) : 999;
+      if (pct >= 100 && delay <= 30 && log.consulted) return { level: 'green', label: 'Compliant', note: `${pct.toFixed(0)}% · ${delay} days` };
+      if (pct >= 90 && delay <= 60) return { level: 'amber', label: 'Risk', note: `${pct.toFixed(0)}% · ${delay} days` };
+      return { level: 'red', label: 'Breach', note: `${pct.toFixed(0)}% · ${delay} days` };
+    }
+
+    function getRequestDeadline(request) {
+      if (!request.submitted) return null;
+      const date = new Date(request.submitted);
+      date.setMonth(date.getMonth() + 1);
+      return date.toISOString().split('T')[0];
+    }
+
+    function renderStaffTable() {
+      const body = document.getElementById('staffTable');
+      if (!state.staff.length) {
+        body.innerHTML = `<tr><td colspan="7" class="empty">No staff members logged yet.</td></tr>`;
+        return;
+      }
+      body.innerHTML = state.staff.map(staff => {
+        const avgHours = getAverageHours(staff);
+        const variance = Math.round((avgHours - staff.contractedHours) * 10) / 10;
+        const status = getBreachStatus(staff);
+        return `<tr>
+          <td><strong>${staff.name}</strong><br><span>${staff.role || ''}</span></td>
+          <td>${staff.contractType === 'employee' ? 'Employee' : 'Worker'}<br><span>${staff.arrangement === 'zero' ? 'Zero-hour' : 'Fixed'}</span></td>
+          <td>${staff.contractedHours || '—'}</td>
+          <td>${avgHours || '—'}</td>
+          <td>${variance > 0 ? '+' : ''}${variance.toFixed(1)}</td>
+          <td><span class="badge ${status.level}">${status.label}</span><br><small>${status.note}</small></td>
+          <td><button class="btn btn-sm btn-ghost" onclick="prefillHours('${staff.id}')">Log hours</button></td>
+        </tr>`;
+      }).join('');
+    }
+
+    function prefillHours(staffId) {
+      document.getElementById('hoursStaff').value = staffId;
+      document.getElementById('tab-contracts').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function renderHolidayTables() {
+      const tbody = document.getElementById('holidayTable');
+      if (!state.staff.length) {
+        tbody.innerHTML = `<tr><td colspan="5" class="empty">No staff available.</td></tr>`;
+        document.getElementById('holidayLedger').innerHTML = '<div class="empty">Log leave to see the ledger.</div>';
+        return;
+      }
+      tbody.innerHTML = state.staff.map(staff => {
+        const stats = getHolidayStats(staff);
+        const days = Math.max(stats.remaining / 8, 0).toFixed(1);
+        return `<tr>
+          <td><strong>${staff.name}</strong></td>
+          <td>${stats.entitlement.toFixed(1)}</td>
+          <td>${stats.taken.toFixed(1)}</td>
+          <td>${stats.remaining.toFixed(1)}</td>
+          <td>${days} days</td>
+        </tr>`;
+      }).join('');
+
+      const ledger = [];
+      state.staff.forEach(staff => {
+        staff.holidayLogs.forEach(log => {
+          ledger.push(`<div class="list-item">
+            <div>
+              <strong>${staff.name} · ${log.hours} hrs</strong>
+              <span>${formatDate(log.date)} · ${log.notes || 'No note'}</span>
+            </div>
+          </div>`);
+        });
+      });
+      document.getElementById('holidayLedger').innerHTML = ledger.length ? ledger.join('') : '<div class="empty">No holiday taken yet.</div>';
+    }
+
+    function renderTipTable() {
+      const body = document.getElementById('tipTable');
+      if (!state.tipLogs.length) {
+        body.innerHTML = `<tr><td colspan="5" class="empty">No distributions logged.</td></tr>`;
+        return;
+      }
+      body.innerHTML = state.tipLogs.sort((a, b) => new Date(b.period) - new Date(a.period)).map(log => {
+        const status = computeTipStatus(log);
+        const pct = log.total ? ((log.distributed / log.total) * 100).toFixed(0) : '0';
+        const delay = log.distributionDate ? Math.round((new Date(log.distributionDate) - new Date(log.period)) / 86400000) : '—';
+        return `<tr>
+          <td>${formatDate(log.period)}</td>
+          <td>£${log.distributed.toFixed(2)} / £${log.total.toFixed(2)} (${pct}%)<br><small>${log.method}</small></td>
+          <td>${delay} days</td>
+          <td>${log.consulted ? '✅' : '⚠️'} ${log.consulted ? 'Consulted' : 'Missing'}</td>
+          <td><span class="badge ${status.level}">${status.label}</span><br><small>${status.note}</small></td>
+        </tr>`;
+      }).join('');
+    }
+
+    function renderRequests() {
+      const body = document.getElementById('requestTable');
+      if (!state.patternRequests.length) {
+        body.innerHTML = `<tr><td colspan="5" class="empty">No requests on file.</td></tr>`;
+        document.getElementById('reminderList').innerHTML = '<div class="empty">No reminders — stay ready.</div>';
+        return;
+      }
+      const rows = state.patternRequests.sort((a, b) => new Date(b.submitted) - new Date(a.submitted)).map(req => {
+        const deadline = getRequestDeadline(req);
+        const daysRemaining = deadline ? Math.ceil((new Date(deadline) - new Date()) / 86400000) : null;
+        const level = req.status !== 'pending' ? 'green' : daysRemaining !== null && daysRemaining < 0 ? 'red' : daysRemaining !== null && daysRemaining <= 7 ? 'amber' : 'grey';
+        return `<tr>
+          <td><strong>${req.worker}</strong></td>
+          <td>${formatDate(req.submitted)}</td>
+          <td>${deadline ? formatDate(deadline) : '—'}</td>
+          <td>
+            <select onchange="changeRequestStatus('${req.id}', this.value)">
+              <option value="pending" ${req.status === 'pending' ? 'selected' : ''}>Pending</option>
+              <option value="approved" ${req.status === 'approved' ? 'selected' : ''}>Approved</option>
+              <option value="declined" ${req.status === 'declined' ? 'selected' : ''}>Declined</option>
+            </select>
+            <div><span class="badge ${level}">${req.status}</span></div>
+          </td>
+          <td><small>${req.requestedPattern}</small></td>
+        </tr>`;
+      });
+      body.innerHTML = rows.join('');
+
+      const reminders = state.patternRequests.filter(r => r.status === 'pending').map(req => {
+        const deadline = getRequestDeadline(req);
+        if (!deadline) return null;
+        const daysRemaining = Math.ceil((new Date(deadline) - new Date()) / 86400000);
+        let level = 'green';
+        if (daysRemaining < 0) level = 'red';
+        else if (daysRemaining <= 7) level = 'amber';
+        return `<div class="list-item">
+          <div>
+            <strong>${req.worker}</strong>
+            <span>Respond by ${formatDate(deadline)} (${daysRemaining < 0 ? 'overdue' : daysRemaining + ' days left'})</span>
+          </div>
+          <span class="badge ${level}">${level.toUpperCase()}</span>
+        </div>`;
+      }).filter(Boolean);
+      document.getElementById('reminderList').innerHTML = reminders.length ? reminders.join('') : '<div class="empty">No pending requests.</div>';
+    }
+
+    function renderDocuments() {
+      const body = document.getElementById('docTable');
+      if (!state.documents.length) {
+        body.innerHTML = `<tr><td colspan="6" class="empty">Locker empty.</td></tr>`;
+        return;
+      }
+      body.innerHTML = state.documents.sort((a, b) => new Date(b.captured || 0) - new Date(a.captured || 0)).map(doc => {
+        const expiry = doc.expiry ? new Date(doc.expiry) : null;
+        const days = expiry ? Math.ceil((expiry - new Date()) / 86400000) : null;
+        let level = 'green';
+        if (expiry && days < 0) level = 'red';
+        else if (expiry && days <= 30) level = 'amber';
+        return `<tr>
+          <td>${doc.staff}</td>
+          <td>${doc.type}</td>
+          <td><small>${doc.reference}</small><br>${doc.notes || ''}</td>
+          <td>${formatDate(doc.captured)}</td>
+          <td>${formatDate(doc.expiry)}</td>
+          <td>
+            <button class="btn btn-sm ${doc.verified ? 'btn-primary' : 'btn-ghost'}" onclick="toggleDocument('${doc.id}')">${doc.verified ? 'Verified' : 'Awaiting check'}</button>
+            ${expiry ? `<div><span class="badge ${level}">${days < 0 ? 'Expired' : days + 'd'}</span></div>` : ''}
+          </td>
+        </tr>`;
+      }).join('');
+    }
+
+    function renderSelects() {
+      const options = ['<option value="">Select…</option>', ...state.staff.map(staff => `<option value="${staff.id}">${staff.name}</option>`)];
+      ['hoursStaff', 'holidayStaff'].forEach(id => {
+        const select = document.getElementById(id);
+        if (select) select.innerHTML = options.join('');
+      });
+    }
+
+    function renderDashboard() {
+      const contractIssues = state.staff.filter(staff => getBreachStatus(staff).level === 'red');
+      const amberContracts = state.staff.filter(staff => getBreachStatus(staff).level === 'amber');
+      const holidayLiability = state.staff.reduce((sum, staff) => {
+        const stats = getHolidayStats(staff);
+        return stats.remaining < 0 ? sum + Math.abs(stats.remaining) : sum;
+      }, 0);
+      const tipBreaches = state.tipLogs.filter(log => computeTipStatus(log).level === 'red');
+      const pendingRequests = state.patternRequests.filter(r => r.status === 'pending');
+      const overdueRequests = pendingRequests.filter(r => {
+        const deadline = getRequestDeadline(r);
+        if (!deadline) return false;
+        return new Date(deadline) < new Date();
+      });
+
+      setStatusCard('statusContract', contractIssues.length ? contractIssues.length : state.staff.length ? 'OK' : '—', contractIssues.length ? 'red' : amberContracts.length ? 'amber' : state.staff.length ? 'green' : 'grey', contractIssues.length ? `${contractIssues.length} contract breach${contractIssues.length > 1 ? 'es' : ''}` : amberContracts.length ? 'Trend watch' : state.staff.length ? 'All within limits' : 'Add staff to begin');
+      setStatusCard('statusHoliday', holidayLiability ? `${holidayLiability.toFixed(1)}h` : state.staff.length ? 'OK' : '—', holidayLiability ? 'amber' : state.staff.length ? 'green' : 'grey', holidayLiability ? 'Negative balance — schedule leave' : state.staff.length ? 'Balanced' : 'Awaiting data');
+      setStatusCard('statusTips', state.tipLogs.length ? `${state.tipLogs.length} logs` : '—', tipBreaches.length ? 'red' : state.tipLogs.length ? 'green' : 'grey', tipBreaches.length ? `${tipBreaches.length} non-compliant` : state.tipLogs.length ? 'All compliant' : 'No data');
+      setStatusCard('statusRequests', pendingRequests.length ? `${pendingRequests.length}` : state.patternRequests.length ? 'OK' : '—', overdueRequests.length ? 'red' : pendingRequests.length ? 'amber' : state.patternRequests.length ? 'green' : 'grey', overdueRequests.length ? `${overdueRequests.length} overdue` : pendingRequests.length ? 'Awaiting response' : state.patternRequests.length ? 'All closed' : 'No requests');
+
+      const issues = [];
+      contractIssues.forEach(staff => issues.push(`<li class="list-item"><div><strong>${staff.name}</strong><span>Last logged week exceeded contract by ${ (getAverageHours(staff) - staff.contractedHours).toFixed(1) } hrs. Offer guaranteed hours or adjust rota.</span></div><span class="badge red">Contract</span></li>`));
+      if (holidayLiability) issues.push(`<li class="list-item"><div><strong>Holiday liability £</strong><span>${holidayLiability.toFixed(1)} hrs owed. Run leave campaign.</span></div><span class="badge amber">Holiday</span></li>`);
+      tipBreaches.forEach(log => issues.push(`<li class="list-item"><div><strong>Tip breach (${formatDate(log.period)})</strong><span>${computeTipStatus(log).note}. Investigate consultation + payout.</span></div><span class="badge red">Tips</span></li>`));
+      overdueRequests.forEach(req => issues.push(`<li class="list-item"><div><strong>Predictable pattern overdue</strong><span>${req.worker} request from ${formatDate(req.submitted)} exceeded one-month statutory deadline.</span></div><span class="badge red">Predictable</span></li>`));
+      document.getElementById('issueList').innerHTML = issues.length ? issues.join('') : '<div class="empty">No active risks logged.</div>';
+
+      const deadlines = [];
+      pendingRequests.forEach(req => {
+        const deadline = getRequestDeadline(req);
+        if (!deadline) return;
+        const days = Math.ceil((new Date(deadline) - new Date()) / 86400000);
+        deadlines.push(`<li class="list-item"><div><strong>${req.worker}</strong><span>Respond by ${formatDate(deadline)} (${days < 0 ? 'overdue' : days + ' days'})</span></div><span class="badge ${days < 0 ? 'red' : days <= 7 ? 'amber' : 'green'}">Predictable</span></li>`);
+      });
+      state.tipLogs.forEach(log => {
+        const delay = log.distributionDate ? Math.round((new Date(log.distributionDate) - new Date(log.period)) / 86400000) : 0;
+        if (delay > 28) deadlines.push(`<li class="list-item"><div><strong>Tip payout (${formatDate(log.period)})</strong><span>${delay} days to distribute</span></div><span class="badge amber">Tip Act</span></li>`);
+      });
+      document.getElementById('deadlineList').innerHTML = deadlines.length ? deadlines.join('') : '<div class="empty">No pending statutory deadlines.</div>';
+
+      const alertBoard = document.getElementById('alertBoard');
+      const alerts = [];
+      alerts.push(`<div class="alert-pill ${contractIssues.length ? 'red' : amberContracts.length ? 'amber' : 'green'}"><span class="dot"></span><span>${contractIssues.length ? contractIssues.length + ' critical contract breach(es)' : amberContracts.length ? 'Monitor: ' + amberContracts.length + ' staff near limits' : 'Contracted hours stable'}</span></div>`);
+      alerts.push(`<div class="alert-pill ${holidayLiability ? 'amber' : 'green'}"><span class="dot"></span><span>${holidayLiability ? holidayLiability.toFixed(1) + ' hrs negative holiday balance' : 'Holiday accrual balanced'}</span></div>`);
+      alerts.push(`<div class="alert-pill ${tipBreaches.length ? 'red' : 'green'}"><span class="dot"></span><span>${tipBreaches.length ? tipBreaches.length + ' tip log(s) breaching phase 2' : 'Tip distributions compliant'}</span></div>`);
+      alerts.push(`<div class="alert-pill ${overdueRequests.length ? 'red' : pendingRequests.length ? 'amber' : 'green'}"><span class="dot"></span><span>${overdueRequests.length ? overdueRequests.length + ' predictable requests overdue' : pendingRequests.length ? 'Pending predictable pattern requests' : 'No outstanding predictable requests'}</span></div>`);
+      alertBoard.innerHTML = alerts.join('');
+    }
+
+    function setStatusCard(id, value, tone, note) {
+      const valueEl = document.getElementById(id);
+      const noteEl = document.getElementById(id + 'Note');
+      const card = valueEl?.closest('.status-card');
+      if (valueEl) valueEl.textContent = value;
+      if (noteEl) noteEl.textContent = note;
+      if (card) {
+        card.classList.remove('green', 'amber', 'red', 'grey');
+        card.classList.add(tone);
+      }
+    }
+
+    function generateExport() {
+      const lines = [];
+      lines.push(`Employment Rights Compliance Snapshot — ${new Date().toLocaleDateString()}`);
+      lines.push('');
+      lines.push('Contracts & schedules:');
+      state.staff.forEach(staff => {
+        const status = getBreachStatus(staff);
+        lines.push(`• ${staff.name} (${staff.contractType}/${staff.arrangement}) — contracted ${staff.contractedHours}h, 4-week avg ${getAverageHours(staff)}h → ${status.label}`);
+      });
+      if (!state.staff.length) lines.push('• No staff logged');
+      lines.push('');
+      lines.push('Holiday entitlement:');
+      state.staff.forEach(staff => {
+        const stats = getHolidayStats(staff);
+        lines.push(`• ${staff.name} — entitlement ${stats.entitlement.toFixed(1)}h, taken ${stats.taken.toFixed(1)}h, remaining ${stats.remaining.toFixed(1)}h`);
+      });
+      lines.push('');
+      lines.push('Tip allocation log:');
+      state.tipLogs.forEach(log => {
+        const status = computeTipStatus(log);
+        lines.push(`• ${formatDate(log.period)} — £${log.total.toFixed(2)} collected / £${log.distributed.toFixed(2)} distributed (${status.label})`);
+      });
+      if (!state.tipLogs.length) lines.push('• No tip distributions recorded');
+      lines.push('');
+      lines.push('Predictable working requests:');
+      state.patternRequests.forEach(req => {
+        lines.push(`• ${req.worker} — submitted ${formatDate(req.submitted)} · status ${req.status} · deadline ${formatDate(getRequestDeadline(req))}`);
+      });
+      if (!state.patternRequests.length) lines.push('• None logged');
+      lines.push('');
+      lines.push('Documentation locker:');
+      state.documents.forEach(doc => {
+        lines.push(`• ${doc.staff} — ${doc.type} stored at ${doc.reference}${doc.verified ? ' (verified)' : ''}`);
+      });
+      if (!state.documents.length) lines.push('• Locker empty');
+      document.getElementById('exportOutput').value = lines.join('\n');
+    }
+
+    function copyExport() {
+      const field = document.getElementById('exportOutput');
+      field.select();
+      document.execCommand('copy');
+    }
+
+    function formatDate(date) {
+      if (!date) return '—';
+      const d = new Date(date);
+      if (Number.isNaN(d.getTime())) return date;
+      return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+    }
+
+    function render() {
+      renderStaffTable();
+      renderHolidayTables();
+      renderTipTable();
+      renderRequests();
+      renderDocuments();
+      renderSelects();
+      renderDashboard();
+    }
+
+    render();
+  </script>
+</body>
+</html>
