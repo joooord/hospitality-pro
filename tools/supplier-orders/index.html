@@ -1,0 +1,1546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Supplier Automation Console · Hospitality Pro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/assets/styles/system.css" />
+  <style>
+    :root { color-scheme: dark; }
+
+    body {
+      background:
+        radial-gradient(circle at 10% 8%, rgba(91, 126, 255, 0.22), transparent 38%),
+        radial-gradient(circle at 82% 5%, rgba(201, 153, 63, 0.16), transparent 42%),
+        radial-gradient(circle at 50% 85%, rgba(78, 220, 176, 0.08), transparent 50%),
+        linear-gradient(145deg, #04060e, #020305 48%, #040609);
+      color: #f2f4ff;
+    }
+
+    .site-nav {
+      background: rgba(4, 7, 14, 0.88);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      box-shadow: 0 12px 40px rgba(4, 7, 14, 0.6);
+    }
+    .site-nav .nav-links a,
+    .site-nav .nav-brand,
+    .site-nav .nav-brand span { color: rgba(255,255,255,0.8); }
+    .site-nav .nav-cta {
+      background: rgba(255,255,255,0.07);
+      color: #f2c574;
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .app-shell { padding-top: calc(var(--space-xl) * 1.2); }
+
+    .hero-panel {
+      background: rgba(5, 7, 15, 0.78);
+      border: 1px solid rgba(255,255,255,0.07);
+    }
+    .hero-panel::after,
+    .glass-card::after,
+    .glass-panel::after {
+      background: linear-gradient(180deg, rgba(255,255,255,0.07), transparent 70%);
+    }
+    .glass-card,
+    .glass-panel {
+      background: rgba(5, 7, 15, 0.7);
+      border: 1px solid rgba(255,255,255,0.07);
+      box-shadow: 0 35px 65px rgba(2, 3, 8, 0.6);
+    }
+    .glass-card:hover,
+    .glass-panel:hover { border-color: rgba(255,255,255,0.15); }
+
+    h1, h2, h3, label { color: #f7f8ff; }
+    .muted { color: rgba(220, 224, 248, 0.68); }
+
+    input, select, textarea {
+      background: rgba(5, 7, 15, 0.68);
+      border: 1px solid rgba(255,255,255,0.11);
+      color: #fefefe;
+    }
+    input:focus, select:focus, textarea:focus {
+      background: rgba(2, 3, 10, 0.92);
+      border-color: rgba(243, 201, 139, 0.75);
+      box-shadow: 0 0 0 3px rgba(243, 201, 139, 0.3);
+    }
+    input::placeholder { color: rgba(200, 205, 230, 0.35); }
+    select option { background: #0c101f; }
+
+    /* ── Summary metrics ── */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--space-md);
+    }
+    .metric-card {
+      padding: var(--space-lg);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(255,255,255,0.07);
+      background: linear-gradient(135deg, rgba(255,255,255,0.04), rgba(15,15,25,0.4));
+      box-shadow: 0 22px 50px rgba(0,0,0,0.4);
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    .metric-card__label {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-text-muted);
+      font-weight: 500;
+    }
+    .metric-card__value {
+      font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+      font-weight: 700;
+      color: #f5f7ff;
+      line-height: 1;
+    }
+    .metric-card__sub {
+      font-size: 0.82rem;
+      color: var(--color-text-muted);
+    }
+    .metric-card.accent-gold .metric-card__value { color: var(--color-gold); }
+    .metric-card.accent-green .metric-card__value { color: var(--color-success); }
+    .metric-card.accent-red .metric-card__value { color: var(--color-error); }
+    .metric-card.accent-blue .metric-card__value { color: var(--color-info); }
+
+    /* ── Tab nav ── */
+    .tab-bar {
+      display: flex;
+      gap: 0.25rem;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding-bottom: 0;
+      margin-bottom: var(--space-lg);
+      flex-wrap: wrap;
+    }
+    .tab-btn {
+      padding: 0.55rem 1.1rem;
+      border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+      border: 1px solid transparent;
+      border-bottom: none;
+      background: transparent;
+      color: var(--color-text-muted);
+      font-size: 0.88rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--transition-base);
+      font-family: var(--font-sans);
+      position: relative;
+      bottom: -1px;
+    }
+    .tab-btn:hover { color: var(--color-text); background: rgba(255,255,255,0.04); }
+    .tab-btn.active {
+      color: var(--color-gold);
+      border-color: rgba(255,255,255,0.08);
+      background: rgba(5, 7, 15, 0.7);
+      border-bottom-color: rgba(5, 7, 15, 0.7);
+    }
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
+
+    /* ── Table ── */
+    .data-table-wrap {
+      overflow-x: auto;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(255,255,255,0.07);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+    thead th {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-text-muted);
+      font-weight: 600;
+      background: rgba(255,255,255,0.025);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      white-space: nowrap;
+    }
+    thead th:first-child { border-radius: var(--radius-md) 0 0 0; }
+    thead th:last-child  { border-radius: 0 var(--radius-md) 0 0; }
+    tbody tr {
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      transition: background var(--transition-fast);
+    }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: rgba(255,255,255,0.025); }
+    tbody td {
+      padding: 0.7rem 1rem;
+      color: var(--color-text-soft);
+      vertical-align: middle;
+    }
+    tbody td strong { color: var(--color-text); }
+    .tbl-right { text-align: right; }
+    .tbl-center { text-align: center; }
+    .tbl-mono { font-family: var(--font-mono); font-size: 0.85rem; }
+
+    /* Status pills */
+    .pill {
+      display: inline-block;
+      padding: 0.18rem 0.65rem;
+      border-radius: var(--radius-pill);
+      font-size: 0.75rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .pill-ok    { background: rgba(76,225,173,0.14); color: var(--color-success); border: 1px solid rgba(76,225,173,0.25); }
+    .pill-low   { background: rgba(246,174,91,0.14); color: var(--color-warning); border: 1px solid rgba(246,174,91,0.25); }
+    .pill-crit  { background: rgba(246,124,124,0.14); color: var(--color-error);   border: 1px solid rgba(246,124,124,0.25); }
+    .pill-na    { background: rgba(200,205,230,0.08); color: var(--color-text-muted); border: 1px solid rgba(200,205,230,0.12); }
+
+    /* Inline input in table */
+    .tbl-input {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #fefefe;
+      border-radius: var(--radius-sm);
+      padding: 0.3rem 0.55rem;
+      font-size: 0.85rem;
+      font-family: var(--font-mono);
+      width: 90px;
+      text-align: right;
+      transition: all var(--transition-fast);
+    }
+    .tbl-input:focus {
+      background: rgba(2, 3, 10, 0.9);
+      border-color: rgba(243, 201, 139, 0.65);
+      box-shadow: 0 0 0 2px rgba(243, 201, 139, 0.2);
+      outline: none;
+    }
+    .tbl-select {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: rgba(245,247,255,0.85);
+      border-radius: var(--radius-sm);
+      padding: 0.3rem 0.55rem;
+      font-size: 0.82rem;
+      font-family: var(--font-sans);
+      min-width: 130px;
+      transition: all var(--transition-fast);
+      cursor: pointer;
+    }
+    .tbl-select:focus {
+      border-color: rgba(243, 201, 139, 0.65);
+      box-shadow: 0 0 0 2px rgba(243, 201, 139, 0.2);
+      outline: none;
+    }
+    .tbl-select option { background: #0c101f; }
+
+    /* ── Action toolbar ── */
+    .toolbar {
+      display: flex;
+      gap: var(--space-sm);
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+    .toolbar-left, .toolbar-right {
+      display: flex;
+      gap: var(--space-sm);
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.55rem 1.2rem;
+      border-radius: var(--radius-md);
+      border: 1px solid transparent;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: var(--font-sans);
+      transition: all var(--transition-base);
+      white-space: nowrap;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, rgba(243,201,139,0.22), rgba(243,201,139,0.12));
+      color: var(--color-gold);
+      border-color: rgba(243,201,139,0.3);
+    }
+    .btn-primary:hover {
+      background: linear-gradient(135deg, rgba(243,201,139,0.3), rgba(243,201,139,0.18));
+      border-color: rgba(243,201,139,0.5);
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(243,201,139,0.15);
+    }
+    .btn-ghost {
+      background: rgba(255,255,255,0.05);
+      color: var(--color-text-soft);
+      border-color: rgba(255,255,255,0.1);
+    }
+    .btn-ghost:hover {
+      background: rgba(255,255,255,0.09);
+      border-color: rgba(255,255,255,0.18);
+    }
+    .btn-danger {
+      background: rgba(246,124,124,0.1);
+      color: var(--color-error);
+      border-color: rgba(246,124,124,0.2);
+    }
+    .btn-danger:hover {
+      background: rgba(246,124,124,0.18);
+      border-color: rgba(246,124,124,0.35);
+    }
+    .btn-success {
+      background: rgba(76,225,173,0.12);
+      color: var(--color-success);
+      border-color: rgba(76,225,173,0.22);
+    }
+    .btn-success:hover {
+      background: rgba(76,225,173,0.2);
+      border-color: rgba(76,225,173,0.38);
+    }
+    .btn-sm {
+      padding: 0.3rem 0.75rem;
+      font-size: 0.8rem;
+      border-radius: var(--radius-sm);
+    }
+    .btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+
+    /* ── Empty state ── */
+    .empty-state {
+      text-align: center;
+      padding: var(--space-xl) var(--space-lg);
+      color: var(--color-text-muted);
+    }
+    .empty-state .icon {
+      font-size: 2.5rem;
+      margin-bottom: var(--space-sm);
+      opacity: 0.5;
+    }
+    .empty-state p { margin: 0; }
+    .empty-state h3 { color: var(--color-text-soft); margin-bottom: 0.35rem; }
+
+    /* ── Supplier card ── */
+    .supplier-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: var(--space-md);
+    }
+    .supplier-card {
+      background: rgba(255,255,255,0.028);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: var(--radius-md);
+      padding: var(--space-md);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+      transition: all var(--transition-base);
+    }
+    .supplier-card:hover { border-color: rgba(255,255,255,0.13); }
+    .supplier-card__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: var(--space-sm);
+    }
+    .supplier-card__name {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--color-text);
+    }
+    .supplier-card__category {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-text-muted);
+    }
+    .supplier-card__detail {
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+      display: flex;
+      gap: 0.4rem;
+      align-items: baseline;
+    }
+    .supplier-card__detail strong { color: var(--color-text-soft); }
+    .days-row {
+      display: flex;
+      gap: 0.3rem;
+      flex-wrap: wrap;
+    }
+    .day-chip {
+      padding: 0.15rem 0.5rem;
+      border-radius: var(--radius-pill);
+      font-size: 0.72rem;
+      font-weight: 600;
+      background: rgba(106,167,255,0.12);
+      color: var(--color-info);
+      border: 1px solid rgba(106,167,255,0.2);
+    }
+    .day-chip.inactive {
+      background: rgba(255,255,255,0.04);
+      color: var(--color-text-muted);
+      border-color: rgba(255,255,255,0.06);
+    }
+    .supplier-card__actions { display: flex; gap: 0.5rem; margin-top: auto; }
+
+    /* ── Order sheet ── */
+    .order-section {
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin-bottom: var(--space-md);
+    }
+    .order-section__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.85rem 1.1rem;
+      background: rgba(255,255,255,0.03);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+    }
+    .order-section__title {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--color-text);
+    }
+    .order-section__meta {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      display: flex;
+      gap: var(--space-md);
+      flex-wrap: wrap;
+    }
+    .order-section__meta span strong {
+      color: var(--color-gold);
+      font-family: var(--font-mono);
+    }
+
+    /* ── Print modal overlay ── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 3, 8, 0.88);
+      backdrop-filter: blur(12px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-lg);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--transition-base);
+    }
+    .modal-overlay.visible {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .modal {
+      background: rgba(8, 11, 22, 0.98);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 60px 120px rgba(0,0,0,0.8);
+      max-width: 720px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: var(--space-lg);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+    .modal__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: var(--space-md);
+    }
+    .modal__title {
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      color: var(--color-text);
+    }
+    .modal__close {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--color-text-muted);
+      border-radius: var(--radius-sm);
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: all var(--transition-fast);
+      flex-shrink: 0;
+    }
+    .modal__close:hover { background: rgba(255,255,255,0.12); color: var(--color-text); }
+    .modal__order-content {
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      background: rgba(2,3,8,0.7);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: var(--radius-sm);
+      padding: var(--space-md);
+      color: var(--color-text-soft);
+      max-height: 50vh;
+      overflow-y: auto;
+    }
+    .modal__actions { display: flex; gap: var(--space-sm); flex-wrap: wrap; }
+
+    /* ── Inline form card ── */
+    .form-card {
+      background: rgba(255,255,255,0.025);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--space-md);
+    }
+    .form-field { display: flex; flex-direction: column; gap: 0.4rem; }
+    .form-field label {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-text-muted);
+      font-weight: 600;
+    }
+    .form-field input,
+    .form-field select,
+    .form-field textarea {
+      padding: 0.55rem 0.85rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.9rem;
+      font-family: var(--font-sans);
+      outline: none;
+      transition: all var(--transition-fast);
+    }
+    .form-field.full { grid-column: 1 / -1; }
+
+    /* Days checkboxes */
+    .days-select {
+      display: flex;
+      gap: 0.3rem;
+      flex-wrap: wrap;
+    }
+    .day-toggle {
+      display: none;
+    }
+    .day-toggle + label {
+      padding: 0.25rem 0.6rem;
+      border-radius: var(--radius-pill);
+      font-size: 0.75rem;
+      font-weight: 600;
+      background: rgba(255,255,255,0.04);
+      color: var(--color-text-muted);
+      border: 1px solid rgba(255,255,255,0.08);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      user-select: none;
+    }
+    .day-toggle:checked + label {
+      background: rgba(106,167,255,0.15);
+      color: var(--color-info);
+      border-color: rgba(106,167,255,0.3);
+    }
+
+    /* ── Misc ── */
+    .section-title {
+      font-family: var(--font-serif);
+      font-size: 1.3rem;
+      font-weight: 500;
+      color: var(--color-text);
+      margin-bottom: var(--space-md);
+    }
+    .section-title small {
+      font-family: var(--font-sans);
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+      font-weight: 400;
+      display: block;
+      margin-top: 0.15rem;
+    }
+    .save-toast {
+      position: fixed;
+      bottom: var(--space-lg);
+      right: var(--space-lg);
+      background: rgba(76,225,173,0.15);
+      border: 1px solid rgba(76,225,173,0.3);
+      color: var(--color-success);
+      padding: 0.65rem 1.2rem;
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      font-weight: 500;
+      z-index: 999;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: all 250ms ease;
+      pointer-events: none;
+    }
+    .save-toast.show { opacity: 1; transform: translateY(0); }
+    .divider { height: 1px; background: rgba(255,255,255,0.06); margin: var(--space-md) 0; }
+    .filter-row {
+      display: flex;
+      gap: var(--space-sm);
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .filter-row input[type=search], .filter-row select {
+      padding: 0.45rem 0.85rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.88rem;
+      font-family: var(--font-sans);
+      outline: none;
+      background: rgba(5, 7, 15, 0.65);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--color-text);
+      transition: all var(--transition-fast);
+    }
+    .filter-row input[type=search]:focus,
+    .filter-row select:focus {
+      border-color: rgba(243, 201, 139, 0.65);
+      box-shadow: 0 0 0 2px rgba(243, 201, 139, 0.2);
+    }
+    .filter-row select option { background: #0c101f; }
+    .info-row {
+      display: flex;
+      gap: var(--space-lg);
+      flex-wrap: wrap;
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+    }
+    .info-row .hl { color: var(--color-gold); font-family: var(--font-mono); }
+
+    .note {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: var(--radius-sm);
+      padding: 0.6rem 0.9rem;
+      line-height: 1.5;
+    }
+
+    /* ── Print ── */
+    @media print {
+      body { background: #fff !important; color: #111 !important; }
+      .site-nav, .app-shell > *:not(#printArea) { display: none !important; }
+      #printArea { display: block !important; }
+      .no-print { display: none !important; }
+    }
+
+    @media (max-width: 640px) {
+      .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+      .toolbar { flex-direction: column; align-items: stretch; }
+      .toolbar-left, .toolbar-right { justify-content: stretch; }
+      .btn { justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="site-nav">
+    <a class="nav-brand" href="/">Hospitality <span>Pro</span></a>
+    <div class="nav-links">
+      <a href="/#tools">Tools</a>
+      <a href="/#playbook">Playbook</a>
+      <a href="/#about">About</a>
+      <a class="nav-cta" href="/#tools">Get Started →</a>
+    </div>
+  </nav>
+
+  <main class="app-shell">
+    <a class="back-link" href="/#tools">← Back to all tools</a>
+
+    <header class="glass-panel hero-panel">
+      <div class="stack">
+        <p class="eyebrow">Procurement Intelligence</p>
+        <h1>Supplier Automation Console</h1>
+        <p class="muted">Reads your live ingredient database, calculates shortfalls against PAR levels, and generates ready-to-send order sheets per supplier — with spend forecasting and delivery scheduling built in.</p>
+        <div class="cluster">
+          <span class="badge">Liquid Glass UI</span>
+          <span class="badge badge-warning">Reads liquidGlassInventory</span>
+          <span class="badge">PAR · Orders · Spend</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Summary metrics -->
+    <section class="metrics-grid" id="summaryMetrics">
+      <div class="metric-card accent-blue">
+        <div class="metric-card__label">Inventory Items</div>
+        <div class="metric-card__value" id="metricTotal">0</div>
+        <div class="metric-card__sub">Loaded from ingredient database</div>
+      </div>
+      <div class="metric-card accent-red">
+        <div class="metric-card__label">Below PAR</div>
+        <div class="metric-card__value" id="metricBelowPar">0</div>
+        <div class="metric-card__sub">Items requiring order</div>
+      </div>
+      <div class="metric-card accent-gold">
+        <div class="metric-card__label">Estimated Order Value</div>
+        <div class="metric-card__value" id="metricOrderValue">£0.00</div>
+        <div class="metric-card__sub">Based on current bottle costs</div>
+      </div>
+      <div class="metric-card accent-green">
+        <div class="metric-card__label">Suppliers Active</div>
+        <div class="metric-card__value" id="metricSuppliers">0</div>
+        <div class="metric-card__sub">With pending orders</div>
+      </div>
+    </section>
+
+    <!-- Tab navigation -->
+    <div class="glass-panel" style="padding: var(--space-lg);">
+      <div class="tab-bar" id="tabBar">
+        <button class="tab-btn active" data-tab="stock">📦 Stock & PAR Levels</button>
+        <button class="tab-btn" data-tab="orders">🧾 Order Generator</button>
+        <button class="tab-btn" data-tab="suppliers">🏢 Supplier Database</button>
+      </div>
+
+      <!-- ═══ TAB: STOCK & PAR ═══ -->
+      <div class="tab-pane active" id="tab-stock">
+        <div class="toolbar" style="margin-bottom: var(--space-md);">
+          <div class="toolbar-left">
+            <h2 class="section-title" style="margin:0;">Stock Levels
+              <small>Set current stock (units/bottles) and minimum PAR thresholds per item</small>
+            </h2>
+          </div>
+          <div class="toolbar-right">
+            <div class="filter-row">
+              <input type="search" id="stockSearch" placeholder="Search items…" style="width:200px;" />
+              <select id="stockDomainFilter">
+                <option value="">All domains</option>
+                <option value="bar">Bar</option>
+                <option value="kitchen">Kitchen</option>
+              </select>
+              <select id="stockStatusFilter">
+                <option value="">All status</option>
+                <option value="crit">Critical</option>
+                <option value="low">Low</option>
+                <option value="ok">OK</option>
+              </select>
+            </div>
+            <button class="btn btn-ghost btn-sm" id="refreshInventoryBtn" title="Reload from localStorage">↺ Refresh</button>
+            <button class="btn btn-primary btn-sm" id="saveParsBtn">💾 Save PAR Levels</button>
+          </div>
+        </div>
+
+        <div class="note" id="inventoryNote" style="margin-bottom:var(--space-md);">
+          ℹ️ Inventory is loaded from your <strong>Cocktail &amp; Costing Engine</strong> database (<code>liquidGlassInventory</code>). Open that tool first to populate your ingredient list. Stock counts and PAR levels are saved separately here.
+        </div>
+
+        <div class="data-table-wrap">
+          <table id="stockTable">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Domain / Category</th>
+                <th class="tbl-right">Unit Size</th>
+                <th class="tbl-right">Unit Cost</th>
+                <th class="tbl-right">Current Stock</th>
+                <th class="tbl-right">PAR Level</th>
+                <th class="tbl-right">Shortfall</th>
+                <th class="tbl-center">Status</th>
+                <th>Supplier</th>
+              </tr>
+            </thead>
+            <tbody id="stockTableBody">
+              <tr>
+                <td colspan="9">
+                  <div class="empty-state">
+                    <div class="icon">📦</div>
+                    <h3>No inventory loaded</h3>
+                    <p>Open the Cocktail &amp; Costing Engine to add ingredients, then return here.</p>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ═══ TAB: ORDER GENERATOR ═══ -->
+      <div class="tab-pane" id="tab-orders">
+        <div class="toolbar" style="margin-bottom:var(--space-md);">
+          <div class="toolbar-left">
+            <h2 class="section-title" style="margin:0;">Order Generator
+              <small>Auto-calculated from items below PAR — grouped by supplier</small>
+            </h2>
+          </div>
+          <div class="toolbar-right">
+            <button class="btn btn-ghost btn-sm" id="printOrdersBtn">🖨️ Print</button>
+            <button class="btn btn-primary btn-sm" id="exportOrdersBtn">📋 Copy All Orders</button>
+          </div>
+        </div>
+
+        <div id="orderSheetsContainer">
+          <div class="empty-state" style="padding: var(--space-xl) 0;">
+            <div class="icon">🧾</div>
+            <h3>No orders required</h3>
+            <p>All items are at or above PAR, or no PAR levels set yet.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ TAB: SUPPLIER DATABASE ═══ -->
+      <div class="tab-pane" id="tab-suppliers">
+        <div class="toolbar" style="margin-bottom:var(--space-md);">
+          <div class="toolbar-left">
+            <h2 class="section-title" style="margin:0;">Supplier Database
+              <small>Contact details, delivery schedules, and account info</small>
+            </h2>
+          </div>
+          <div class="toolbar-right">
+            <button class="btn btn-primary btn-sm" id="addSupplierBtn">+ Add Supplier</button>
+          </div>
+        </div>
+
+        <!-- Add/Edit supplier form -->
+        <div class="form-card" id="supplierFormCard" style="display:none; margin-bottom:var(--space-md);">
+          <h3 style="margin-bottom:var(--space-md); font-size:1rem;" id="supplierFormTitle">New Supplier</h3>
+          <div class="form-grid">
+            <div class="form-field">
+              <label>Business Name *</label>
+              <input type="text" id="sfName" placeholder="e.g. LWC Drinks" />
+            </div>
+            <div class="form-field">
+              <label>Category</label>
+              <select id="sfCategory">
+                <option value="spirits">Spirits &amp; Wines</option>
+                <option value="produce">Fresh Produce</option>
+                <option value="dry-goods">Dry Goods</option>
+                <option value="dairy">Dairy &amp; Chilled</option>
+                <option value="cleaning">Cleaning &amp; Sundries</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label>Contact Name</label>
+              <input type="text" id="sfContact" placeholder="e.g. Sarah Thompson" />
+            </div>
+            <div class="form-field">
+              <label>Phone</label>
+              <input type="tel" id="sfPhone" placeholder="e.g. 07700 900123" />
+            </div>
+            <div class="form-field">
+              <label>Email</label>
+              <input type="email" id="sfEmail" placeholder="e.g. orders@supplier.co.uk" />
+            </div>
+            <div class="form-field">
+              <label>Account Number</label>
+              <input type="text" id="sfAccount" placeholder="e.g. HID-0042" />
+            </div>
+            <div class="form-field">
+              <label>Min. Order (£)</label>
+              <input type="number" id="sfMinOrder" placeholder="0" min="0" step="1" />
+            </div>
+            <div class="form-field">
+              <label>Lead Time (days)</label>
+              <input type="number" id="sfLeadTime" placeholder="1" min="0" step="1" value="1" />
+            </div>
+            <div class="form-field full">
+              <label>Delivery Days</label>
+              <div class="days-select">
+                <input type="checkbox" class="day-toggle" id="sfMon" value="Mon"><label for="sfMon">Mon</label>
+                <input type="checkbox" class="day-toggle" id="sfTue" value="Tue"><label for="sfTue">Tue</label>
+                <input type="checkbox" class="day-toggle" id="sfWed" value="Wed"><label for="sfWed">Wed</label>
+                <input type="checkbox" class="day-toggle" id="sfThu" value="Thu"><label for="sfThu">Thu</label>
+                <input type="checkbox" class="day-toggle" id="sfFri" value="Fri"><label for="sfFri">Fri</label>
+                <input type="checkbox" class="day-toggle" id="sfSat" value="Sat"><label for="sfSat">Sat</label>
+                <input type="checkbox" class="day-toggle" id="sfSun" value="Sun"><label for="sfSun">Sun</label>
+              </div>
+            </div>
+            <div class="form-field full">
+              <label>Notes</label>
+              <textarea id="sfNotes" rows="2" placeholder="e.g. Reps email cut-off midday Tuesday…"></textarea>
+            </div>
+          </div>
+          <div style="display:flex;gap:var(--space-sm);margin-top:var(--space-md);">
+            <button class="btn btn-primary btn-sm" id="saveSupplierBtn">Save Supplier</button>
+            <button class="btn btn-ghost btn-sm" id="cancelSupplierBtn">Cancel</button>
+          </div>
+          <input type="hidden" id="sfEditId" value="" />
+        </div>
+
+        <div class="supplier-grid" id="supplierGrid">
+          <div class="empty-state" style="grid-column:1/-1;">
+            <div class="icon">🏢</div>
+            <h3>No suppliers yet</h3>
+            <p>Add your first supplier to enable automated order routing.</p>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /glass-panel -->
+  </main>
+
+  <!-- Print area (hidden) -->
+  <div id="printArea" style="display:none;"></div>
+
+  <!-- Order modal -->
+  <div class="modal-overlay" id="orderModal">
+    <div class="modal">
+      <div class="modal__header">
+        <div class="modal__title" id="modalTitle">Order Sheet</div>
+        <button class="modal__close" id="modalClose">×</button>
+      </div>
+      <div class="modal__order-content" id="modalContent"></div>
+      <div class="modal__actions">
+        <button class="btn btn-primary btn-sm" id="modalCopy">📋 Copy to Clipboard</button>
+        <button class="btn btn-ghost btn-sm" id="modalPrint">🖨️ Print This Order</button>
+        <button class="btn btn-ghost btn-sm" id="modalClose2">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Save toast -->
+  <div class="save-toast" id="saveToast">✓ Saved</div>
+
+  <script>
+  (() => {
+    'use strict';
+
+    // ─── Storage Keys ───────────────────────────────────────────────
+    const INVENTORY_KEY  = 'liquidGlassInventory';
+    const PAR_KEY        = 'hp_supplier_pars_v1';
+    const STOCK_KEY      = 'hp_supplier_stock_v1';
+    const SUPPLIER_KEY   = 'hp_suppliers_v1';
+
+    // ─── State ──────────────────────────────────────────────────────
+    let inventoryItems = [];   // from liquidGlassInventory
+    let parLevels      = {};   // { itemId: number }
+    let stockCounts    = {};   // { itemId: number }
+    let suppliers      = [];
+    let activeFilter   = { search: '', domain: '', status: '' };
+
+    // ─── Default Suppliers ──────────────────────────────────────────
+    const DEFAULT_SUPPLIERS = [
+      {
+        id: 'sup-lwc',
+        name: 'LWC Drinks',
+        category: 'spirits',
+        contact: 'Trade Account',
+        phone: '0161 827 1000',
+        email: 'orders@lwc.co.uk',
+        account: '',
+        minOrder: 150,
+        leadTime: 1,
+        days: ['Mon','Wed','Fri'],
+        notes: 'Cut-off midday for next-day delivery. Rep visit Tuesdays.'
+      },
+      {
+        id: 'sup-fresh',
+        name: 'Fresh Direct',
+        category: 'produce',
+        contact: 'Orders Desk',
+        phone: '0800 123 4567',
+        email: 'orders@freshdirect.co.uk',
+        account: '',
+        minOrder: 50,
+        leadTime: 1,
+        days: ['Tue','Thu','Sat'],
+        notes: 'Order before 6 PM for next morning delivery.'
+      }
+    ];
+
+    // ─── Utilities ──────────────────────────────────────────────────
+    function uid() { return Math.random().toString(36).slice(2, 10); }
+    function fmtCurrency(v) { return '£' + (Number.isFinite(v) ? v.toFixed(2) : '0.00'); }
+    function fmtCap(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : ''; }
+    function esc(s) {
+      return String(s)
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+    }
+    function showToast(msg='✓ Saved') {
+      const el = document.getElementById('saveToast');
+      el.textContent = msg;
+      el.classList.add('show');
+      setTimeout(() => el.classList.remove('show'), 2200);
+    }
+
+    // ─── Persistence ────────────────────────────────────────────────
+    function load(key, fallback) {
+      try {
+        const v = localStorage.getItem(key);
+        return v ? JSON.parse(v) : fallback;
+      } catch(e) { return fallback; }
+    }
+    function save(key, val) {
+      try { localStorage.setItem(key, JSON.stringify(val)); } catch(e) {}
+    }
+
+    // ─── Load All ───────────────────────────────────────────────────
+    function loadAll() {
+      inventoryItems = load(INVENTORY_KEY, []);
+      parLevels      = load(PAR_KEY, {});
+      stockCounts    = load(STOCK_KEY, {});
+      suppliers      = load(SUPPLIER_KEY, null);
+      if (!suppliers || !suppliers.length) {
+        suppliers = DEFAULT_SUPPLIERS;
+        save(SUPPLIER_KEY, suppliers);
+      }
+    }
+
+    // ─── Calculations ───────────────────────────────────────────────
+    function getShortfall(item) {
+      const stock = Number(stockCounts[item.id] ?? 0);
+      const par   = Number(parLevels[item.id]   ?? 0);
+      return Math.max(0, par - stock);
+    }
+    function getStatus(item) {
+      const stock  = Number(stockCounts[item.id] ?? 0);
+      const par    = Number(parLevels[item.id]   ?? 0);
+      if (!par) return 'na';
+      if (stock === 0) return 'crit';
+      if (stock < par) return 'low';
+      return 'ok';
+    }
+    function getOrderCost(item) {
+      const shortfall   = getShortfall(item);
+      const unitCost    = Number(item.bottleCost ?? 0);
+      return shortfall * unitCost;
+    }
+    function computeSummary() {
+      const below = inventoryItems.filter(i => getShortfall(i) > 0);
+      const orderValue = below.reduce((sum, i) => sum + getOrderCost(i), 0);
+      const supplierIds = new Set(below.map(i => stockCounts[i.id + '_supplier'] ?? '').filter(Boolean));
+      return {
+        total: inventoryItems.length,
+        belowPar: below.length,
+        orderValue,
+        activeSuppliersCount: supplierIds.size
+      };
+    }
+
+    // ─── Render Summary ─────────────────────────────────────────────
+    function renderSummary() {
+      const s = computeSummary();
+      document.getElementById('metricTotal').textContent     = s.total;
+      document.getElementById('metricBelowPar').textContent  = s.belowPar;
+      document.getElementById('metricOrderValue').textContent = fmtCurrency(s.orderValue);
+      // count suppliers that have items to order
+      const orderItems = inventoryItems.filter(i => getShortfall(i) > 0);
+      const suppIds = new Set(orderItems.map(i => parLevels[i.id + '_supplier']).filter(Boolean));
+      document.getElementById('metricSuppliers').textContent = suppIds.size;
+    }
+
+    // ─── Render Stock Table ─────────────────────────────────────────
+    function getFilteredItems() {
+      const { search, domain, status } = activeFilter;
+      return inventoryItems.filter(item => {
+        if (domain && item.domain !== domain) return false;
+        if (search) {
+          const q = search.toLowerCase();
+          if (!(item.name || '').toLowerCase().includes(q) &&
+              !(item.category || '').toLowerCase().includes(q)) return false;
+        }
+        if (status) {
+          if (getStatus(item) !== status) return false;
+        }
+        return true;
+      });
+    }
+
+    function renderStockTable() {
+      const tbody = document.getElementById('stockTableBody');
+      const items = getFilteredItems();
+
+      if (!inventoryItems.length) {
+        tbody.innerHTML = `<tr><td colspan="9"><div class="empty-state">
+          <div class="icon">📦</div>
+          <h3>No inventory loaded</h3>
+          <p>Open the <strong>Cocktail &amp; Costing Engine</strong> to add ingredients, then click ↺ Refresh.</p>
+        </div></td></tr>`;
+        return;
+      }
+      if (!items.length) {
+        tbody.innerHTML = `<tr><td colspan="9"><div class="empty-state">
+          <div class="icon">🔍</div>
+          <h3>No items match filters</h3>
+          <p>Clear your search or filters to see all items.</p>
+        </div></td></tr>`;
+        return;
+      }
+
+      const suppOptions = ['<option value="">— Unassigned —</option>',
+        ...suppliers.map(s => `<option value="${esc(s.id)}">${esc(s.name)}</option>`)
+      ].join('');
+
+      tbody.innerHTML = items.map(item => {
+        const stock    = Number(stockCounts[item.id] ?? 0);
+        const par      = Number(parLevels[item.id]   ?? 0);
+        const shortfall = getShortfall(item);
+        const status   = getStatus(item);
+        const assignedSupp = parLevels[item.id + '_supplier'] || '';
+        const unitCost = Number(item.bottleCost ?? 0);
+        const orderCost = getOrderCost(item);
+
+        const pillClass = { ok: 'pill-ok', low: 'pill-low', crit: 'pill-crit', na: 'pill-na' }[status];
+        const pillLabel = { ok: '✓ OK', low: '▼ Low', crit: '⚠ Critical', na: '— No PAR' }[status];
+
+        const shortfallHtml = shortfall > 0
+          ? `<span style="color:var(--color-error);font-family:var(--font-mono);font-weight:600;">${shortfall}</span>
+             <span style="font-size:0.75rem;color:var(--color-text-muted);margin-left:4px;">(${fmtCurrency(orderCost)})</span>`
+          : `<span style="color:var(--color-text-muted);">0</span>`;
+
+        return `<tr data-id="${esc(item.id)}">
+          <td><strong>${esc(item.name)}</strong></td>
+          <td><span style="text-transform:capitalize;">${esc(item.domain)}</span> / ${esc(item.category)}</td>
+          <td class="tbl-right tbl-mono">${item.bottleSize}ml</td>
+          <td class="tbl-right tbl-mono">${fmtCurrency(unitCost)}</td>
+          <td class="tbl-right">
+            <input type="number" class="tbl-input stock-input" data-id="${esc(item.id)}"
+              value="${stock}" min="0" step="1" title="Current stock (bottles/units)" />
+          </td>
+          <td class="tbl-right">
+            <input type="number" class="tbl-input par-input" data-id="${esc(item.id)}"
+              value="${par}" min="0" step="1" title="Minimum PAR level" />
+          </td>
+          <td class="tbl-right">${shortfallHtml}</td>
+          <td class="tbl-center"><span class="pill ${pillClass}">${pillLabel}</span></td>
+          <td>
+            <select class="tbl-select supplier-select" data-id="${esc(item.id)}">${suppOptions.replace(`value="${esc(assignedSupp)}"`, `value="${esc(assignedSupp)}" selected`)}</select>
+          </td>
+        </tr>`;
+      }).join('');
+
+      // ── Bind inline inputs ──
+      tbody.querySelectorAll('.stock-input').forEach(inp => {
+        inp.addEventListener('change', e => {
+          const id = e.target.dataset.id;
+          stockCounts[id] = Math.max(0, Number(e.target.value) || 0);
+          debouncedAutoSave();
+        });
+      });
+      tbody.querySelectorAll('.par-input').forEach(inp => {
+        inp.addEventListener('change', e => {
+          const id = e.target.dataset.id;
+          parLevels[id] = Math.max(0, Number(e.target.value) || 0);
+          debouncedAutoSave();
+        });
+      });
+      tbody.querySelectorAll('.supplier-select').forEach(sel => {
+        sel.addEventListener('change', e => {
+          const id = e.target.dataset.id;
+          parLevels[id + '_supplier'] = e.target.value;
+          debouncedAutoSave();
+        });
+      });
+    }
+
+    // ─── Render Order Sheets ─────────────────────────────────────────
+    function renderOrders() {
+      const container = document.getElementById('orderSheetsContainer');
+      const needOrder = inventoryItems.filter(i => getShortfall(i) > 0);
+
+      if (!needOrder.length) {
+        container.innerHTML = `<div class="empty-state" style="padding:var(--space-xl) 0;">
+          <div class="icon">✅</div>
+          <h3>All items at or above PAR</h3>
+          <p>Nothing to order right now. Check back after setting PAR levels.</p>
+        </div>`;
+        return;
+      }
+
+      // Group by assigned supplier
+      const groups = {};
+      needOrder.forEach(item => {
+        const suppId = parLevels[item.id + '_supplier'] || '__unassigned__';
+        if (!groups[suppId]) groups[suppId] = [];
+        groups[suppId].push(item);
+      });
+
+      const today = new Date().toLocaleDateString('en-GB', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+      let html = '';
+
+      Object.entries(groups).forEach(([suppId, items]) => {
+        const supp = suppId === '__unassigned__' ? null : suppliers.find(s => s.id === suppId);
+        const suppName    = supp ? supp.name        : 'Unassigned Supplier';
+        const suppEmail   = supp ? supp.email       : '—';
+        const suppPhone   = supp ? supp.phone       : '—';
+        const suppContact = supp ? supp.contact     : '—';
+        const suppAccount = supp ? supp.account     : '—';
+        const suppMin     = supp ? fmtCurrency(supp.minOrder) : '—';
+        const suppDays    = supp ? supp.days.join(', ') || 'Any' : '—';
+        const orderTotal  = items.reduce((s, i) => s + getOrderCost(i), 0);
+
+        const itemRows = items.map((item, idx) => {
+          const shortfall = getShortfall(item);
+          const cost = getOrderCost(item);
+          return `<tr>
+            <td style="padding:0.6rem 0.85rem;">${idx + 1}</td>
+            <td style="padding:0.6rem 0.85rem;"><strong>${esc(item.name)}</strong></td>
+            <td style="padding:0.6rem 0.85rem;text-align:center;">${item.bottleSize}ml</td>
+            <td style="padding:0.6rem 0.85rem;text-align:center;">${Number(stockCounts[item.id]??0)}</td>
+            <td style="padding:0.6rem 0.85rem;text-align:center;">${Number(parLevels[item.id]??0)}</td>
+            <td style="padding:0.6rem 0.85rem;text-align:center;font-weight:700;color:var(--color-gold);">${shortfall}</td>
+            <td style="padding:0.6rem 0.85rem;text-align:right;font-family:var(--font-mono);">${fmtCurrency(Number(item.bottleCost??0))}</td>
+            <td style="padding:0.6rem 0.85rem;text-align:right;font-family:var(--font-mono);font-weight:600;">${fmtCurrency(cost)}</td>
+          </tr>`;
+        }).join('');
+
+        html += `<div class="order-section">
+          <div class="order-section__header">
+            <div>
+              <div class="order-section__title">📦 ${esc(suppName)}</div>
+              <div style="font-size:0.78rem;color:var(--color-text-muted);margin-top:0.2rem;">
+                ${suppEmail !== '—' ? `✉ ${esc(suppEmail)}` : ''}
+                ${suppPhone !== '—' ? ` · 📞 ${esc(suppPhone)}` : ''}
+                ${suppAccount && suppAccount !== '—' ? ` · Account: ${esc(suppAccount)}` : ''}
+                ${suppDays !== '—' ? ` · Delivers: ${esc(suppDays)}` : ''}
+              </div>
+            </div>
+            <div class="order-section__meta">
+              <span><strong>${fmtCurrency(orderTotal)}</strong> est. total</span>
+              <span>${items.length} item${items.length !== 1 ? 's' : ''}</span>
+              ${supp && supp.minOrder && orderTotal < supp.minOrder
+                ? `<span style="color:var(--color-warning);">⚠ Below min. order (${suppMin})</span>`
+                : ''}
+              <button class="btn btn-ghost btn-sm no-print" onclick="window.__showOrderModal('${esc(suppId)}')">📋 View Order</button>
+            </div>
+          </div>
+          <div class="data-table-wrap" style="border:none;border-radius:0;">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Item</th>
+                  <th class="tbl-center">Size</th>
+                  <th class="tbl-center">In Stock</th>
+                  <th class="tbl-center">PAR</th>
+                  <th class="tbl-center">Order Qty</th>
+                  <th class="tbl-right">Unit Cost</th>
+                  <th class="tbl-right">Line Total</th>
+                </tr>
+              </thead>
+              <tbody>${itemRows}</tbody>
+              <tfoot>
+                <tr style="border-top:1px solid rgba(255,255,255,0.1);">
+                  <td colspan="7" style="padding:0.75rem 0.85rem;text-align:right;font-weight:600;color:var(--color-text-muted);">ORDER TOTAL</td>
+                  <td style="padding:0.75rem 0.85rem;text-align:right;font-family:var(--font-mono);font-weight:700;font-size:1rem;color:var(--color-gold);">${fmtCurrency(orderTotal)}</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>`;
+      });
+
+      container.innerHTML = html;
+    }
+
+    // ─── Order Modal ─────────────────────────────────────────────────
+    function buildPlainTextOrder(suppId) {
+      const supp = suppId === '__unassigned__' ? null : suppliers.find(s => s.id === suppId);
+      const items = inventoryItems.filter(i => {
+        const sid = parLevels[i.id + '_supplier'] || '__unassigned__';
+        return sid === suppId && getShortfall(i) > 0;
+      });
+      const today = new Date().toLocaleDateString('en-GB');
+      const orderTotal = items.reduce((s, i) => s + getOrderCost(i), 0);
+
+      let text = `ORDER REQUEST — ${today}\n`;
+      text += `${'='.repeat(50)}\n`;
+      text += `Supplier: ${supp ? supp.name : 'Unassigned'}\n`;
+      if (supp) {
+        if (supp.email)   text += `Email:    ${supp.email}\n`;
+        if (supp.phone)   text += `Phone:    ${supp.phone}\n`;
+        if (supp.account) text += `Account:  ${supp.account}\n`;
+      }
+      text += `\nPlease supply the following items:\n`;
+      text += `${'─'.repeat(50)}\n`;
+      text += `${'Item'.padEnd(30)} ${'Qty'.padStart(5)} ${'Unit Cost'.padStart(12)} ${'Total'.padStart(10)}\n`;
+      text += `${'─'.repeat(50)}\n`;
+      items.forEach(item => {
+        const qty  = getShortfall(item);
+        const cost = Number(item.bottleCost ?? 0);
+        const line = qty * cost;
+        text += `${(item.name || '').substring(0, 29).padEnd(30)} ${String(qty).padStart(5)} £${String(cost.toFixed(2)).padStart(10)} £${String(line.toFixed(2)).padStart(8)}\n`;
+      });
+      text += `${'─'.repeat(50)}\n`;
+      text += `${'TOTAL'.padEnd(36)} £${orderTotal.toFixed(2).padStart(9)}\n`;
+      text += `${'='.repeat(50)}\n`;
+      text += `\nKind regards,\nHidden Bar & Kitchen\n`;
+      return text;
+    }
+
+    window.__showOrderModal = function(suppId) {
+      const supp = suppId === '__unassigned__' ? null : suppliers.find(s => s.id === suppId);
+      const title = supp ? `Order: ${supp.name}` : 'Order: Unassigned Items';
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('modalContent').textContent = buildPlainTextOrder(suppId);
+      document.getElementById('orderModal').classList.add('visible');
+      window.__currentModalSuppId = suppId;
+    };
+
+    // ─── Render Suppliers ─────────────────────────────────────────────
+    const ALL_DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+
+    function renderSuppliers() {
+      const grid = document.getElementById('supplierGrid');
+      if (!suppliers.length) {
+        grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">
+          <div class="icon">🏢</div>
+          <h3>No suppliers yet</h3>
+          <p>Add your first supplier to enable automated order routing.</p>
+        </div>`;
+        return;
+      }
+
+      grid.innerHTML = suppliers.map(s => {
+        const days = s.days || [];
+        const dayChips = ALL_DAYS.map(d =>
+          `<span class="day-chip ${days.includes(d) ? '' : 'inactive'}">${d}</span>`
+        ).join('');
+        const catLabel = {
+          spirits: 'Spirits & Wines', produce: 'Fresh Produce',
+          'dry-goods': 'Dry Goods', dairy: 'Dairy & Chilled',
+          cleaning: 'Cleaning & Sundries', other: 'Other'
+        }[s.category] || s.category;
+
+        // Items assigned to this supplier
+        const assignedCount = inventoryItems.filter(i => parLevels[i.id + '_supplier'] === s.id).length;
+        const orderItems    = inventoryItems.filter(i => parLevels[i.id + '_supplier'] === s.id && getShortfall(i) > 0);
+        const orderVal      = orderItems.reduce((sum, i) => sum + getOrderCost(i), 0);
+
+        return `<div class="supplier-card">
+          <div class="supplier-card__header">
+            <div>
+              <div class="supplier-card__name">${esc(s.name)}</div>
+              <div class="supplier-card__category">${esc(catLabel)}</div>
+            </div>
+            ${orderItems.length ? `<span class="pill pill-low">${orderItems.length} to order</span>` : '<span class="pill pill-ok">✓ Stocked</span>'}
+          </div>
+          ${s.contact ? `<div class="supplier-card__detail">👤 <strong>${esc(s.contact)}</strong></div>` : ''}
+          ${s.phone   ? `<div class="supplier-card__detail">📞 <strong>${esc(s.phone)}</strong></div>` : ''}
+          ${s.email   ? `<div class="supplier-card__detail">✉ <strong>${esc(s.email)}</strong></div>` : ''}
+          ${s.account ? `<div class="supplier-card__detail">🔑 Account: <strong>${esc(s.account)}</strong></div>` : ''}
+          <div class="supplier-card__detail">🚚 Lead time: <strong>${s.leadTime ?? 1} day${(s.leadTime ?? 1) !== 1 ? 's' : ''}</strong></div>
+          ${s.minOrder ? `<div class="supplier-card__detail">💰 Min order: <strong>${fmtCurrency(s.minOrder)}</strong></div>` : ''}
+          <div class="supplier-card__detail" style="flex-direction:column;gap:0.3rem;">
+            <span>Delivery days:</span>
+            <div class="days-row">${dayChips}</div>
+          </div>
+          <div class="supplier-card__detail">📦 <strong>${assignedCount}</strong> item${assignedCount !== 1 ? 's' : ''} assigned${orderVal > 0 ? ` · <span style="color:var(--color-gold);">${fmtCurrency(orderVal)} pending</span>` : ''}</div>
+          ${s.notes ? `<div style="font-size:0.78rem;color:var(--color-text-muted);font-style:italic;">"${esc(s.notes)}"</div>` : ''}
+          <div class="supplier-card__actions">
+            <button class="btn btn-ghost btn-sm" onclick="window.__editSupplier('${esc(s.id)}')">✏️ Edit</button>
+            <button class="btn btn-danger btn-sm" onclick="window.__deleteSupplier('${esc(s.id)}')">Delete</button>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    // ─── Supplier CRUD ───────────────────────────────────────────────
+    function clearSupplierForm(id = '') {
+      document.getElementById('sfEditId').value    = id;
+      document.getElementById('sfName').value      = '';
+      document.getElementById('sfCategory').value  = 'spirits';
+      document.getElementById('sfContact').value   = '';
+      document.getElementById('sfPhone').value     = '';
+      document.getElementById('sfEmail').value     = '';
+      document.getElementById('sfAccount').value   = '';
+      document.getElementById('sfMinOrder').value  = '';
+      document.getElementById('sfLeadTime').value  = '1';
+      document.getElementById('sfNotes').value     = '';
+      ALL_DAYS.forEach(d => {
+        const el = document.getElementById('sf' + d);
+        if (el) el.checked = false;
+      });
+    }
+    function populateSupplierForm(s) {
+      document.getElementById('sfEditId').value    = s.id;
+      document.getElementById('sfName').value      = s.name      || '';
+      document.getElementById('sfCategory').value  = s.category  || 'other';
+      document.getElementById('sfContact').value   = s.contact   || '';
+      document.getElementById('sfPhone').value     = s.phone     || '';
+      document.getElementById('sfEmail').value     = s.email     || '';
+      document.getElementById('sfAccount').value   = s.account   || '';
+      document.getElementById('sfMinOrder').value  = s.minOrder  ?? '';
+      document.getElementById('sfLeadTime').value  = s.leadTime  ?? 1;
+      document.getElementById('sfNotes').value     = s.notes     || '';
+      ALL_DAYS.forEach(d => {
+        const el = document.getElementById('sf' + d);
+        if (el) el.checked = (s.days || []).includes(d);
+      });
+    }
+    function readSupplierForm() {
+      const days = ALL_DAYS.filter(d => {
+        const el = document.getElementById('sf' + d);
+        return el && el.checked;
+      });
+      return {
+        id:       document.getElementById('sfEditId').value || uid(),
+        name:     document.getElementById('sfName').value.trim(),
+        category: document.getElementById('sfCategory').value,
+        contact:  document.getElementById('sfContact').value.trim(),
+        phone:    document.getElementById('sfPhone').value.trim(),
+        email:    document.getElementById('sfEmail').value.trim(),
+        account:  document.getElementById('sfAccount').value.trim(),
+        minOrder: Number(document.getElementById('sfMinOrder').value) || 0,
+        leadTime: Number(document.getElementById('sfLeadTime').value) || 1,
+        notes:    document.getElementById('sfNotes').value.trim(),
+        days
+      };
+    }
+
+    window.__editSupplier = function(id) {
+      const s = suppliers.find(x => x.id === id);
+      if (!s) return;
+      document.getElementById('supplierFormTitle').textContent = 'Edit Supplier';
+      populateSupplierForm(s);
+      document.getElementById('supplierFormCard').style.display = 'block';
+      document.getElementById('supplierFormCard').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    };
+    window.__deleteSupplier = function(id) {
+      if (!confirm('Remove this supplier? Items assigned to them will become unassigned.')) return;
+      suppliers = suppliers.filter(s => s.id !== id);
+      save(SUPPLIER_KEY, suppliers);
+      renderSuppliers();
+      renderStockTable();
+      renderOrders();
+      renderSummary();
+      showToast('✓ Supplier removed');
+    };
+
+    // ─── Auto-save debounce ──────────────────────────────────────────
+    let saveTimer;
+    function debouncedAutoSave() {
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(() => {
+        save(PAR_KEY, parLevels);
+        save(STOCK_KEY, stockCounts);
+        renderSummary();
+        renderOrders();
+        renderStockTable();
+      }, 600);
+    }
+
+    // ─── Full re-render ──────────────────────────────────────────────
+    function renderAll() {
+      renderSummary();
+      renderStockTable();
+      renderOrders();
+      renderSuppliers();
+    }
+
+    // ─── Tab switching ───────────────────────────────────────────────
+    document.getElementById('tabBar').addEventListener('click', e => {
+      const btn = e.target.closest('.tab-btn');
+      if (!btn) return;
+      const tab = btn.dataset.tab;
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b === btn));
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.toggle('active', p.id === 'tab-' + tab));
+    });
+
+    // ─── Filters ────────────────────────────────────────────────────
+    document.getElementById('stockSearch').addEventListener('input', e => {
+      activeFilter.search = e.target.value;
+      renderStockTable();
+    });
+    document.getElementById('stockDomainFilter').addEventListener('change', e => {
+      activeFilter.domain = e.target.value;
+      renderStockTable();
+    });
+    document.getElementById('stockStatusFilter').addEventListener('change', e => {
+      activeFilter.status = e.target.value;
+      renderStockTable();
+    });
+
+    // ─── Refresh button ──────────────────────────────────────────────
+    document.getElementById('refreshInventoryBtn').addEventListener('click', () => {
+      inventoryItems = load(INVENTORY_KEY, []);
+      renderAll();
+      showToast('↺ Inventory refreshed');
+    });
+
+    // ─── Save PAR button ─────────────────────────────────────────────
+    document.getElementById('saveParsBtn').addEventListener('click', () => {
+      save(PAR_KEY, parLevels);
+      save(STOCK_KEY, stockCounts);
+      renderSummary();
+      renderOrders();
+      showToast('✓ PAR levels saved');
+    });
+
+    // ─── Add/Save Supplier ───────────────────────────────────────────
+    document.getElementById('addSupplierBtn').addEventListener('click', () => {
+      document.getElementById('supplierFormTitle').textContent = 'New Supplier';
+      clearSupplierForm();
+      document.getElementById('supplierFormCard').style.display = 'block';
+      document.getElementById('supplierFormCard').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+    document.getElementById('cancelSupplierBtn').addEventListener('click', () => {
+      document.getElementById('supplierFormCard').style.display = 'none';
+    });
+    document.getElementById('saveSupplierBtn').addEventListener('click', () => {
+      const s = readSupplierForm();
+      if (!s.name) { alert('Business name is required.'); return; }
+      const existing = suppliers.findIndex(x => x.id === s.id);
+      if (existing >= 0) suppliers[existing] = s;
+      else suppliers.push(s);
+      save(SUPPLIER_KEY, suppliers);
+      document.getElementById('supplierFormCard').style.display = 'none';
+      renderSuppliers();
+      renderStockTable(); // refresh supplier dropdowns
+      renderOrders();
+      showToast('✓ Supplier saved');
+    });
+
+    // ─── Export all orders ────────────────────────────────────────────
+    document.getElementById('exportOrdersBtn').addEventListener('click', () => {
+      const needOrder = inventoryItems.filter(i => getShortfall(i) > 0);
+      if (!needOrder.length) { showToast('No orders to export'); return; }
+
+      const groups = {};
+      needOrder.forEach(item => {
+        const suppId = parLevels[item.id + '_supplier'] || '__unassigned__';
+        if (!groups[suppId]) groups[suppId] = [];
+        groups[suppId].push(item);
+      });
+
+      const allText = Object.keys(groups).map(buildPlainTextOrder).join('\n\n' + '═'.repeat(50) + '\n\n');
+      navigator.clipboard.writeText(allText).then(() => showToast('📋 Copied to clipboard'));
+    });
+
+    // ─── Print orders ─────────────────────────────────────────────────
+    document.getElementById('printOrdersBtn').addEventListener('click', () => { window.print(); });
+
+    // ─── Modal ────────────────────────────────────────────────────────
+    function closeModal() { document.getElementById('orderModal').classList.remove('visible'); }
+    document.getElementById('modalClose').addEventListener('click', closeModal);
+    document.getElementById('modalClose2').addEventListener('click', closeModal);
+    document.getElementById('orderModal').addEventListener('click', e => {
+      if (e.target === e.currentTarget) closeModal();
+    });
+    document.getElementById('modalCopy').addEventListener('click', () => {
+      const text = document.getElementById('modalContent').textContent;
+      navigator.clipboard.writeText(text).then(() => showToast('📋 Copied'));
+    });
+    document.getElementById('modalPrint').addEventListener('click', () => { window.print(); });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    // ─── Init ─────────────────────────────────────────────────────────
+    loadAll();
+    renderAll();
+
+  })();
+  </script>
+</body>
+</html>
