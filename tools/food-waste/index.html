@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Food Waste Audit Tracker · Hospitality Pro</title>
+  <link rel="stylesheet" href="/assets/styles/system.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Layout ───────────────────────────────────────────── */
+    .page-header { text-align: center; padding: var(--space-lg) 0 var(--space-md); }
+    .page-header .eyebrow { color: var(--color-text-muted); font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem; }
+    .page-header h1 { font-family: var(--font-serif); font-size: clamp(1.6rem, 4.5vw, 2.4rem); margin: 0 0 0.5rem; }
+    .page-header p { color: var(--color-text-muted); margin: 0; font-size: 0.9rem; }
+
+    .back-link { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--color-text-muted); font-size: 0.82rem; text-decoration: none; transition: color var(--transition-fast); margin-bottom: var(--space-md); }
+    .back-link:hover { color: var(--color-gold); }
+
+    /* ── Tabs ─────────────────────────────────────────────── */
+    .tabs { display: flex; border-bottom: 1px solid var(--color-border); margin-bottom: var(--space-lg); overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab-btn { flex: 1; min-width: 75px; padding: 0.75rem 0.85rem; background: none; border: none; cursor: pointer; color: var(--color-text-muted); font-size: 0.82rem; font-family: var(--font-sans); font-weight: 500; border-bottom: 2px solid transparent; transition: all var(--transition-base); white-space: nowrap; }
+    .tab-btn:hover { color: var(--color-text); }
+    .tab-btn.active { color: var(--color-gold); border-bottom-color: var(--color-gold); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── Glass Cards ──────────────────────────────────────── */
+    .glass-card { background: rgba(255,255,255,0.035); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--space-md); backdrop-filter: blur(var(--glass-blur)); -webkit-backdrop-filter: blur(var(--glass-blur)); }
+    .section-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-text-muted); margin: 0 0 var(--space-sm); }
+    .stack { display: flex; flex-direction: column; gap: var(--space-md); }
+
+    /* ── KPI Strip ────────────────────────────────────────── */
+    .kpi-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: var(--space-sm); margin-bottom: var(--space-md); }
+    .kpi-card { background: rgba(255,255,255,0.04); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-sm); text-align: center; }
+    .kpi-label { font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-muted); margin-bottom: 0.2rem; }
+    .kpi-value { font-size: 1.4rem; font-weight: 700; font-family: var(--font-mono); line-height: 1.1; color: var(--color-gold); }
+    .kpi-sub { font-size: 0.68rem; color: var(--color-text-muted); margin-top: 0.2rem; }
+    .kpi-card.danger .kpi-value { color: var(--color-error); }
+    .kpi-card.success .kpi-value { color: var(--color-success); }
+    .kpi-card.warn .kpi-value { color: #f0a832; }
+
+    /* ── Form ─────────────────────────────────────────────── */
+    .field-group { display: flex; flex-direction: column; gap: 0.3rem; }
+    .field-label { font-size: 0.79rem; color: var(--color-text-muted); font-weight: 500; }
+    input[type="text"], input[type="number"], input[type="date"], select, textarea {
+      width: 100%; padding: 0.65rem 0.85rem;
+      background: rgba(255,255,255,0.06); border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm); color: var(--color-text); font-family: var(--font-sans); font-size: 0.95rem;
+      transition: border-color var(--transition-fast);
+    }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: rgba(243,201,139,0.45); }
+    input::placeholder, textarea::placeholder { color: var(--color-text-muted); opacity: 0.55; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-sm); }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--space-sm); }
+    @media (max-width: 480px) { .grid-3 { grid-template-columns: 1fr 1fr; } .grid-2 { grid-template-columns: 1fr; } }
+
+    /* ── Quick-log form special styling ──────────────────── */
+    .quick-form { display: flex; flex-direction: column; gap: var(--space-sm); }
+    .quick-row { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: var(--space-sm); align-items: end; }
+    @media (max-width: 520px) { .quick-row { grid-template-columns: 1fr 1fr; } .quick-row .full-mobile { grid-column: 1 / -1; } }
+
+    /* ── Buttons ──────────────────────────────────────────── */
+    .btn { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.7rem 1.2rem; border-radius: var(--radius-sm); font-family: var(--font-sans); font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: all var(--transition-fast); border: none; }
+    .btn-primary { background: var(--color-gold); color: #0a0a0a; }
+    .btn-primary:hover { filter: brightness(1.1); }
+    .btn-ghost { background: rgba(255,255,255,0.06); border: 1px solid var(--color-border); color: var(--color-text); }
+    .btn-ghost:hover { background: rgba(255,255,255,0.1); }
+    .btn-danger { background: rgba(246,124,124,0.12); border: 1px solid rgba(246,124,124,0.25); color: var(--color-error); }
+    .btn-danger:hover { background: rgba(246,124,124,0.2); }
+    .btn-full { width: 100%; justify-content: center; }
+    .btn-sm { padding: 0.4rem 0.7rem; font-size: 0.78rem; }
+
+    /* ── Waste Log Table ──────────────────────────────────── */
+    .log-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .log-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; min-width: 560px; }
+    .log-table th { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-muted); padding: 0.5rem 0.6rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+    .log-table td { padding: 0.6rem 0.6rem; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: middle; }
+    .log-table tr:last-child td { border-bottom: none; }
+    .log-table tr:hover td { background: rgba(255,255,255,0.025); }
+    .cat-badge { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 20px; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.04em; }
+    .cat-spirits { background: rgba(147,112,219,0.15); color: #b39ddb; border: 1px solid rgba(147,112,219,0.2); }
+    .cat-wine { background: rgba(229,57,53,0.12); color: #ef9a9a; border: 1px solid rgba(229,57,53,0.2); }
+    .cat-beer { background: rgba(243,201,139,0.12); color: var(--color-gold); border: 1px solid rgba(243,201,139,0.2); }
+    .cat-food { background: rgba(76,175,80,0.12); color: #a5d6a7; border: 1px solid rgba(76,175,80,0.2); }
+    .cat-garnish { background: rgba(3,169,244,0.12); color: #81d4fa; border: 1px solid rgba(3,169,244,0.2); }
+    .cat-other { background: rgba(255,255,255,0.06); color: var(--color-text-muted); border: 1px solid var(--color-border); }
+    .reason-tag { font-size: 0.7rem; color: var(--color-text-muted); font-style: italic; }
+    .cost-cell { font-family: var(--font-mono); font-weight: 600; }
+    .cost-cell.high { color: var(--color-error); }
+    .cost-cell.mid { color: #f0a832; }
+    .empty-state { text-align: center; padding: var(--space-lg); color: var(--color-text-muted); font-size: 0.9rem; }
+
+    /* ── Category Breakdown Bars ──────────────────────────── */
+    .breakdown-list { display: flex; flex-direction: column; gap: 0.85rem; }
+    .breakdown-row { display: flex; flex-direction: column; gap: 0.3rem; }
+    .breakdown-row-header { display: flex; justify-content: space-between; align-items: baseline; }
+    .breakdown-name { font-size: 0.88rem; font-weight: 500; }
+    .breakdown-amount { font-family: var(--font-mono); font-size: 0.9rem; color: var(--color-gold); }
+    .breakdown-sub { font-size: 0.72rem; color: var(--color-text-muted); }
+    .bar-track { height: 6px; background: rgba(255,255,255,0.08); border-radius: 3px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 3px; transition: width 0.6s ease; }
+    .bar-spirits { background: linear-gradient(90deg, #7c4dff, #b39ddb); }
+    .bar-wine { background: linear-gradient(90deg, #c62828, #ef9a9a); }
+    .bar-beer { background: linear-gradient(90deg, #f57c00, var(--color-gold)); }
+    .bar-food { background: linear-gradient(90deg, #2e7d32, #a5d6a7); }
+    .bar-garnish { background: linear-gradient(90deg, #0277bd, #81d4fa); }
+    .bar-other { background: linear-gradient(90deg, #424242, #9e9e9e); }
+
+    /* ── Reason Breakdown ─────────────────────────────────── */
+    .reason-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: var(--space-sm); }
+    .reason-card { background: rgba(255,255,255,0.03); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-sm); text-align: center; }
+    .reason-icon { font-size: 1.4rem; margin-bottom: 0.3rem; }
+    .reason-name { font-size: 0.75rem; color: var(--color-text-muted); margin-bottom: 0.2rem; }
+    .reason-cost { font-family: var(--font-mono); font-size: 1rem; font-weight: 700; color: var(--color-text); }
+    .reason-pct { font-size: 0.68rem; color: var(--color-text-muted); }
+
+    /* ── Target / Progress ────────────────────────────────── */
+    .target-ring-wrap { display: flex; align-items: center; gap: var(--space-md); flex-wrap: wrap; }
+    .ring-container { position: relative; width: 100px; height: 100px; flex-shrink: 0; }
+    .ring-svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+    .ring-track { fill: none; stroke: rgba(255,255,255,0.08); stroke-width: 10; }
+    .ring-fill { fill: none; stroke-width: 10; stroke-linecap: round; transition: stroke-dashoffset 0.8s ease, stroke 0.5s ease; }
+    .ring-label { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .ring-pct { font-family: var(--font-mono); font-size: 1.2rem; font-weight: 700; line-height: 1; }
+    .ring-sub { font-size: 0.6rem; color: var(--color-text-muted); margin-top: 0.2rem; }
+    .target-details { flex: 1; min-width: 180px; }
+    .target-stat { display: flex; justify-content: space-between; padding: 0.35rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.85rem; }
+    .target-stat:last-child { border-bottom: none; }
+    .target-stat span:first-child { color: var(--color-text-muted); }
+    .target-stat span:last-child { font-family: var(--font-mono); font-weight: 600; }
+    .stat-good { color: var(--color-success) !important; }
+    .stat-warn { color: #f0a832 !important; }
+    .stat-bad { color: var(--color-error) !important; }
+
+    /* ── Settings ─────────────────────────────────────────── */
+    .setting-row { display: flex; justify-content: space-between; align-items: center; padding: 0.65rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); gap: var(--space-sm); }
+    .setting-row:last-child { border-bottom: none; }
+    .setting-label-wrap .setting-label { font-size: 0.88rem; font-weight: 500; }
+    .setting-label-wrap .setting-desc { font-size: 0.75rem; color: var(--color-text-muted); margin-top: 0.15rem; }
+    .setting-input-wrap { min-width: 130px; }
+
+    /* ── Report ───────────────────────────────────────────── */
+    .report-output { white-space: pre-wrap; font-family: var(--font-mono); font-size: 0.78rem; line-height: 1.7; background: rgba(0,0,0,0.3); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-md); color: var(--color-text-muted); max-height: 400px; overflow-y: auto; }
+    .report-controls { display: flex; gap: var(--space-sm); flex-wrap: wrap; }
+
+    /* ── Period Switcher ──────────────────────────────────── */
+    .period-btns { display: flex; gap: 0.4rem; margin-bottom: var(--space-md); }
+    .period-btn { padding: 0.38rem 0.85rem; background: rgba(255,255,255,0.05); border: 1px solid var(--color-border); border-radius: 20px; color: var(--color-text-muted); font-size: 0.78rem; font-family: var(--font-sans); cursor: pointer; transition: all var(--transition-fast); }
+    .period-btn.active { background: rgba(243,201,139,0.12); border-color: rgba(243,201,139,0.4); color: var(--color-gold); }
+
+    /* ── Trend mini-chart ─────────────────────────────────── */
+    .trend-chart-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .trend-canvas-container { min-width: 320px; width: 100%; }
+    canvas { display: block; width: 100%; }
+
+    /* ── Alert banner ─────────────────────────────────────── */
+    .alert-banner { display: flex; align-items: flex-start; gap: 0.7rem; padding: 0.75rem var(--space-sm); border-radius: var(--radius-md); font-size: 0.82rem; margin-bottom: var(--space-sm); }
+    .alert-warn { background: rgba(240,168,50,0.08); border: 1px solid rgba(240,168,50,0.25); color: #f0a832; }
+    .alert-danger { background: rgba(246,124,124,0.08); border: 1px solid rgba(246,124,124,0.25); color: var(--color-error); }
+    .alert-good { background: rgba(76,175,80,0.08); border: 1px solid rgba(76,175,80,0.25); color: var(--color-success); }
+    .alert-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 0.05rem; }
+
+    /* ── Misc ─────────────────────────────────────────────── */
+    .divider { border: none; border-top: 1px solid var(--color-border); margin: var(--space-md) 0; }
+    .text-right { text-align: right; }
+    .text-muted { color: var(--color-text-muted); }
+    .font-mono { font-family: var(--font-mono); }
+    .flex-between { display: flex; justify-content: space-between; align-items: center; gap: var(--space-sm); flex-wrap: wrap; }
+    .cluster { display: flex; gap: var(--space-sm); flex-wrap: wrap; align-items: center; }
+    .mt-sm { margin-top: var(--space-sm); }
+    .mt-md { margin-top: var(--space-md); }
+    .hidden { display: none !important; }
+    .copy-success { color: var(--color-success) !important; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a class="back-link" href="/">← Back to Hospitality Pro</a>
+
+    <header class="page-header">
+      <p class="eyebrow">Hospitality Pro · Operations</p>
+      <h1>Food Waste Audit Tracker</h1>
+      <p>Make the invisible visible. Log waste in seconds, see the cost clearly, act on it fast.</p>
+    </header>
+
+    <!-- KPI Strip -->
+    <div class="kpi-strip" id="kpiStrip">
+      <div class="kpi-card" id="kpiToday">
+        <div class="kpi-label">Today</div>
+        <div class="kpi-value" id="kpiTodayVal">£0.00</div>
+        <div class="kpi-sub">waste cost</div>
+      </div>
+      <div class="kpi-card" id="kpiWeek">
+        <div class="kpi-label">This Week</div>
+        <div class="kpi-value" id="kpiWeekVal">£0.00</div>
+        <div class="kpi-sub">7 days</div>
+      </div>
+      <div class="kpi-card" id="kpiMonth">
+        <div class="kpi-label">This Month</div>
+        <div class="kpi-value" id="kpiMonthVal">£0.00</div>
+        <div class="kpi-sub" id="kpiMonthSub">vs £0 target</div>
+      </div>
+      <div class="kpi-card" id="kpiTotal">
+        <div class="kpi-label">All Time</div>
+        <div class="kpi-value" id="kpiTotalVal">£0.00</div>
+        <div class="kpi-sub" id="kpiTotalCount">0 entries</div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs" role="tablist">
+      <button class="tab-btn active" role="tab" data-tab="log">📋 Log Waste</button>
+      <button class="tab-btn" role="tab" data-tab="dashboard">📊 Dashboard</button>
+      <button class="tab-btn" role="tab" data-tab="targets">🎯 Targets</button>
+      <button class="tab-btn" role="tab" data-tab="report">📄 Report</button>
+      <button class="tab-btn" role="tab" data-tab="settings">⚙️ Settings</button>
+    </div>
+
+    <!-- ── TAB: LOG WASTE ─────────────────────────────────── -->
+    <div class="tab-panel active" id="tab-log">
+      <div class="stack">
+        <!-- Quick Entry Form -->
+        <div class="glass-card">
+          <p class="section-label">Quick Entry — log waste in seconds</p>
+          <div class="quick-form" id="wasteForm">
+            <div class="grid-2">
+              <div class="field-group full-mobile">
+                <label class="field-label" for="wItem">Item Name</label>
+                <input type="text" id="wItem" placeholder="e.g. Lemon garnish, House Merlot…" autocomplete="off" />
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="wCategory">Category</label>
+                <select id="wCategory">
+                  <option value="">— select —</option>
+                  <option value="Spirits">Spirits</option>
+                  <option value="Wine">Wine</option>
+                  <option value="Beer">Beer</option>
+                  <option value="Food">Food</option>
+                  <option value="Garnish">Garnish</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+            </div>
+            <div class="grid-3">
+              <div class="field-group">
+                <label class="field-label" for="wQty">Quantity</label>
+                <input type="number" id="wQty" min="0" step="any" placeholder="e.g. 2" />
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="wUnit">Unit</label>
+                <select id="wUnit">
+                  <option value="portions">Portions</option>
+                  <option value="ml">ml</option>
+                  <option value="bottles">Bottles</option>
+                  <option value="kg">kg</option>
+                  <option value="g">g</option>
+                  <option value="litres">Litres</option>
+                  <option value="units">Units</option>
+                </select>
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="wCost">Cost Value (£)</label>
+                <input type="number" id="wCost" min="0" step="0.01" placeholder="0.00" />
+              </div>
+            </div>
+            <div class="grid-2">
+              <div class="field-group">
+                <label class="field-label" for="wReason">Reason</label>
+                <select id="wReason">
+                  <option value="Spoilage">Spoilage</option>
+                  <option value="Over-prep">Over-prep</option>
+                  <option value="Breakage">Breakage</option>
+                  <option value="Spillage">Spillage</option>
+                  <option value="Expired">Expired</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="wDate">Date</label>
+                <input type="date" id="wDate" />
+              </div>
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="wNotes">Notes (optional)</label>
+              <input type="text" id="wNotes" placeholder="e.g. fridge temp issue, excess prep for event…" />
+            </div>
+            <button class="btn btn-primary btn-full" id="btnLogWaste">＋ Log Waste Entry</button>
+          </div>
+        </div>
+
+        <!-- Waste Log Table -->
+        <div class="glass-card">
+          <div class="flex-between" style="margin-bottom:var(--space-sm)">
+            <p class="section-label" style="margin:0">Waste Log</p>
+            <div class="cluster">
+              <select id="logFilter" style="width:auto;padding:0.35rem 0.6rem;font-size:0.78rem;">
+                <option value="all">All categories</option>
+                <option value="Spirits">Spirits</option>
+                <option value="Wine">Wine</option>
+                <option value="Beer">Beer</option>
+                <option value="Food">Food</option>
+                <option value="Garnish">Garnish</option>
+                <option value="Other">Other</option>
+              </select>
+              <button class="btn btn-ghost btn-sm" id="btnClearAll">Clear all</button>
+            </div>
+          </div>
+          <div class="log-wrap">
+            <table class="log-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Item</th>
+                  <th>Category</th>
+                  <th>Qty</th>
+                  <th>Reason</th>
+                  <th>Cost</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="logTableBody">
+                <tr><td colspan="7" class="empty-state">No waste logged yet. Use the form above to add your first entry.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB: DASHBOARD ─────────────────────────────────── -->
+    <div class="tab-panel" id="tab-dashboard">
+      <div class="stack">
+        <!-- Period Switcher -->
+        <div class="flex-between">
+          <div class="period-btns">
+            <button class="period-btn active" data-period="week">This Week</button>
+            <button class="period-btn" data-period="month">This Month</button>
+            <button class="period-btn" data-period="all">All Time</button>
+          </div>
+        </div>
+
+        <!-- Alert Area -->
+        <div id="alertArea"></div>
+
+        <!-- Category Breakdown -->
+        <div class="glass-card">
+          <p class="section-label">Waste by Category</p>
+          <div class="breakdown-list" id="categoryBreakdown">
+            <p class="empty-state text-muted" style="padding:var(--space-sm) 0;">No data for this period.</p>
+          </div>
+        </div>
+
+        <!-- Reason Breakdown -->
+        <div class="glass-card">
+          <p class="section-label">Waste by Reason</p>
+          <div class="reason-grid" id="reasonBreakdown">
+            <p class="empty-state text-muted" style="padding:var(--space-sm) 0;">No data for this period.</p>
+          </div>
+        </div>
+
+        <!-- Trend Chart -->
+        <div class="glass-card">
+          <p class="section-label">Daily Waste Trend (Last 14 Days)</p>
+          <div class="trend-chart-wrap">
+            <div class="trend-canvas-container" style="height:160px;">
+              <canvas id="trendCanvas" height="160"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Top Wasted Items -->
+        <div class="glass-card">
+          <p class="section-label">Top Wasted Items</p>
+          <div id="topItemsList">
+            <p class="empty-state text-muted" style="padding:var(--space-sm) 0;">No data for this period.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB: TARGETS ───────────────────────────────────── -->
+    <div class="tab-panel" id="tab-targets">
+      <div class="stack">
+        <div class="glass-card">
+          <p class="section-label">Monthly Waste Budget Target</p>
+          <div class="target-ring-wrap" id="targetRingWrap">
+            <div class="ring-container">
+              <svg class="ring-svg" viewBox="0 0 100 100">
+                <circle class="ring-track" cx="50" cy="50" r="40"/>
+                <circle class="ring-fill" id="ringFill" cx="50" cy="50" r="40" stroke-dasharray="251.3" stroke-dashoffset="251.3" stroke="var(--color-gold)"/>
+              </svg>
+              <div class="ring-label">
+                <span class="ring-pct" id="ringPct">0%</span>
+                <span class="ring-sub">of target</span>
+              </div>
+            </div>
+            <div class="target-details" id="targetDetails">
+              <div class="target-stat">
+                <span>Monthly target</span>
+                <span id="tStatTarget" class="font-mono">not set</span>
+              </div>
+              <div class="target-stat">
+                <span>Spent this month</span>
+                <span id="tStatSpent" class="font-mono">£0.00</span>
+              </div>
+              <div class="target-stat">
+                <span>Remaining</span>
+                <span id="tStatRemaining" class="font-mono">—</span>
+              </div>
+              <div class="target-stat">
+                <span>Days left</span>
+                <span id="tStatDays" class="font-mono">—</span>
+              </div>
+              <div class="target-stat">
+                <span>Daily burn rate</span>
+                <span id="tStatBurn" class="font-mono">—</span>
+              </div>
+              <div class="target-stat">
+                <span>Projected month-end</span>
+                <span id="tStatProjected" class="font-mono">—</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Set Target -->
+        <div class="glass-card">
+          <p class="section-label">Set Target</p>
+          <div class="grid-2">
+            <div class="field-group">
+              <label class="field-label" for="targetAmount">Monthly Budget (£)</label>
+              <input type="number" id="targetAmount" min="0" step="10" placeholder="e.g. 500" />
+            </div>
+            <div class="field-group">
+              <label class="field-label">Industry Benchmarks</label>
+              <div class="cluster mt-sm">
+                <button class="btn btn-ghost btn-sm" onclick="setQuickTarget(300)">£300</button>
+                <button class="btn btn-ghost btn-sm" onclick="setQuickTarget(500)">£500</button>
+                <button class="btn btn-ghost btn-sm" onclick="setQuickTarget(833)">£833 <span class="text-muted">(£10k/yr)</span></button>
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-primary mt-md" onclick="saveTarget()">Save Target</button>
+          <p class="text-muted" style="font-size:0.75rem;margin-top:0.75rem;">UK hospitality average: £10,000+ waste cost per year. A £500/month target = £6k saved vs average. Start here.</p>
+        </div>
+
+        <!-- Historical targets context -->
+        <div class="glass-card">
+          <p class="section-label">Why This Matters</p>
+          <div class="breakdown-list">
+            <div class="breakdown-row">
+              <div class="breakdown-row-header">
+                <span class="breakdown-name">🇬🇧 UK Average Annual Waste</span>
+                <span class="breakdown-amount">£10,000+</span>
+              </div>
+              <div class="bar-track"><div class="bar-fill bar-food" style="width:100%"></div></div>
+              <div class="breakdown-sub">WRAP study — UK hospitality sector average per venue</div>
+            </div>
+            <div class="breakdown-row">
+              <div class="breakdown-row-header">
+                <span class="breakdown-name">🍷 Spirits & Wine (hidden waste)</span>
+                <span class="breakdown-amount">~35%</span>
+              </div>
+              <div class="bar-track"><div class="bar-fill bar-spirits" style="width:35%"></div></div>
+              <div class="breakdown-sub">Spillage, over-pour, breakage — rarely tracked</div>
+            </div>
+            <div class="breakdown-row">
+              <div class="breakdown-row-header">
+                <span class="breakdown-name">🌿 Garnish Over-prep</span>
+                <span class="breakdown-amount">~20%</span>
+              </div>
+              <div class="bar-track"><div class="bar-fill bar-garnish" style="width:20%"></div></div>
+              <div class="breakdown-sub">High-frequency, low-unit-cost — adds up fast</div>
+            </div>
+            <div class="breakdown-row">
+              <div class="breakdown-row-header">
+                <span class="breakdown-name">🍽️ Food Over-production</span>
+                <span class="breakdown-amount">~25%</span>
+              </div>
+              <div class="bar-track"><div class="bar-fill bar-food" style="width:25%"></div></div>
+              <div class="breakdown-sub">Kitchen over-prep and plate waste</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB: REPORT ────────────────────────────────────── -->
+    <div class="tab-panel" id="tab-report">
+      <div class="stack">
+        <div class="glass-card">
+          <p class="section-label">Generate Waste Report</p>
+          <div class="grid-2">
+            <div class="field-group">
+              <label class="field-label" for="reportType">Report Period</label>
+              <select id="reportType">
+                <option value="week">This Week</option>
+                <option value="month">This Month</option>
+                <option value="lastweek">Last Week</option>
+                <option value="lastmonth">Last Month</option>
+              </select>
+            </div>
+            <div class="field-group" style="justify-content:flex-end;">
+              <div class="cluster" style="height:100%;align-items:flex-end;">
+                <button class="btn btn-primary" id="btnGenerateReport">Generate Report</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="glass-card" id="reportCard">
+          <div class="flex-between" style="margin-bottom:var(--space-sm)">
+            <p class="section-label" style="margin:0">Report Output</p>
+            <div class="report-controls">
+              <button class="btn btn-ghost btn-sm" id="btnCopyReport">📋 Copy to Clipboard</button>
+            </div>
+          </div>
+          <div class="report-output" id="reportOutput">Generate a report above to see the formatted waste summary.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB: SETTINGS ─────────────────────────────────── -->
+    <div class="tab-panel" id="tab-settings">
+      <div class="stack">
+        <div class="glass-card">
+          <p class="section-label">Venue Settings</p>
+          <div class="setting-row">
+            <div class="setting-label-wrap">
+              <div class="setting-label">Venue Name</div>
+              <div class="setting-desc">Used in reports and exports</div>
+            </div>
+            <div class="setting-input-wrap">
+              <input type="text" id="settingVenueName" placeholder="e.g. Hidden" />
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-label-wrap">
+              <div class="setting-label">Monthly Waste Target (£)</div>
+              <div class="setting-desc">Sets the target on the Targets tab</div>
+            </div>
+            <div class="setting-input-wrap">
+              <input type="number" id="settingTarget" min="0" step="10" placeholder="e.g. 500" />
+            </div>
+          </div>
+          <button class="btn btn-primary mt-md" onclick="saveSettings()">Save Settings</button>
+        </div>
+
+        <div class="glass-card">
+          <p class="section-label">Data Management</p>
+          <div class="setting-row">
+            <div class="setting-label-wrap">
+              <div class="setting-label">Export All Data</div>
+              <div class="setting-desc">Download as JSON backup</div>
+            </div>
+            <button class="btn btn-ghost btn-sm" onclick="exportData()">Export JSON</button>
+          </div>
+          <div class="setting-row">
+            <div class="setting-label-wrap">
+              <div class="setting-label">Import Data</div>
+              <div class="setting-desc">Restore from JSON backup</div>
+            </div>
+            <label class="btn btn-ghost btn-sm" style="cursor:pointer;">
+              Import JSON
+              <input type="file" id="importFile" accept=".json" style="display:none;" onchange="importData(event)" />
+            </label>
+          </div>
+          <div class="setting-row">
+            <div class="setting-label-wrap">
+              <div class="setting-label">Inventory Integration</div>
+              <div class="setting-desc">Pull categories from liquidGlassInventory</div>
+            </div>
+            <button class="btn btn-ghost btn-sm" id="btnSyncInventory" onclick="syncFromInventory()">Sync Now</button>
+          </div>
+          <div class="setting-row">
+            <div class="setting-label-wrap">
+              <div class="setting-label">Clear All Waste Data</div>
+              <div class="setting-desc">Permanently delete all waste entries</div>
+            </div>
+            <button class="btn btn-danger btn-sm" onclick="clearAllData()">Delete All</button>
+          </div>
+        </div>
+
+        <div class="glass-card">
+          <p class="section-label">About</p>
+          <p class="text-muted" style="font-size:0.82rem;line-height:1.6;">Food Waste Audit Tracker · Hospitality Pro. All data stored locally in your browser. Zero cloud, zero logins. Built by Jordan Pitts — <a href="https://jordanpitts.com" target="_blank" style="color:var(--color-gold);">jordanpitts.com</a>.</p>
+          <p class="text-muted" style="font-size:0.75rem;margin-top:0.5rem;">UK hospitality businesses lose an average of £10,000+ per year to food and drink waste (WRAP). This tool makes the invisible visible and actionable.</p>
+        </div>
+      </div>
+    </div>
+  </div><!-- /.container -->
+
+  <script>
+  // ── Storage key ─────────────────────────────────────────
+  const STORAGE_KEY = 'foodWasteLog';
+  const SETTINGS_KEY = 'foodWasteSettings';
+
+  // ── State ─────────────────────────────────────────────────
+  let entries = [];
+  let settings = { venueName: 'Hidden', monthlyTarget: 0 };
+  let dashPeriod = 'week';
+
+  // ── Init ──────────────────────────────────────────────────
+  function init() {
+    loadData();
+    loadSettings();
+    setDefaultDate();
+    renderAll();
+    setupTabs();
+    setupLogFilter();
+    syncFromInventory();
+  }
+
+  function loadData() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      entries = raw ? JSON.parse(raw) : [];
+    } catch { entries = []; }
+  }
+
+  function saveData() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+  }
+
+  function loadSettings() {
+    try {
+      const raw = localStorage.getItem(SETTINGS_KEY);
+      if (raw) settings = { ...settings, ...JSON.parse(raw) };
+    } catch {}
+    document.getElementById('settingVenueName').value = settings.venueName || '';
+    document.getElementById('settingTarget').value = settings.monthlyTarget || '';
+    document.getElementById('targetAmount').value = settings.monthlyTarget || '';
+  }
+
+  function saveSettings() {
+    settings.venueName = document.getElementById('settingVenueName').value.trim() || 'Hidden';
+    settings.monthlyTarget = parseFloat(document.getElementById('settingTarget').value) || 0;
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+    renderAll();
+    showToast('Settings saved ✓');
+  }
+
+  function saveTarget() {
+    settings.monthlyTarget = parseFloat(document.getElementById('targetAmount').value) || 0;
+    document.getElementById('settingTarget').value = settings.monthlyTarget;
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+    renderAll();
+    showToast('Target saved ✓');
+  }
+
+  function setQuickTarget(amount) {
+    document.getElementById('targetAmount').value = amount;
+    saveTarget();
+  }
+
+  // ── Date helpers ──────────────────────────────────────────
+  function setDefaultDate() {
+    const d = document.getElementById('wDate');
+    d.value = todayStr();
+  }
+
+  function todayStr() {
+    return new Date().toISOString().split('T')[0];
+  }
+
+  function startOfWeek() {
+    const d = new Date();
+    d.setDate(d.getDate() - d.getDay() + (d.getDay() === 0 ? -6 : 1));
+    return d.toISOString().split('T')[0];
+  }
+
+  function startOfMonth() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-01`;
+  }
+
+  function startOfLastWeek() {
+    const d = new Date();
+    const day = d.getDay() || 7;
+    d.setDate(d.getDate() - day - 6);
+    return d.toISOString().split('T')[0];
+  }
+
+  function endOfLastWeek() {
+    const d = new Date();
+    const day = d.getDay() || 7;
+    d.setDate(d.getDate() - day);
+    return d.toISOString().split('T')[0];
+  }
+
+  function startOfLastMonth() {
+    const d = new Date();
+    return new Date(d.getFullYear(), d.getMonth()-1, 1).toISOString().split('T')[0];
+  }
+
+  function endOfLastMonth() {
+    const d = new Date();
+    return new Date(d.getFullYear(), d.getMonth(), 0).toISOString().split('T')[0];
+  }
+
+  function filterByPeriod(period) {
+    const today = todayStr();
+    if (period === 'week') return entries.filter(e => e.date >= startOfWeek() && e.date <= today);
+    if (period === 'month') return entries.filter(e => e.date >= startOfMonth() && e.date <= today);
+    if (period === 'lastweek') return entries.filter(e => e.date >= startOfLastWeek() && e.date <= endOfLastWeek());
+    if (period === 'lastmonth') return entries.filter(e => e.date >= startOfLastMonth() && e.date <= endOfLastMonth());
+    return [...entries]; // all
+  }
+
+  function totalCost(arr) {
+    return arr.reduce((s, e) => s + (parseFloat(e.cost) || 0), 0);
+  }
+
+  // ── Log Waste ─────────────────────────────────────────────
+  document.getElementById('btnLogWaste').addEventListener('click', logWaste);
+
+  function logWaste() {
+    const item = document.getElementById('wItem').value.trim();
+    const category = document.getElementById('wCategory').value;
+    const qty = document.getElementById('wQty').value;
+    const unit = document.getElementById('wUnit').value;
+    const cost = document.getElementById('wCost').value;
+    const reason = document.getElementById('wReason').value;
+    const date = document.getElementById('wDate').value;
+    const notes = document.getElementById('wNotes').value.trim();
+
+    if (!item) { highlight('wItem'); return; }
+    if (!category) { highlight('wCategory'); return; }
+    if (!qty || isNaN(parseFloat(qty))) { highlight('wQty'); return; }
+    if (!cost || isNaN(parseFloat(cost))) { highlight('wCost'); return; }
+    if (!date) { highlight('wDate'); return; }
+
+    const entry = {
+      id: Date.now(),
+      item, category, qty: parseFloat(qty), unit, cost: parseFloat(cost),
+      reason, date, notes,
+      ts: new Date().toISOString()
+    };
+
+    entries.unshift(entry);
+    saveData();
+    resetForm();
+    renderAll();
+    showToast('Waste logged ✓');
+  }
+
+  function highlight(id) {
+    const el = document.getElementById(id);
+    el.style.borderColor = 'var(--color-error)';
+    el.focus();
+    setTimeout(() => el.style.borderColor = '', 1500);
+  }
+
+  function resetForm() {
+    document.getElementById('wItem').value = '';
+    document.getElementById('wQty').value = '';
+    document.getElementById('wCost').value = '';
+    document.getElementById('wNotes').value = '';
+    document.getElementById('wCategory').value = '';
+  }
+
+  function deleteEntry(id) {
+    if (!confirm('Delete this waste entry?')) return;
+    entries = entries.filter(e => e.id !== id);
+    saveData();
+    renderAll();
+  }
+
+  document.getElementById('btnClearAll').addEventListener('click', () => {
+    if (!confirm('Clear ALL waste entries? This cannot be undone.')) return;
+    entries = [];
+    saveData();
+    renderAll();
+  });
+
+  // ── Render All ────────────────────────────────────────────
+  function renderAll() {
+    renderKPIs();
+    renderLogTable();
+    renderDashboard();
+    renderTargets();
+  }
+
+  // ── KPI Strip ─────────────────────────────────────────────
+  function renderKPIs() {
+    const today = todayStr();
+    const todayEntries = entries.filter(e => e.date === today);
+    const weekEntries = entries.filter(e => e.date >= startOfWeek() && e.date <= today);
+    const monthEntries = entries.filter(e => e.date >= startOfMonth() && e.date <= today);
+
+    const todayCost = totalCost(todayEntries);
+    const weekCost = totalCost(weekEntries);
+    const monthCost = totalCost(monthEntries);
+    const allCost = totalCost(entries);
+
+    document.getElementById('kpiTodayVal').textContent = fmt(todayCost);
+    document.getElementById('kpiWeekVal').textContent = fmt(weekCost);
+    document.getElementById('kpiMonthVal').textContent = fmt(monthCost);
+    document.getElementById('kpiTotalVal').textContent = fmt(allCost);
+    document.getElementById('kpiTotalCount').textContent = `${entries.length} entries`;
+
+    const target = settings.monthlyTarget;
+    document.getElementById('kpiMonthSub').textContent = target > 0 ? `vs ${fmt(target)} target` : 'no target set';
+
+    // Colour the month KPI
+    const monthCard = document.getElementById('kpiMonth');
+    monthCard.className = 'kpi-card';
+    if (target > 0) {
+      const pct = monthCost / target;
+      if (pct >= 1) monthCard.classList.add('danger');
+      else if (pct >= 0.8) monthCard.classList.add('warn');
+      else monthCard.classList.add('success');
+    }
+  }
+
+  // ── Log Table ─────────────────────────────────────────────
+  function setupLogFilter() {
+    document.getElementById('logFilter').addEventListener('change', renderLogTable);
+  }
+
+  function renderLogTable() {
+    const filter = document.getElementById('logFilter').value;
+    const filtered = filter === 'all' ? entries : entries.filter(e => e.category === filter);
+    const tbody = document.getElementById('logTableBody');
+    if (!filtered.length) {
+      tbody.innerHTML = `<tr><td colspan="7" class="empty-state">No entries${filter !== 'all' ? ` for ${filter}` : ''}. Start logging waste above.</td></tr>`;
+      return;
+    }
+    tbody.innerHTML = filtered.map(e => {
+      const costNum = parseFloat(e.cost) || 0;
+      const costClass = costNum >= 20 ? 'cost-cell high' : costNum >= 8 ? 'cost-cell mid' : 'cost-cell';
+      return `
+        <tr>
+          <td>${formatDate(e.date)}</td>
+          <td><strong>${esc(e.item)}</strong>${e.notes ? `<br><span class="reason-tag">${esc(e.notes)}</span>` : ''}</td>
+          <td><span class="cat-badge cat-${e.category.toLowerCase()}">${esc(e.category)}</span></td>
+          <td class="font-mono">${e.qty} ${esc(e.unit)}</td>
+          <td><span class="reason-tag">${esc(e.reason)}</span></td>
+          <td class="${costClass}">${fmt(costNum)}</td>
+          <td><button class="btn-remove" onclick="deleteEntry(${e.id})" title="Delete">✕</button></td>
+        </tr>`;
+    }).join('');
+  }
+
+  // ── Dashboard ─────────────────────────────────────────────
+  function setupPeriodBtns() {
+    document.querySelectorAll('.period-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        dashPeriod = btn.dataset.period;
+        renderDashboard();
+      });
+    });
+  }
+
+  function renderDashboard() {
+    const data = filterByPeriod(dashPeriod);
+    renderAlerts(data);
+    renderCategoryBreakdown(data);
+    renderReasonBreakdown(data);
+    renderTrendChart();
+    renderTopItems(data);
+  }
+
+  function renderAlerts(data) {
+    const area = document.getElementById('alertArea');
+    area.innerHTML = '';
+    const total = totalCost(data);
+    const target = settings.monthlyTarget;
+    const msgs = [];
+
+    if (dashPeriod === 'month' && target > 0) {
+      const pct = total / target;
+      if (pct >= 1) {
+        msgs.push({ cls: 'alert-danger', icon: '🚨', text: `Monthly waste target breached — ${fmt(total)} spent vs ${fmt(target)} budget. Immediate action required.` });
+      } else if (pct >= 0.8) {
+        msgs.push({ cls: 'alert-warn', icon: '⚠️', text: `${Math.round(pct*100)}% of monthly waste budget used. ${fmt(target - total)} remaining.` });
+      } else if (pct > 0) {
+        msgs.push({ cls: 'alert-good', icon: '✅', text: `On track — ${fmt(total)} of ${fmt(target)} monthly target used (${Math.round(pct*100)}%).` });
+      }
+    }
+
+    // Spike alert: any single category >40% of total
+    if (total > 0) {
+      const catTotals = getCategoryTotals(data);
+      catTotals.forEach(ct => {
+        if (ct.cost / total > 0.5 && ct.cost > 50) {
+          msgs.push({ cls: 'alert-warn', icon: '📊', text: `${ct.cat} accounts for ${Math.round(ct.cost/total*100)}% of waste this period (${fmt(ct.cost)}). Review root cause.` });
+        }
+      });
+    }
+
+    if (msgs.length) {
+      area.innerHTML = msgs.map(m => `<div class="alert-banner ${m.cls}"><span class="alert-icon">${m.icon}</span><span>${m.text}</span></div>`).join('');
+    }
+  }
+
+  function getCategoryTotals(data) {
+    const cats = {};
+    data.forEach(e => {
+      if (!cats[e.category]) cats[e.category] = 0;
+      cats[e.category] += parseFloat(e.cost) || 0;
+    });
+    return Object.entries(cats).map(([cat, cost]) => ({ cat, cost })).sort((a,b) => b.cost - a.cost);
+  }
+
+  function renderCategoryBreakdown(data) {
+    const el = document.getElementById('categoryBreakdown');
+    const cats = getCategoryTotals(data);
+    const total = totalCost(data);
+
+    if (!cats.length || total === 0) {
+      el.innerHTML = `<p class="empty-state text-muted" style="padding:var(--space-sm) 0;">No data for this period.</p>`;
+      return;
+    }
+
+    const max = cats[0].cost;
+    el.innerHTML = cats.map(({ cat, cost }) => {
+      const pct = max > 0 ? (cost / max) * 100 : 0;
+      const sharePct = total > 0 ? Math.round(cost / total * 100) : 0;
+      const catKey = cat.toLowerCase();
+      return `
+        <div class="breakdown-row">
+          <div class="breakdown-row-header">
+            <span class="breakdown-name">${catIcon(cat)} ${cat}</span>
+            <span class="breakdown-amount">${fmt(cost)}</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill bar-${catKey}" style="width:${pct}%"></div></div>
+          <div class="breakdown-sub">${sharePct}% of total waste · ${data.filter(e=>e.category===cat).length} entries</div>
+        </div>`;
+    }).join('');
+  }
+
+  function renderReasonBreakdown(data) {
+    const el = document.getElementById('reasonBreakdown');
+    const reasons = {};
+    data.forEach(e => {
+      if (!reasons[e.reason]) reasons[e.reason] = 0;
+      reasons[e.reason] += parseFloat(e.cost) || 0;
+    });
+    const total = totalCost(data);
+    const sorted = Object.entries(reasons).sort((a,b) => b[1]-a[1]);
+
+    if (!sorted.length) {
+      el.innerHTML = `<p class="empty-state text-muted" style="padding:var(--space-sm) 0;">No data for this period.</p>`;
+      return;
+    }
+
+    el.innerHTML = sorted.map(([reason, cost]) => {
+      const pct = total > 0 ? Math.round(cost/total*100) : 0;
+      return `
+        <div class="reason-card">
+          <div class="reason-icon">${reasonIcon(reason)}</div>
+          <div class="reason-name">${reason}</div>
+          <div class="reason-cost">${fmt(cost)}</div>
+          <div class="reason-pct">${pct}% of total</div>
+        </div>`;
+    }).join('');
+  }
+
+  function renderTrendChart() {
+    const canvas = document.getElementById('trendCanvas');
+    const ctx = canvas.getContext('2d');
+    const dpr = window.devicePixelRatio || 1;
+    const W = canvas.offsetWidth || 320;
+    const H = 160;
+    canvas.width = W * dpr;
+    canvas.height = H * dpr;
+    ctx.scale(dpr, dpr);
+
+    // Build last 14 days
+    const days = [];
+    for (let i = 13; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      days.push(d.toISOString().split('T')[0]);
+    }
+
+    const dayTotals = days.map(day => ({
+      day,
+      cost: totalCost(entries.filter(e => e.date === day))
+    }));
+
+    const maxCost = Math.max(...dayTotals.map(d => d.cost), 1);
+    const pad = { t: 20, r: 16, b: 30, l: 48 };
+    const chartW = W - pad.l - pad.r;
+    const chartH = H - pad.t - pad.b;
+    const barW = (chartW / days.length) * 0.6;
+    const gap = (chartW / days.length) * 0.4;
+
+    ctx.clearRect(0, 0, W, H);
+
+    // Grid lines
+    ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+    ctx.lineWidth = 1;
+    for (let g = 0; g <= 4; g++) {
+      const y = pad.t + (chartH / 4) * g;
+      ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(W - pad.r, y); ctx.stroke();
+      // Y labels
+      const val = maxCost * (1 - g/4);
+      ctx.fillStyle = 'rgba(255,255,255,0.3)';
+      ctx.font = '9px Inter, sans-serif';
+      ctx.textAlign = 'right';
+      ctx.fillText(`£${val < 10 ? val.toFixed(1) : Math.round(val)}`, pad.l - 4, y + 3);
+    }
+
+    // Bars
+    dayTotals.forEach((d, i) => {
+      const x = pad.l + i * (barW + gap) + gap/2;
+      const barH = d.cost > 0 ? Math.max((d.cost / maxCost) * chartH, 3) : 0;
+      const y = pad.t + chartH - barH;
+
+      if (d.cost > 0) {
+        const grad = ctx.createLinearGradient(0, y, 0, y + barH);
+        grad.addColorStop(0, 'rgba(243,201,139,0.9)');
+        grad.addColorStop(1, 'rgba(243,201,139,0.2)');
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.roundRect(x, y, barW, barH, 2);
+        ctx.fill();
+      }
+
+      // X labels — only every other day
+      if (i % 2 === 0 || i === 13) {
+        const dateObj = new Date(d.day + 'T12:00:00');
+        const label = `${dateObj.getDate()}/${dateObj.getMonth()+1}`;
+        ctx.fillStyle = 'rgba(255,255,255,0.3)';
+        ctx.font = '9px Inter, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(label, x + barW/2, H - pad.b + 14);
+      }
+    });
+  }
+
+  function renderTopItems(data) {
+    const el = document.getElementById('topItemsList');
+    const itemMap = {};
+    data.forEach(e => {
+      const key = `${e.item}__${e.category}`;
+      if (!itemMap[key]) itemMap[key] = { item: e.item, category: e.category, cost: 0, count: 0 };
+      itemMap[key].cost += parseFloat(e.cost) || 0;
+      itemMap[key].count++;
+    });
+    const sorted = Object.values(itemMap).sort((a,b) => b.cost - a.cost).slice(0, 8);
+    if (!sorted.length) {
+      el.innerHTML = `<p class="empty-state text-muted" style="padding:var(--space-sm) 0;">No data for this period.</p>`;
+      return;
+    }
+    const max = sorted[0].cost;
+    el.innerHTML = `<div class="breakdown-list">${sorted.map((it, i) => {
+      const pct = max > 0 ? (it.cost / max) * 100 : 0;
+      const catKey = it.category.toLowerCase();
+      return `
+        <div class="breakdown-row">
+          <div class="breakdown-row-header">
+            <span class="breakdown-name">${i+1}. ${esc(it.item)} <span class="cat-badge cat-${catKey}" style="font-size:0.65rem;">${it.category}</span></span>
+            <span class="breakdown-amount">${fmt(it.cost)}</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill bar-${catKey}" style="width:${pct}%"></div></div>
+          <div class="breakdown-sub">${it.count} ${it.count === 1 ? 'entry' : 'entries'}</div>
+        </div>`;
+    }).join('')}</div>`;
+  }
+
+  // ── Targets Tab ───────────────────────────────────────────
+  function renderTargets() {
+    const target = settings.monthlyTarget;
+    const today = todayStr();
+    const monthEntries = entries.filter(e => e.date >= startOfMonth() && e.date <= today);
+    const spent = totalCost(monthEntries);
+
+    // Ring
+    const CIRCUMFERENCE = 251.3;
+    const ringFill = document.getElementById('ringFill');
+    const ringPct = document.getElementById('ringPct');
+
+    if (target > 0) {
+      const ratio = Math.min(spent / target, 1);
+      const pct = Math.round(ratio * 100);
+      ringFill.style.strokeDashoffset = CIRCUMFERENCE * (1 - ratio);
+      ringPct.textContent = `${pct}%`;
+      // Colour
+      if (ratio >= 1) ringFill.style.stroke = 'var(--color-error)';
+      else if (ratio >= 0.8) ringFill.style.stroke = '#f0a832';
+      else ringFill.style.stroke = 'var(--color-gold)';
+    } else {
+      ringFill.style.strokeDashoffset = CIRCUMFERENCE;
+      ringPct.textContent = '—';
+    }
+
+    const now = new Date();
+    const daysInMonth = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
+    const dayOfMonth = now.getDate();
+    const daysLeft = daysInMonth - dayOfMonth;
+    const remaining = Math.max(target - spent, 0);
+    const dailyBurn = dayOfMonth > 0 ? spent / dayOfMonth : 0;
+    const projected = dailyBurn * daysInMonth;
+
+    document.getElementById('tStatTarget').textContent = target > 0 ? fmt(target) : 'not set';
+    document.getElementById('tStatSpent').textContent = fmt(spent);
+
+    const remEl = document.getElementById('tStatRemaining');
+    remEl.textContent = target > 0 ? fmt(remaining) : '—';
+    remEl.className = 'font-mono ' + (target > 0 ? (remaining <= 0 ? 'stat-bad' : remaining < target*0.2 ? 'stat-warn' : 'stat-good') : '');
+
+    document.getElementById('tStatDays').textContent = `${daysLeft} day${daysLeft !== 1 ? 's' : ''}`;
+    document.getElementById('tStatBurn').textContent = `${fmt(dailyBurn)}/day`;
+
+    const projEl = document.getElementById('tStatProjected');
+    projEl.textContent = fmt(projected);
+    projEl.className = 'font-mono ' + (target > 0 ? (projected > target ? 'stat-bad' : projected > target * 0.9 ? 'stat-warn' : 'stat-good') : '');
+
+    // Sync target input
+    document.getElementById('targetAmount').value = target || '';
+  }
+
+  // ── Report Generation ─────────────────────────────────────
+  document.getElementById('btnGenerateReport').addEventListener('click', generateReport);
+
+  function generateReport() {
+    const type = document.getElementById('reportType').value;
+    const data = filterByPeriod(type);
+    const total = totalCost(data);
+    const venue = settings.venueName || 'Venue';
+    const target = settings.monthlyTarget;
+
+    const periodLabel = {
+      week: 'This Week', month: 'This Month',
+      lastweek: 'Last Week', lastmonth: 'Last Month'
+    }[type] || type;
+
+    const cats = getCategoryTotals(data);
+    const reasons = {};
+    data.forEach(e => { if (!reasons[e.reason]) reasons[e.reason] = 0; reasons[e.reason] += parseFloat(e.cost)||0; });
+    const sortedReasons = Object.entries(reasons).sort((a,b)=>b[1]-a[1]);
+
+    const itemMap = {};
+    data.forEach(e => {
+      const key = `${e.item}__${e.category}`;
+      if (!itemMap[key]) itemMap[key] = { item: e.item, category: e.category, cost: 0, count: 0 };
+      itemMap[key].cost += parseFloat(e.cost)||0;
+      itemMap[key].count++;
+    });
+    const topItems = Object.values(itemMap).sort((a,b)=>b.cost-a.cost).slice(0,5);
+
+    const generated = new Date().toLocaleDateString('en-GB', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+
+    let report = `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+${venue.toUpperCase()} — WASTE AUDIT REPORT
+${periodLabel.toUpperCase()}
+Generated: ${generated}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+TOTAL WASTE COST: ${fmt(total)}
+ENTRIES LOGGED: ${data.length}`;
+
+    if (target > 0 && (type === 'month' || type === 'lastmonth')) {
+      const pct = Math.round(total/target*100);
+      report += `\nMONTHLY TARGET: ${fmt(target)} (${pct}% used)`;
+    }
+
+    if (cats.length) {
+      report += `\n\n── BREAKDOWN BY CATEGORY ──\n`;
+      cats.forEach(({cat,cost}) => {
+        const pct = total > 0 ? Math.round(cost/total*100) : 0;
+        const bar = '█'.repeat(Math.round(pct/5));
+        report += `${cat.padEnd(12)} ${fmt(cost).padStart(8)}  ${pct}%  ${bar}\n`;
+      });
+    }
+
+    if (sortedReasons.length) {
+      report += `\n── BREAKDOWN BY REASON ──\n`;
+      sortedReasons.forEach(([reason, cost]) => {
+        const pct = total > 0 ? Math.round(cost/total*100) : 0;
+        report += `${reason.padEnd(14)} ${fmt(cost).padStart(8)}  ${pct}%\n`;
+      });
+    }
+
+    if (topItems.length) {
+      report += `\n── TOP WASTED ITEMS ──\n`;
+      topItems.forEach((it, i) => {
+        report += `${i+1}. ${it.item} (${it.category}) — ${fmt(it.cost)} · ${it.count} ${it.count===1?'entry':'entries'}\n`;
+      });
+    }
+
+    // Action directives
+    report += `\n── RECOMMENDED ACTIONS ──\n`;
+    if (cats.length > 0) {
+      report += `• Focus: ${cats[0].cat} is your highest waste category (${fmt(cats[0].cost)}). Review par levels and ordering frequency.\n`;
+    }
+    if (sortedReasons.length > 0) {
+      const topReason = sortedReasons[0][0];
+      const actionMap = {
+        'Over-prep': 'Reduce batch sizes. Use covers-based prep forecasting.',
+        'Spoilage': 'Review fridge temperatures and stock rotation (FIFO).',
+        'Breakage': 'Check glassware storage and handling procedures.',
+        'Spillage': 'Review pour technique training for bar team.',
+        'Expired': 'Tighten ordering cadence. Reduce PAR on slow-movers.',
+        'Other': 'Tag entries with specific reasons for better analysis.'
+      };
+      report += `• Root cause: ${topReason} is the leading reason. ${actionMap[topReason] || 'Review processes.'}\n`;
+    }
+    if (total > 800) {
+      report += `• At this rate, annual waste cost is ~${fmt(total * (type==='week'?52:type==='month'?12:1))} — review supplier minimums and menu mix.\n`;
+    }
+
+    report += `\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Hospitality Pro · hospitality-pro.vercel.app
+Built by Jordan Pitts · jordanpitts.com
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`;
+
+    document.getElementById('reportOutput').textContent = report;
+    showToast('Report generated ✓');
+  }
+
+  document.getElementById('btnCopyReport').addEventListener('click', () => {
+    const text = document.getElementById('reportOutput').textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('btnCopyReport');
+      const orig = btn.textContent;
+      btn.textContent = '✓ Copied!';
+      btn.classList.add('copy-success');
+      setTimeout(() => { btn.textContent = orig; btn.classList.remove('copy-success'); }, 2000);
+    });
+  });
+
+  // ── Inventory Integration ─────────────────────────────────
+  function syncFromInventory() {
+    try {
+      const raw = localStorage.getItem('liquidGlassInventory');
+      if (!raw) return;
+      const inv = JSON.parse(raw);
+      // Pull unique categories from inventory items
+      const invCats = new Set();
+      (inv.ingredients || inv.items || Object.values(inv)).forEach(item => {
+        if (item && item.category) invCats.add(item.category);
+      });
+      // Map to our categories where possible
+      const catSelect = document.getElementById('wCategory');
+      // We keep our standard set but could extend; for now just log sync
+      if (invCats.size > 0) {
+        document.getElementById('btnSyncInventory').textContent = `Synced ✓ (${invCats.size} cats)`;
+      }
+    } catch(e) {}
+  }
+
+  // ── Data Import/Export ────────────────────────────────────
+  function exportData() {
+    const data = { entries, settings, exported: new Date().toISOString() };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `waste-audit-${todayStr()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function importData(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        const data = JSON.parse(e.target.result);
+        if (data.entries) { entries = data.entries; saveData(); }
+        if (data.settings) { settings = { ...settings, ...data.settings }; localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); loadSettings(); }
+        renderAll();
+        showToast('Data imported ✓');
+      } catch { showToast('Import failed — invalid file'); }
+    };
+    reader.readAsText(file);
+  }
+
+  function clearAllData() {
+    if (!confirm('Delete ALL waste entries permanently? This cannot be undone.')) return;
+    entries = [];
+    saveData();
+    renderAll();
+    showToast('All data cleared');
+  }
+
+  // ── Tabs ──────────────────────────────────────────────────
+  function setupTabs() {
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+        if (btn.dataset.tab === 'dashboard') renderDashboard();
+        if (btn.dataset.tab === 'targets') renderTargets();
+      });
+    });
+    setupPeriodBtns();
+  }
+
+  // ── Helpers ───────────────────────────────────────────────
+  function fmt(n) {
+    return '£' + (parseFloat(n) || 0).toFixed(2);
+  }
+
+  function esc(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function formatDate(dateStr) {
+    const d = new Date(dateStr + 'T12:00:00');
+    return d.toLocaleDateString('en-GB', { day:'numeric', month:'short' });
+  }
+
+  function catIcon(cat) {
+    return { Spirits:'🥃', Wine:'🍷', Beer:'🍺', Food:'🍽️', Garnish:'🌿', Other:'📦' }[cat] || '📦';
+  }
+
+  function reasonIcon(reason) {
+    return { Spoilage:'🦠', 'Over-prep':'♻️', Breakage:'💔', Spillage:'💧', Expired:'⏰', Other:'❓' }[reason] || '❓';
+  }
+
+  function showToast(msg) {
+    const t = document.createElement('div');
+    t.textContent = msg;
+    t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--color-gold);color:#0a0a0a;padding:0.55rem 1.2rem;border-radius:20px;font-size:0.85rem;font-weight:600;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,0.4);pointer-events:none;';
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 2200);
+  }
+
+  // ── Canvas resize ─────────────────────────────────────────
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(renderTrendChart, 150);
+  });
+
+  // ── Boot ──────────────────────────────────────────────────
+  init();
+  </script>
+</body>
+</html>

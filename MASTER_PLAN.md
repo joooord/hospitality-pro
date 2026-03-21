@@ -44,13 +44,21 @@ Premium, dark, editorial, restrained. Clean typography. Liquid-glass UI elements
 - AI-assisted review responses (Google/TripAdvisor/Booking.com).
 - Platform-specific tone. Never says "discount". Brand voice locked.
 
-### 7. Food Waste Audit Tracker
+### 7. Food Waste Audit Tracker ✅ SHIPPED
 - Log waste events (item, quantity, reason, value).
 - Weekly waste value vs theoretical waste allowance.
 - Trend chart — top wasted items, root cause tagging.
 - Pairs with Supplier Automation Console for intelligent re-ordering.
 
 ### 8. Staff Tip Pool & Distribution Calculator ✅ SHIPPED
+
+### 11. Staff Training & Onboarding Hub
+- Onboarding checklist builder with role-specific task lists and sign-off tracking.
+- Menu knowledge base — dishes/drinks with allergens, pairing notes, upsell prompts.
+- Competency assessment — quiz builder tied to menu items or SOPs.
+- Progress tracker — manager view across the team.
+- Pulls from Allergen Matrix and SOP Generator localStorage.
+- Printable induction packs. 100% localStorage, mobile-first, Liquid Glass aesthetic.
 
 ### 10. Guest Micro-CRM ✅ SHIPPED
 - "Little black book" for premium venues — remember your regulars.
@@ -71,24 +79,26 @@ Premium, dark, editorial, restrained. Clean typography. Liquid-glass UI elements
 - Pairs with Rota Optimizer, EOD Reconciliation, and Financial Narrative.
 
 ## Infinite Loop · Immediate Next Build
-**Food Waste Audit Tracker**
-- `tools/food-waste/index.html`
-- UK hospitality businesses lose an average of £10,000/year to food waste (WRAP study). Zero tools in this suite currently address it.
-- Log waste events: item name, category (prep waste / spoilage / over-production / plate waste), quantity, unit cost, calculated waste value, responsible section, reason.
-- Weekly waste value vs theoretical waste allowance (configurable % of food revenue).
-- Trend chart: top wasted items, root cause tagging, day-of-week patterns.
-- Live waste cost tracker: total weekly waste £, waste as % of food revenue, comparison vs industry benchmark (avg 4-8%).
-- Pairs with Supplier Automation Console: flag high-waste items for reduced PAR level recommendation.
-- Printable weekly waste report — for kitchen brigade accountability and owner visibility.
-- 100% localStorage, mobile-first, Liquid Glass dark premium aesthetic.
-- Export: one-tap clipboard copy for WhatsApp/manager briefings.
+**Staff Training & Onboarding Hub**
+- `tools/training-hub/index.html`
+- UK hospitality has the highest staff turnover of any industry (~75% annually). Every new hire costs £1,500–£3,000 to onboard. This tool cuts that cost and accelerates time-to-competency.
+- **Core modules:**
+  - Onboarding checklist builder — create structured induction programs with role-specific task lists, sign-off tracking, and completion percentages
+  - Menu knowledge base — add dishes/drinks with descriptions, allergens, upsell notes, and pairing suggestions; staff can self-study before service
+  - SOP quick-reference cards — searchable, mobile-optimised SOPs staff can pull up mid-shift
+  - Competency assessment — simple pass/fail quiz builder tied to menu items or procedures
+  - Progress tracker — manager view showing who's completed what across the team
+- **Integration:** pulls allergen data from Allergen Matrix Builder, pulls SOPs from SOP Generator localStorage
+- **Mobile-first:** staff use it on their phones between covers
+- 100% localStorage, no logins, Liquid Glass dark premium aesthetic
+- Export: printable induction packs for paper-based venues
 
 ### Why This Wins
-- **Direct P&L impact**: a £10k/year waste problem solved in a browser tool = immediate ROI argument for new customers
-- **Compliance angle**: environmental reporting requirements for UK hospitality increasing under Defra Food Waste legislation
-- **Bridges to procurement**: waste data feeds directly back into PAR and ordering decisions
-- **No competition at this price point**: professional food waste trackers (Winnow, Leanpath) cost £1,000+/month
-- **Kitchen culture**: accountability without blame — data-driven conversations instead of guesswork
+- **Retention play**: structured onboarding reduces 90-day dropout by ~30% (CIPD data)
+- **Compliance**: food hygiene, allergen awareness, and licensing training can be tracked and evidenced
+- **Consistency**: every staff member learns the same thing — eliminates "ask whoever trained me" variation
+- **No competition at this price point**: Deputy, Trainual, etc. cost £100–£500/month; this is free
+- **Natural upsell**: Jordan can offer bespoke onboarding content build as a consulting service
 
 ## Execution Strategy
 - **Autonomy**: Jim and the agents will continually build, test, refine, and deploy this app without asking for permission.
@@ -119,7 +129,8 @@ Premium, dark, editorial, restrained. Clean typography. Liquid-glass UI elements
 | Staff Tip Pool & Distribution | /tools/tip-pool/ | ✅ Live |
 | Private Event & Hire Planner | /tools/event-planner/ | ✅ Live |
 | Guest Micro-CRM | /tools/guest-crm/ | ✅ Live |
-| Food Waste Audit Tracker | /tools/food-waste/ | 🔨 Next |
+| Food Waste Audit Tracker | /tools/food-waste/ | ✅ Live |
+| Staff Training & Onboarding Hub | /tools/training-hub/ | 🔨 Next |
 
 ## The Infinite Loop Protocol
 At the end of every task list, the system MUST execute the following sequence indefinitely:
