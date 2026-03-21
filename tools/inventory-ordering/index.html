@@ -2,10 +2,34 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta http-equiv="refresh" content="0; url=/tools/supplier-orders/" />
-  <title>Redirecting…</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hidden · Inventory & Ordering</title>
+  <link rel="stylesheet" href="/assets/styles/system.css" />
+  <style>
+    .supplier-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+    .supplier-card { background: rgba(255,255,255,0.02); border: 1px solid var(--color-border); padding: 1rem; border-radius: var(--radius-md); }
+  </style>
 </head>
 <body>
-  <p>Redirecting to <a href="/tools/supplier-orders/">Supplier Automation Console</a>…</p>
+  <nav class="site-nav"><a class="nav-brand" href="/">Hospitality <span>Pro</span></a></nav>
+  <main class="app-shell">
+    <header class="glass-panel hero-panel">
+      <h1>Inventory & Supplier Ordering</h1>
+      <p class="muted">Manage stock counts, par levels, and generate supplier orders automatically.</p>
+    </header>
+    <section class="glass-card">
+      <h2>Supplier Directory</h2>
+      <div class="supplier-grid">
+        <div class="supplier-card">
+          <h3>Local Produce Co.</h3>
+          <p>Deliveries: Mon, Thu</p>
+        </div>
+        <div class="supplier-card">
+          <h3>Premier Spirits</h3>
+          <p>Deliveries: Tue, Fri</p>
+        </div>
+      </div>
+    </section>
+  </main>
 </body>
 </html>
