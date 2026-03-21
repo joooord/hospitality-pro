@@ -51,6 +51,14 @@ Premium, dark, editorial, restrained. Clean typography. Liquid-glass UI elements
 - Pairs with Supplier Automation Console for intelligent re-ordering.
 
 ### 8. Staff Tip Pool & Distribution Calculator ✅ SHIPPED
+
+### 10. Guest Micro-CRM ← NEXT
+- "Little black book" for premium venues — remember your regulars.
+- Log guest name, visit history, preferences (drinks, dietary, seating), special occasions.
+- VIP flag, spend tier, notes field.
+- Quick-lookup by name — usable mid-service on mobile.
+- Pairs with Private Event Planner (link guest records to events).
+- No logins, no cloud — 100% localStorage, 100% private.
 - Weighted distribution by role (Bartender 1.0, Bar Back 0.5, etc.) × hours worked.
 - Calculates to the penny using remainder rounding on last person.
 - Role weights editable by manager. Custom roles supported.
@@ -59,29 +67,30 @@ Premium, dark, editorial, restrained. Clean typography. Liquid-glass UI elements
 - Print/share modal — one-tap copy for WhatsApp or email.
 - Mobile-first, Liquid Glass dark premium aesthetic.
 
-### 9. Private Event & Hire Planner ← NEXT
+### 9. Private Event & Hire Planner ✅ SHIPPED
 - Lightweight Tripleseat replacement for small premium venues.
 - Quote generator, min spend calculator, deposit tracker.
 - Event log with status pipeline (enquiry → confirmed → invoiced → complete).
+- Drag-and-drop Kanban + click stage change from log view.
+- CSV export, clipboard quote copy, print-ready modal.
 - Pairs with Rota Optimizer, EOD Reconciliation, and Financial Narrative.
 
 ## Infinite Loop · Immediate Next Build
-**Private Event & Hire Planner**
-- `tools/event-planner/index.html`
-- Enterprise tools (Tripleseat, iVvy) cost £300–£600/month — zero lightweight options exist for small premium venues
-- Hidden does private hires regularly; every speakeasy/cocktail bar does. Currently managed with email + mental maths
-- Input: event type (private hire, birthday, corporate, tasting), date, guest count, package (drinks only / food + drinks / buyout), duration
-- Calculates: minimum spend, deposit required (usually 25–50%), per-head rate, recommended staffing level
-- Generates: professional quote/proposal text (copy/paste ready for email or WhatsApp), event confirmation summary
-- Event log: localStorage calendar of upcoming events, status (enquiry → confirmed → invoiced → completed)
-- Pairs with: Rota Optimizer (auto-flag event on rota), EOD Reconciliation (event performance vs projected min spend)
-- Mobile-first, Liquid Glass, sub-2-minute to produce a professional quote
+**Guest Micro-CRM**
+- `tools/guest-crm/index.html`
+- Full CRM platforms (Salesforce, HubSpot) are overkill and expensive; hospitality-specific tools (SevenRooms, Resy) lock behind expensive subscriptions
+- Premium cocktail bars and speakeasies live and die by their regulars; personalized service is the primary loyalty driver
+- Input: guest name, visit date, drink preferences, dietary flags, birthday/occasion, spend level, VIP status
+- Features: quick-search by name (usable in seconds mid-service on mobile), visit count + last seen, notes field, VIP/regular/new badge, optional event linkage
+- Export/share: printable "shift briefing" of expected guests tonight with preferences visible
+- 100% localStorage, zero backend, zero logins — completely private
 
 ### Why This Wins
-- **Direct revenue impact**: faster, more professional quoting = more bookings, higher conversion
-- **No lightweight competitor**: Tripleseat starts at $299/mo; nothing exists in the zero-cost tier
-- **Pairs with 3 existing tools**: Rota, EOD, and Financial Narrative
-- **Hospitality operators' #2 pain point**: attracting and converting customers (35% of owners in 2025 surveys)
+- **Service quality multiplier**: knowing a guest's preferences = higher tips, more loyalty, word-of-mouth
+- **No privacy risk**: data never leaves the device — huge for GDPR-conscious operators
+- **Zero-cost tier**: SevenRooms starts at $1,000+/month for the guest profiling features
+- **Uniquely positioned**: no tool in this suite's tier does this today
+- **Mobile-first use case**: manager grabs the phone before service, checks tonight's regulars
 
 ## Execution Strategy
 - **Autonomy**: Jim and the agents will continually build, test, refine, and deploy this app without asking for permission.
@@ -110,7 +119,8 @@ Premium, dark, editorial, restrained. Clean typography. Liquid-glass UI elements
 | SOP Generator | /tools/sop-generator/ | ✅ Live |
 | End-of-Night Reconciliation | /tools/eod-reconciliation/ | ✅ Live |
 | Staff Tip Pool & Distribution | /tools/tip-pool/ | ✅ Live |
-| Private Event & Hire Planner | /tools/event-planner/ | 🔨 Next |
+| Private Event & Hire Planner | /tools/event-planner/ | ✅ Live |
+| Guest Micro-CRM | /tools/guest-crm/ | 🔨 Next |
 
 ## The Infinite Loop Protocol
 At the end of every task list, the system MUST execute the following sequence indefinitely:
