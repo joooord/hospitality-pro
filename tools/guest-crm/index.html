@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Guest Micro-CRM · Hospitality Pro</title>
+  <link rel="stylesheet" href="/assets/styles/system.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Reset & Base ─────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ── Page Shell ───────────────────────────────────────── */
+    .page-header { text-align: center; padding: var(--space-lg) 0 var(--space-md); }
+    .page-header .eyebrow { color: var(--color-text-muted); font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem; }
+    .page-header h1 { font-family: var(--font-serif); font-size: clamp(1.6rem, 4.5vw, 2.5rem); margin: 0 0 0.5rem; }
+    .page-header p { color: var(--color-text-muted); margin: 0; font-size: 0.9rem; }
+    .page-header .privacy-badge { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.75rem; color: var(--color-success); background: rgba(134,239,172,0.08); border: 1px solid rgba(134,239,172,0.2); border-radius: var(--radius-pill); padding: 0.25rem 0.75rem; margin-top: 0.75rem; }
+
+    .back-link { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--color-text-muted); font-size: 0.82rem; text-decoration: none; transition: color var(--transition-fast); margin-bottom: var(--space-md); }
+    .back-link:hover { color: var(--color-gold); }
+
+    /* ── Glass Cards ──────────────────────────────────────── */
+    .glass-card { background: rgba(255,255,255,0.035); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--space-md); backdrop-filter: blur(var(--glass-blur)); -webkit-backdrop-filter: blur(var(--glass-blur)); }
+    .glass-card + .glass-card { margin-top: var(--space-md); }
+
+    /* ── Tabs ─────────────────────────────────────────────── */
+    .tabs { display: flex; border-bottom: 1px solid var(--color-border); margin-bottom: var(--space-lg); overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .tab-btn { flex: 1; min-width: 80px; padding: 0.75rem 0.8rem; background: none; border: none; cursor: pointer; color: var(--color-text-muted); font-size: 0.82rem; font-family: var(--font-sans); font-weight: 500; border-bottom: 2px solid transparent; transition: all var(--transition-base); white-space: nowrap; }
+    .tab-btn:hover { color: var(--color-text); }
+    .tab-btn.active { color: var(--color-gold); border-bottom-color: var(--color-gold); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── KPI Strip ────────────────────────────────────────── */
+    .kpi-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: var(--space-sm); margin-bottom: var(--space-md); }
+    .kpi-card { background: rgba(255,255,255,0.04); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-sm); text-align: center; }
+    .kpi-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-muted); margin-bottom: 0.25rem; }
+    .kpi-value { font-size: 1.3rem; font-weight: 700; font-family: var(--font-mono); line-height: 1.1; }
+    .kpi-sub { font-size: 0.65rem; color: var(--color-text-muted); margin-top: 0.2rem; }
+    .kpi-card.gold .kpi-value { color: var(--color-gold); }
+    .kpi-card.success .kpi-value { color: var(--color-success); }
+    .kpi-card.warning .kpi-value { color: var(--color-warning); }
+    .kpi-card.error .kpi-value { color: var(--color-error); }
+
+    /* ── Forms ────────────────────────────────────────────── */
+    .field-group { display: flex; flex-direction: column; gap: 0.35rem; }
+    .field-label { font-size: 0.8rem; color: var(--color-text-muted); font-weight: 500; }
+    input[type="number"], input[type="text"], input[type="date"], input[type="email"], input[type="tel"], select, textarea {
+      width: 100%; padding: 0.65rem 0.9rem;
+      background: rgba(255,255,255,0.06); border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm); color: var(--color-text); font-family: var(--font-sans); font-size: 0.95rem;
+      transition: border-color var(--transition-fast);
+    }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: rgba(243,201,139,0.5); }
+    input::placeholder, textarea::placeholder { color: var(--color-text-muted); opacity: 0.6; }
+    textarea { resize: vertical; min-height: 70px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-sm); }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--space-sm); }
+    @media (max-width: 600px) { .grid-3 { grid-template-columns: 1fr 1fr; } .grid-2 { grid-template-columns: 1fr; } }
+    @media (max-width: 380px) { .grid-3 { grid-template-columns: 1fr; } }
+
+    /* ── Buttons ──────────────────────────────────────────── */
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.45rem; padding: 0.7rem 1.2rem; border-radius: var(--radius-sm); font-family: var(--font-sans); font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: all var(--transition-base); border: none; white-space: nowrap; }
+    .btn-primary { background: var(--color-gold); color: #0a0b10; }
+    .btn-primary:hover { background: #ffe7bf; }
+    .btn-ghost { background: rgba(255,255,255,0.06); border: 1px solid var(--color-border); color: var(--color-text); }
+    .btn-ghost:hover { background: rgba(255,255,255,0.1); }
+    .btn-danger { background: rgba(246,124,124,0.12); border: 1px solid rgba(246,124,124,0.25); color: var(--color-error); }
+    .btn-danger:hover { background: rgba(246,124,124,0.2); }
+    .btn-success { background: rgba(134,239,172,0.12); border: 1px solid rgba(134,239,172,0.25); color: var(--color-success); }
+    .btn-success:hover { background: rgba(134,239,172,0.2); }
+    .btn-sm { padding: 0.4rem 0.8rem; font-size: 0.78rem; }
+    .btn-full { width: 100%; }
+    .btn-group { display: flex; gap: var(--space-sm); flex-wrap: wrap; }
+
+    /* ── Section Titles ───────────────────────────────────── */
+    .section-title { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-text-muted); margin: 0 0 var(--space-sm); }
+    .form-divider { border: none; border-top: 1px solid var(--color-border); margin: var(--space-md) 0; }
+
+    /* ── Alert Banner ─────────────────────────────────────── */
+    .alert-banner { border-radius: var(--radius-md); padding: 0.8rem 1rem; font-size: 0.85rem; margin-bottom: var(--space-sm); display: flex; align-items: flex-start; gap: 0.6rem; }
+    .alert-banner.warning { background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.2); color: var(--color-warning); }
+    .alert-banner.info { background: rgba(96,165,250,0.08); border: 1px solid rgba(96,165,250,0.2); color: var(--color-info); }
+    .alert-banner.error { background: rgba(246,124,124,0.08); border: 1px solid rgba(246,124,124,0.2); color: var(--color-error); }
+    .alert-banner.success { background: rgba(134,239,172,0.08); border: 1px solid rgba(134,239,172,0.2); color: var(--color-success); }
+    .alert-banner__icon { flex-shrink: 0; font-size: 1rem; line-height: 1.4; }
+    .alert-banner__body { flex: 1; }
+    .alert-banner__name { font-weight: 600; }
+    .alert-empty { text-align: center; color: var(--color-text-muted); font-size: 0.85rem; padding: var(--space-lg) 0; }
+
+    /* ── Search & Filter Bar ──────────────────────────────── */
+    .search-bar { display: flex; gap: var(--space-sm); margin-bottom: var(--space-md); flex-wrap: wrap; }
+    .search-bar input { flex: 1; min-width: 160px; }
+    .search-bar select { flex: 0 0 auto; min-width: 130px; }
+
+    /* ── Guest List ───────────────────────────────────────── */
+    .guest-list { display: flex; flex-direction: column; gap: 0.6rem; }
+    .guest-row {
+      background: rgba(255,255,255,0.035); border: 1px solid var(--color-border);
+      border-radius: var(--radius-md); padding: 0.85rem 1rem;
+      cursor: pointer; transition: all var(--transition-base);
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+    .guest-row:hover { background: rgba(255,255,255,0.055); border-color: rgba(243,201,139,0.25); }
+    .guest-row__avatar { width: 40px; height: 40px; border-radius: 50%; background: rgba(243,201,139,0.12); border: 1px solid rgba(243,201,139,0.2); display: flex; align-items: center; justify-content: center; font-family: var(--font-serif); font-size: 1rem; color: var(--color-gold); flex-shrink: 0; }
+    .guest-row__body { flex: 1; min-width: 0; }
+    .guest-row__name { font-weight: 600; font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .guest-row__meta { font-size: 0.75rem; color: var(--color-text-muted); margin-top: 0.1rem; }
+    .guest-row__badges { display: flex; gap: 0.3rem; flex-wrap: wrap; margin-top: 0.3rem; }
+    .guest-row__right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.25rem; flex-shrink: 0; }
+    .guest-row__ltv { font-family: var(--font-mono); font-size: 0.82rem; color: var(--color-gold); }
+    .guest-row__visits { font-size: 0.7rem; color: var(--color-text-muted); }
+
+    /* ── Badges / Pills ───────────────────────────────────── */
+    .badge { display: inline-block; font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: var(--radius-pill); }
+    .badge-vip { background: rgba(243,201,139,0.15); color: var(--color-gold); border: 1px solid rgba(243,201,139,0.3); }
+    .badge-regular { background: rgba(96,165,250,0.12); color: var(--color-info); border: 1px solid rgba(96,165,250,0.25); }
+    .badge-new { background: rgba(134,239,172,0.1); color: var(--color-success); border: 1px solid rgba(134,239,172,0.25); }
+    .badge-quiet { background: rgba(246,124,124,0.1); color: var(--color-error); border: 1px solid rgba(246,124,124,0.25); }
+    .badge-bday { background: rgba(251,191,36,0.1); color: #fbbf24; border: 1px solid rgba(251,191,36,0.25); }
+    .badge-anniversary { background: rgba(167,139,250,0.1); color: #a78bfa; border: 1px solid rgba(167,139,250,0.25); }
+
+    /* ── Guest Detail Modal ───────────────────────────────── */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); z-index: 100; overflow-y: auto; padding: 1rem; }
+    .modal-overlay.open { display: flex; align-items: flex-start; justify-content: center; }
+    .modal { background: #11131c; border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--space-md); max-width: 640px; width: 100%; margin: auto; box-shadow: 0 24px 80px rgba(0,0,0,0.6); }
+    .modal-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: var(--space-md); }
+    .modal-title { font-family: var(--font-serif); font-size: 1.4rem; }
+    .modal-close { background: none; border: none; color: var(--color-text-muted); font-size: 1.4rem; cursor: pointer; padding: 0; line-height: 1; }
+    .modal-close:hover { color: var(--color-text); }
+
+    /* ── Visit Log ────────────────────────────────────────── */
+    .visit-log { display: flex; flex-direction: column; gap: 0.5rem; }
+    .visit-entry { background: rgba(255,255,255,0.03); border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 0.65rem 0.85rem; display: flex; align-items: flex-start; gap: 0.75rem; }
+    .visit-entry__date { font-family: var(--font-mono); font-size: 0.75rem; color: var(--color-text-muted); flex-shrink: 0; min-width: 80px; }
+    .visit-entry__body { flex: 1; min-width: 0; }
+    .visit-entry__meta { font-size: 0.78rem; color: var(--color-text-muted); }
+    .visit-entry__notes { font-size: 0.82rem; margin-top: 0.2rem; color: var(--color-text); opacity: 0.85; }
+    .visit-entry__spend { font-family: var(--font-mono); font-size: 0.82rem; color: var(--color-gold); flex-shrink: 0; }
+
+    /* ── Quick Add Panel ──────────────────────────────────── */
+    .quick-add-hero { background: rgba(243,201,139,0.06); border: 1px solid rgba(243,201,139,0.2); border-radius: var(--radius-lg); padding: var(--space-md); margin-bottom: var(--space-md); }
+    .quick-add-hero h2 { font-family: var(--font-serif); font-size: 1.2rem; margin-bottom: 0.3rem; }
+    .quick-add-hero p { font-size: 0.82rem; color: var(--color-text-muted); margin-bottom: var(--space-md); }
+    .quick-search-results { display: flex; flex-direction: column; gap: 0.4rem; margin-top: var(--space-sm); }
+    .quick-result { background: rgba(255,255,255,0.04); border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 0.65rem 0.9rem; display: flex; align-items: center; gap: 0.75rem; cursor: pointer; transition: all var(--transition-fast); }
+    .quick-result:hover { background: rgba(243,201,139,0.08); border-color: rgba(243,201,139,0.3); }
+    .quick-result__name { font-weight: 600; flex: 1; }
+    .quick-result__hint { font-size: 0.75rem; color: var(--color-text-muted); }
+    .quick-note-panel { background: rgba(255,255,255,0.03); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-sm); margin-top: var(--space-sm); }
+    .quick-note-panel h3 { font-size: 0.85rem; font-weight: 600; margin-bottom: var(--space-sm); display: flex; align-items: center; justify-content: space-between; }
+    .timer-badge { font-family: var(--font-mono); font-size: 0.75rem; color: var(--color-gold); background: rgba(243,201,139,0.1); padding: 0.15rem 0.5rem; border-radius: var(--radius-pill); }
+
+    /* ── Privacy Notice ───────────────────────────────────── */
+    .privacy-notice { background: rgba(134,239,172,0.04); border: 1px solid rgba(134,239,172,0.15); border-radius: var(--radius-md); padding: 0.75rem 1rem; display: flex; gap: 0.75rem; align-items: flex-start; margin-top: var(--space-md); }
+    .privacy-notice__icon { font-size: 1.1rem; flex-shrink: 0; }
+    .privacy-notice__text { font-size: 0.78rem; color: var(--color-text-muted); line-height: 1.5; }
+    .privacy-notice__text strong { color: var(--color-success); }
+
+    /* ── Checkbox ─────────────────────────────────────────── */
+    .checkbox-group { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; }
+    .checkbox-group input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--color-gold); cursor: pointer; flex-shrink: 0; }
+    .checkbox-group span { font-size: 0.85rem; color: var(--color-text-muted); }
+
+    /* ── Divider ──────────────────────────────────────────── */
+    .divider-label { display: flex; align-items: center; gap: 0.75rem; margin: var(--space-md) 0; }
+    .divider-label span { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-text-muted); white-space: nowrap; }
+    .divider-label::before, .divider-label::after { content: ''; flex: 1; height: 1px; background: var(--color-border); }
+
+    /* ── Inline profile pref list ─────────────────────────── */
+    .pref-list { list-style: none; display: flex; flex-direction: column; gap: 0.35rem; }
+    .pref-list li { font-size: 0.82rem; display: flex; gap: 0.5rem; }
+    .pref-list li span:first-child { color: var(--color-text-muted); min-width: 120px; }
+
+    /* ── Toast ────────────────────────────────────────────── */
+    #toast { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%); background: var(--color-gold); color: #0a0b10; padding: 0.65rem 1.4rem; border-radius: var(--radius-pill); font-size: 0.85rem; font-weight: 600; z-index: 999; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+    #toast.visible { opacity: 1; }
+
+    /* ── Responsive ───────────────────────────────────────── */
+    @media (max-width: 480px) {
+      .kpi-strip { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a class="back-link" href="/">← Back to Hospitality Pro</a>
+
+    <div class="page-header">
+      <p class="eyebrow">Guest Micro-CRM</p>
+      <h1>The Little Black Book</h1>
+      <p>SevenRooms-tier guest intelligence. Zero cost. Completely private.</p>
+      <div><span class="privacy-badge">🔒 All data stays on this device — no cloud, no server, no logins</span></div>
+    </div>
+
+    <!-- KPI Strip -->
+    <div class="kpi-strip" id="kpiStrip">
+      <div class="kpi-card gold"><div class="kpi-label">Total Guests</div><div class="kpi-value" id="kpiTotal">0</div></div>
+      <div class="kpi-card gold"><div class="kpi-label">VIP Guests</div><div class="kpi-value" id="kpiVIP">0</div></div>
+      <div class="kpi-card success"><div class="kpi-label">Lifetime Value</div><div class="kpi-value" id="kpiLTV">£0</div></div>
+      <div class="kpi-card warning"><div class="kpi-label">Alerts Active</div><div class="kpi-value" id="kpiAlerts">0</div></div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="guests">Guests</button>
+      <button class="tab-btn" data-tab="alerts">Alerts</button>
+      <button class="tab-btn" data-tab="quick">⚡ Quick Add</button>
+      <button class="tab-btn" data-tab="add">Add Guest</button>
+    </div>
+
+    <!-- ─────────────────────────────────────────────────── -->
+    <!-- TAB: Guests                                         -->
+    <!-- ─────────────────────────────────────────────────── -->
+    <div class="tab-panel active" id="tab-guests">
+      <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="Search by name, phone, email…" autocomplete="off" />
+        <select id="filterStatus">
+          <option value="">All guests</option>
+          <option value="vip">VIP only</option>
+          <option value="regular">Regulars</option>
+          <option value="new">New guests</option>
+          <option value="quiet">Gone quiet</option>
+        </select>
+        <select id="filterMonth">
+          <option value="">Any birthday</option>
+          <option value="1">Jan birthday</option>
+          <option value="2">Feb birthday</option>
+          <option value="3">Mar birthday</option>
+          <option value="4">Apr birthday</option>
+          <option value="5">May birthday</option>
+          <option value="6">Jun birthday</option>
+          <option value="7">Jul birthday</option>
+          <option value="8">Aug birthday</option>
+          <option value="9">Sep birthday</option>
+          <option value="10">Oct birthday</option>
+          <option value="11">Nov birthday</option>
+          <option value="12">Dec birthday</option>
+        </select>
+      </div>
+      <div class="guest-list" id="guestList">
+        <p class="alert-empty">No guests yet. Add your first regular →</p>
+      </div>
+    </div>
+
+    <!-- ─────────────────────────────────────────────────── -->
+    <!-- TAB: Alerts                                         -->
+    <!-- ─────────────────────────────────────────────────── -->
+    <div class="tab-panel" id="tab-alerts">
+      <div id="alertsPanel">
+        <p class="alert-empty">No active alerts. All guests accounted for.</p>
+      </div>
+    </div>
+
+    <!-- ─────────────────────────────────────────────────── -->
+    <!-- TAB: Quick Add                                      -->
+    <!-- ─────────────────────────────────────────────────── -->
+    <div class="tab-panel" id="tab-quick">
+      <div class="quick-add-hero">
+        <h2>⚡ Mid-Service Mode</h2>
+        <p>Capture intel in 15 seconds. Find a guest, add a note, done. Designed for the bar.</p>
+        <div class="field-group">
+          <input type="text" id="quickSearch" placeholder="Type a guest name…" autocomplete="off" style="font-size: 1.05rem; padding: 0.85rem 1rem;" />
+        </div>
+        <div class="quick-search-results" id="quickResults"></div>
+      </div>
+
+      <div class="quick-note-panel" id="quickNotePanel" style="display:none;">
+        <h3>
+          <span id="quickGuestName">Guest Name</span>
+          <span class="timer-badge" id="quickTimer">00s</span>
+        </h3>
+        <div class="field-group" style="margin-bottom: var(--space-sm);">
+          <textarea id="quickNoteText" placeholder="Quick note — drink ordered, special request, mood, anything…" rows="3" style="font-size: 0.95rem;"></textarea>
+        </div>
+        <div class="grid-2" style="margin-bottom: var(--space-sm);">
+          <div class="field-group">
+            <label class="field-label">Spend (£)</label>
+            <input type="number" id="quickSpend" placeholder="0.00" min="0" step="0.01" />
+          </div>
+          <div class="field-group">
+            <label class="field-label">Party Size</label>
+            <input type="number" id="quickParty" placeholder="1" min="1" />
+          </div>
+        </div>
+        <div class="btn-group">
+          <button class="btn btn-primary btn-full" id="quickSaveBtn">Save & Done ✓</button>
+          <button class="btn btn-ghost btn-sm" id="quickCancelBtn">Cancel</button>
+        </div>
+        <div style="margin-top: var(--space-sm);">
+          <p style="font-size: 0.75rem; color: var(--color-text-muted);">Guest preferences on file:</p>
+          <ul class="pref-list" id="quickGuestPrefs" style="margin-top: 0.35rem;"></ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─────────────────────────────────────────────────── -->
+    <!-- TAB: Add Guest                                      -->
+    <!-- ─────────────────────────────────────────────────── -->
+    <div class="tab-panel" id="tab-add">
+      <div class="glass-card">
+        <p class="section-title">Guest Identity</p>
+        <div class="grid-2" style="margin-bottom: var(--space-sm);">
+          <div class="field-group">
+            <label class="field-label">Full Name *</label>
+            <input type="text" id="addName" placeholder="e.g. Sarah Bennett" />
+          </div>
+          <div class="field-group">
+            <label class="field-label">Phone</label>
+            <input type="tel" id="addPhone" placeholder="+44 7700 900000" />
+          </div>
+        </div>
+        <div class="grid-2" style="margin-bottom: var(--space-sm);">
+          <div class="field-group">
+            <label class="field-label">Email</label>
+            <input type="email" id="addEmail" placeholder="sarah@example.com" />
+          </div>
+          <div class="field-group">
+            <label class="field-label">Status</label>
+            <select id="addStatus">
+              <option value="regular">Regular</option>
+              <option value="vip">VIP</option>
+              <option value="new">New guest</option>
+            </select>
+          </div>
+        </div>
+        <label class="checkbox-group" style="margin-bottom: var(--space-sm);">
+          <input type="checkbox" id="addVIP" />
+          <span>⭐ Mark as VIP — priority recognition on service</span>
+        </label>
+
+        <hr class="form-divider" />
+        <p class="section-title">Occasions</p>
+        <div class="grid-2" style="margin-bottom: var(--space-sm);">
+          <div class="field-group">
+            <label class="field-label">Birthday (MM-DD)</label>
+            <input type="text" id="addBirthday" placeholder="e.g. 06-15" maxlength="5" />
+          </div>
+          <div class="field-group">
+            <label class="field-label">Anniversary (MM-DD)</label>
+            <input type="text" id="addAnniversary" placeholder="e.g. 09-22" maxlength="5" />
+          </div>
+        </div>
+
+        <hr class="form-divider" />
+        <p class="section-title">Preferences</p>
+        <div class="grid-2" style="margin-bottom: var(--space-sm);">
+          <div class="field-group">
+            <label class="field-label">Favourite Drink</label>
+            <input type="text" id="addDrink" placeholder="e.g. Negroni, Champagne…" />
+          </div>
+          <div class="field-group">
+            <label class="field-label">Preferred Seating</label>
+            <select id="addSeating">
+              <option value="">No preference</option>
+              <option value="Bar">Bar</option>
+              <option value="Booth">Booth</option>
+              <option value="Window">Window table</option>
+              <option value="Private">Private area</option>
+              <option value="Outside">Outside</option>
+            </select>
+          </div>
+        </div>
+        <div class="field-group" style="margin-bottom: var(--space-sm);">
+          <label class="field-label">Dietary Requirements</label>
+          <input type="text" id="addDietary" placeholder="e.g. Vegan, Gluten-free, Nut allergy…" />
+        </div>
+        <div class="field-group" style="margin-bottom: var(--space-sm);">
+          <label class="field-label">Notes</label>
+          <textarea id="addNotes" placeholder="Anything else worth knowing — regulars, regulars' dog name, how they take their coffee…"></textarea>
+        </div>
+
+        <button class="btn btn-primary btn-full" id="saveGuestBtn" style="margin-top: var(--space-sm);">Add Guest to the Book</button>
+      </div>
+
+      <div class="privacy-notice">
+        <div class="privacy-notice__icon">🔒</div>
+        <div class="privacy-notice__text">
+          <strong>100% private. Zero cloud.</strong> Every guest record is stored exclusively in your browser's localStorage. Nothing is ever transmitted to a server, third party, or cloud service. Delete your browser data and the book is clean. This is GDPR-friendly by design.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────────────────────── -->
+  <!-- Guest Detail Modal                                  -->
+  <!-- ─────────────────────────────────────────────────── -->
+  <div class="modal-overlay" id="guestModal">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <div class="modal-title" id="modalName">Guest Name</div>
+          <div style="display:flex; gap:0.4rem; flex-wrap:wrap; margin-top:0.4rem;" id="modalBadges"></div>
+        </div>
+        <button class="modal-close" id="modalClose">×</button>
+      </div>
+
+      <!-- Guest stats -->
+      <div class="kpi-strip" style="margin-bottom: var(--space-md);">
+        <div class="kpi-card gold"><div class="kpi-label">Lifetime Value</div><div class="kpi-value" id="modalLTV">£0</div></div>
+        <div class="kpi-card"><div class="kpi-label">Visits</div><div class="kpi-value" id="modalVisits">0</div></div>
+        <div class="kpi-card"><div class="kpi-label">Avg Spend</div><div class="kpi-value" id="modalAvgSpend">£0</div></div>
+        <div class="kpi-card"><div class="kpi-label">Last Seen</div><div class="kpi-value" id="modalLastSeen" style="font-size:0.85rem;">—</div></div>
+      </div>
+
+      <!-- Preferences -->
+      <div class="glass-card" style="margin-bottom: var(--space-sm);">
+        <p class="section-title">Profile</p>
+        <ul class="pref-list" id="modalPrefs"></ul>
+      </div>
+
+      <!-- Log a visit -->
+      <div class="glass-card" style="margin-bottom: var(--space-sm);">
+        <p class="section-title">Log a Visit</p>
+        <div class="grid-3" style="margin-bottom: var(--space-sm);">
+          <div class="field-group">
+            <label class="field-label">Date</label>
+            <input type="date" id="visitDate" />
+          </div>
+          <div class="field-group">
+            <label class="field-label">Party Size</label>
+            <input type="number" id="visitParty" placeholder="1" min="1" />
+          </div>
+          <div class="field-group">
+            <label class="field-label">Spend (£)</label>
+            <input type="number" id="visitSpend" placeholder="0.00" min="0" step="0.01" />
+          </div>
+        </div>
+        <div class="field-group" style="margin-bottom: var(--space-sm);">
+          <textarea id="visitNotes" placeholder="Notes from this visit…" rows="2"></textarea>
+        </div>
+        <button class="btn btn-success btn-full" id="logVisitBtn">Log Visit</button>
+      </div>
+
+      <!-- Visit history -->
+      <div class="glass-card" style="margin-bottom: var(--space-md);">
+        <p class="section-title">Visit History</p>
+        <div class="visit-log" id="modalVisitLog">
+          <p class="alert-empty" style="padding: var(--space-sm) 0;">No visits logged yet.</p>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="btn-group">
+        <button class="btn btn-ghost" id="editGuestBtn">Edit Profile</button>
+        <button class="btn btn-danger btn-sm" id="deleteGuestBtn">Delete Guest</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Guest Modal -->
+  <div class="modal-overlay" id="editModal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">Edit Guest</div>
+        <button class="modal-close" id="editModalClose">×</button>
+      </div>
+      <div class="glass-card">
+        <div class="grid-2" style="margin-bottom: var(--space-sm);">
+          <div class="field-group"><label class="field-label">Full Name</label><input type="text" id="editName" /></div>
+          <div class="field-group"><label class="field-label">Phone</label><input type="tel" id="editPhone" /></div>
+        </div>
+        <div class="grid-2" style="margin-bottom: var(--space-sm);">
+          <div class="field-group"><label class="field-label">Email</label><input type="email" id="editEmail" /></div>
+          <div class="field-group"><label class="field-label">Status</label>
+            <select id="editStatus">
+              <option value="regular">Regular</option>
+              <option value="vip">VIP</option>
+              <option value="new">New guest</option>
+            </select>
+          </div>
+        </div>
+        <label class="checkbox-group" style="margin-bottom: var(--space-sm);">
+          <input type="checkbox" id="editVIP" />
+          <span>⭐ VIP</span>
+        </label>
+        <hr class="form-divider" />
+        <div class="grid-2" style="margin-bottom: var(--space-sm);">
+          <div class="field-group"><label class="field-label">Birthday (MM-DD)</label><input type="text" id="editBirthday" maxlength="5" /></div>
+          <div class="field-group"><label class="field-label">Anniversary (MM-DD)</label><input type="text" id="editAnniversary" maxlength="5" /></div>
+        </div>
+        <hr class="form-divider" />
+        <div class="grid-2" style="margin-bottom: var(--space-sm);">
+          <div class="field-group"><label class="field-label">Favourite Drink</label><input type="text" id="editDrink" /></div>
+          <div class="field-group"><label class="field-label">Preferred Seating</label>
+            <select id="editSeating">
+              <option value="">No preference</option>
+              <option value="Bar">Bar</option>
+              <option value="Booth">Booth</option>
+              <option value="Window">Window table</option>
+              <option value="Private">Private area</option>
+              <option value="Outside">Outside</option>
+            </select>
+          </div>
+        </div>
+        <div class="field-group" style="margin-bottom: var(--space-sm);">
+          <label class="field-label">Dietary Requirements</label>
+          <input type="text" id="editDietary" />
+        </div>
+        <div class="field-group" style="margin-bottom: var(--space-sm);">
+          <label class="field-label">Notes</label>
+          <textarea id="editNotes" rows="3"></textarea>
+        </div>
+        <button class="btn btn-primary btn-full" id="saveEditBtn">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast">Saved ✓</div>
+
+  <script>
+  // ── Storage ───────────────────────────────────────────────
+  const STORAGE_KEY = 'hpro_guest_crm_v1';
+
+  function load() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+    catch { return []; }
+  }
+  function save(guests) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(guests));
+  }
+
+  // ── Helpers ───────────────────────────────────────────────
+  function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
+
+  function initials(name) {
+    return name.trim().split(/\s+/).map(w => w[0]).join('').slice(0,2).toUpperCase();
+  }
+
+  function daysSince(dateStr) {
+    if (!dateStr) return null;
+    const d = new Date(dateStr);
+    const now = new Date();
+    return Math.floor((now - d) / 86400000);
+  }
+
+  // days until next occurrence of MM-DD
+  function daysUntilOccurrence(mmdd) {
+    if (!mmdd || !/^\d{2}-\d{2}$/.test(mmdd)) return null;
+    const [m, d] = mmdd.split('-').map(Number);
+    const now = new Date();
+    const thisYear = new Date(now.getFullYear(), m - 1, d);
+    const nextYear = new Date(now.getFullYear() + 1, m - 1, d);
+    const diff = thisYear - now;
+    if (diff >= 0) return Math.ceil(diff / 86400000);
+    return Math.ceil((nextYear - now) / 86400000);
+  }
+
+  function formatDate(dateStr) {
+    if (!dateStr) return '—';
+    const d = new Date(dateStr);
+    return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+  }
+
+  function guestLTV(guest) {
+    return (guest.visits || []).reduce((s, v) => s + (parseFloat(v.spend) || 0), 0);
+  }
+
+  function lastVisitDate(guest) {
+    const visits = (guest.visits || []).slice().sort((a,b) => b.date.localeCompare(a.date));
+    return visits.length ? visits[0].date : null;
+  }
+
+  function guestStatus(guest) {
+    if (guest.vip) return 'vip';
+    const visits = (guest.visits || []).length;
+    if (visits >= 3) return 'regular';
+    return 'new';
+  }
+
+  function showToast(msg = 'Saved ✓') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('visible');
+    setTimeout(() => t.classList.remove('visible'), 2200);
+  }
+
+  // ── Tabs ──────────────────────────────────────────────────
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+      if (btn.dataset.tab === 'alerts') renderAlerts();
+    });
+  });
+
+  // ── KPI ───────────────────────────────────────────────────
+  function updateKPIs() {
+    const guests = load();
+    document.getElementById('kpiTotal').textContent = guests.length;
+    document.getElementById('kpiVIP').textContent = guests.filter(g => g.vip).length;
+    const ltv = guests.reduce((s, g) => s + guestLTV(g), 0);
+    document.getElementById('kpiLTV').textContent = '£' + ltv.toFixed(0);
+    // Alerts: upcoming occasions (30 days) + gone quiet (30+ days since last visit, 3+ visits)
+    let alertCount = 0;
+    guests.forEach(g => {
+      const bd = daysUntilOccurrence(g.birthday);
+      const an = daysUntilOccurrence(g.anniversary);
+      if (bd !== null && bd <= 30) alertCount++;
+      if (an !== null && an <= 30) alertCount++;
+      const sinceVisit = daysSince(lastVisitDate(g));
+      if ((g.visits || []).length >= 3 && sinceVisit !== null && sinceVisit >= 30) alertCount++;
+    });
+    document.getElementById('kpiAlerts').textContent = alertCount;
+  }
+
+  // ── Guest List ────────────────────────────────────────────
+  function renderGuests() {
+    const guests = load();
+    const searchVal = document.getElementById('searchInput').value.toLowerCase();
+    const filterStatus = document.getElementById('filterStatus').value;
+    const filterMonth = document.getElementById('filterMonth').value;
+
+    let filtered = guests.filter(g => {
+      if (searchVal) {
+        const haystack = [g.name, g.phone, g.email].join(' ').toLowerCase();
+        if (!haystack.includes(searchVal)) return false;
+      }
+      if (filterStatus) {
+        const s = guestStatus(g);
+        if (filterStatus === 'vip' && !g.vip) return false;
+        if (filterStatus === 'regular' && s !== 'regular') return false;
+        if (filterStatus === 'new' && s !== 'new') return false;
+        if (filterStatus === 'quiet') {
+          const sinceVisit = daysSince(lastVisitDate(g));
+          if ((g.visits || []).length < 3 || sinceVisit === null || sinceVisit < 30) return false;
+        }
+      }
+      if (filterMonth) {
+        if (!g.birthday) return false;
+        const m = parseInt(g.birthday.split('-')[0]);
+        if (m !== parseInt(filterMonth)) return false;
+      }
+      return true;
+    });
+
+    // Sort: VIP first, then by last visit desc
+    filtered.sort((a, b) => {
+      if (a.vip && !b.vip) return -1;
+      if (!a.vip && b.vip) return 1;
+      const la = lastVisitDate(a) || '';
+      const lb = lastVisitDate(b) || '';
+      return lb.localeCompare(la);
+    });
+
+    const list = document.getElementById('guestList');
+    if (!filtered.length) {
+      list.innerHTML = '<p class="alert-empty">No guests match your search.</p>';
+      return;
+    }
+
+    list.innerHTML = filtered.map(g => {
+      const status = guestStatus(g);
+      const ltv = guestLTV(g);
+      const lastVisit = lastVisitDate(g);
+      const sinceVisit = daysSince(lastVisit);
+      const bd = daysUntilOccurrence(g.birthday);
+      const an = daysUntilOccurrence(g.anniversary);
+
+      let badges = '';
+      if (g.vip) badges += '<span class="badge badge-vip">VIP</span>';
+      else if (status === 'regular') badges += '<span class="badge badge-regular">Regular</span>';
+      else badges += '<span class="badge badge-new">New</span>';
+      if (bd !== null && bd <= 30) badges += `<span class="badge badge-bday">🎂 ${bd === 0 ? 'Today!' : 'in ' + bd + 'd'}</span>`;
+      if (an !== null && an <= 30) badges += `<span class="badge badge-anniversary">💍 ${an === 0 ? 'Today!' : 'in ' + an + 'd'}</span>`;
+      if ((g.visits || []).length >= 3 && sinceVisit !== null && sinceVisit >= 30) badges += `<span class="badge badge-quiet">Quiet ${sinceVisit}d</span>`;
+
+      const meta = [
+        g.drink ? g.drink : null,
+        g.dietary ? g.dietary : null,
+        lastVisit ? 'Last: ' + formatDate(lastVisit) : 'Never visited',
+      ].filter(Boolean).join(' · ');
+
+      return `
+        <div class="guest-row" data-id="${g.id}">
+          <div class="guest-row__avatar">${initials(g.name)}</div>
+          <div class="guest-row__body">
+            <div class="guest-row__name">${g.name}</div>
+            <div class="guest-row__meta">${meta}</div>
+            <div class="guest-row__badges">${badges}</div>
+          </div>
+          <div class="guest-row__right">
+            <div class="guest-row__ltv">£${ltv.toFixed(0)}</div>
+            <div class="guest-row__visits">${(g.visits||[]).length} visit${(g.visits||[]).length !== 1 ? 's' : ''}</div>
+          </div>
+        </div>`;
+    }).join('');
+
+    list.querySelectorAll('.guest-row').forEach(row => {
+      row.addEventListener('click', () => openGuestModal(row.dataset.id));
+    });
+  }
+
+  ['searchInput', 'filterStatus', 'filterMonth'].forEach(id => {
+    document.getElementById(id).addEventListener('input', renderGuests);
+  });
+
+  // ── Guest Modal ───────────────────────────────────────────
+  let currentGuestId = null;
+
+  function openGuestModal(id) {
+    const guests = load();
+    const g = guests.find(x => x.id === id);
+    if (!g) return;
+    currentGuestId = id;
+
+    document.getElementById('modalName').textContent = g.name;
+
+    // Badges
+    const status = guestStatus(g);
+    const bd = daysUntilOccurrence(g.birthday);
+    const an = daysUntilOccurrence(g.anniversary);
+    let badges = '';
+    if (g.vip) badges += '<span class="badge badge-vip">VIP</span>';
+    else if (status === 'regular') badges += '<span class="badge badge-regular">Regular</span>';
+    else badges += '<span class="badge badge-new">New</span>';
+    if (bd !== null && bd <= 30) badges += `<span class="badge badge-bday">🎂 Birthday in ${bd}d</span>`;
+    if (an !== null && an <= 30) badges += `<span class="badge badge-anniversary">💍 Anniversary in ${an}d</span>`;
+    document.getElementById('modalBadges').innerHTML = badges;
+
+    // KPIs
+    const ltv = guestLTV(g);
+    const visits = (g.visits || []).length;
+    const avgSpend = visits ? ltv / visits : 0;
+    const lastVisit = lastVisitDate(g);
+    const sinceVisit = daysSince(lastVisit);
+    document.getElementById('modalLTV').textContent = '£' + ltv.toFixed(0);
+    document.getElementById('modalVisits').textContent = visits;
+    document.getElementById('modalAvgSpend').textContent = '£' + avgSpend.toFixed(0);
+    document.getElementById('modalLastSeen').textContent = sinceVisit !== null ? sinceVisit + 'd ago' : '—';
+
+    // Prefs
+    const prefs = [
+      ['Phone', g.phone],
+      ['Email', g.email],
+      ['Birthday', g.birthday ? formatOccasion(g.birthday) + (bd !== null ? ` (in ${bd}d)` : '') : null],
+      ['Anniversary', g.anniversary ? formatOccasion(g.anniversary) + (an !== null ? ` (in ${an}d)` : '') : null],
+      ['Favourite Drink', g.drink],
+      ['Preferred Seating', g.seating],
+      ['Dietary', g.dietary],
+      ['Notes', g.notes],
+    ].filter(([,v]) => v);
+    document.getElementById('modalPrefs').innerHTML = prefs.map(([k,v]) =>
+      `<li><span>${k}</span><span>${v}</span></li>`
+    ).join('') || '<li><span style="color:var(--color-text-muted)">No profile data yet.</span></li>';
+
+    // Visit date default to today
+    document.getElementById('visitDate').value = new Date().toISOString().split('T')[0];
+    document.getElementById('visitParty').value = '';
+    document.getElementById('visitSpend').value = '';
+    document.getElementById('visitNotes').value = '';
+
+    // Visit log
+    renderVisitLog(g);
+
+    document.getElementById('guestModal').classList.add('open');
+  }
+
+  function formatOccasion(mmdd) {
+    if (!mmdd) return '';
+    const [m, d] = mmdd.split('-');
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return `${months[parseInt(m)-1]} ${parseInt(d)}`;
+  }
+
+  function renderVisitLog(g) {
+    const visits = (g.visits || []).slice().sort((a,b) => b.date.localeCompare(a.date));
+    const el = document.getElementById('modalVisitLog');
+    if (!visits.length) {
+      el.innerHTML = '<p class="alert-empty" style="padding: var(--space-sm) 0;">No visits logged yet.</p>';
+      return;
+    }
+    el.innerHTML = visits.map((v, i) => `
+      <div class="visit-entry">
+        <div class="visit-entry__date">${formatDate(v.date)}</div>
+        <div class="visit-entry__body">
+          <div class="visit-entry__meta">Party of ${v.party || 1}${v.notes ? '' : ''}</div>
+          ${v.notes ? `<div class="visit-entry__notes">${v.notes}</div>` : ''}
+        </div>
+        <div class="visit-entry__spend">£${(parseFloat(v.spend)||0).toFixed(0)}</div>
+      </div>
+    `).join('');
+  }
+
+  document.getElementById('modalClose').addEventListener('click', () => {
+    document.getElementById('guestModal').classList.remove('open');
+    currentGuestId = null;
+  });
+  document.getElementById('guestModal').addEventListener('click', e => {
+    if (e.target === document.getElementById('guestModal')) {
+      document.getElementById('guestModal').classList.remove('open');
+      currentGuestId = null;
+    }
+  });
+
+  document.getElementById('logVisitBtn').addEventListener('click', () => {
+    if (!currentGuestId) return;
+    const date = document.getElementById('visitDate').value;
+    const party = document.getElementById('visitParty').value || 1;
+    const spend = document.getElementById('visitSpend').value || 0;
+    const notes = document.getElementById('visitNotes').value.trim();
+    if (!date) { alert('Please select a date.'); return; }
+
+    const guests = load();
+    const g = guests.find(x => x.id === currentGuestId);
+    if (!g) return;
+    if (!g.visits) g.visits = [];
+    g.visits.push({ date, party: parseInt(party), spend: parseFloat(spend), notes });
+    save(guests);
+    renderVisitLog(g);
+
+    // Update KPIs in modal
+    const ltv = guestLTV(g);
+    const visits = g.visits.length;
+    document.getElementById('modalLTV').textContent = '£' + ltv.toFixed(0);
+    document.getElementById('modalVisits').textContent = visits;
+    document.getElementById('modalAvgSpend').textContent = '£' + (visits ? ltv/visits : 0).toFixed(0);
+    const sinceVisit = daysSince(lastVisitDate(g));
+    document.getElementById('modalLastSeen').textContent = sinceVisit !== null ? sinceVisit + 'd ago' : '—';
+
+    document.getElementById('visitDate').value = new Date().toISOString().split('T')[0];
+    document.getElementById('visitParty').value = '';
+    document.getElementById('visitSpend').value = '';
+    document.getElementById('visitNotes').value = '';
+    showToast('Visit logged ✓');
+    renderGuests();
+    updateKPIs();
+  });
+
+  document.getElementById('deleteGuestBtn').addEventListener('click', () => {
+    if (!currentGuestId) return;
+    const guests = load();
+    const g = guests.find(x => x.id === currentGuestId);
+    if (!confirm(`Remove ${g?.name} from the book? This cannot be undone.`)) return;
+    save(guests.filter(x => x.id !== currentGuestId));
+    document.getElementById('guestModal').classList.remove('open');
+    currentGuestId = null;
+    renderGuests();
+    updateKPIs();
+    showToast('Guest removed');
+  });
+
+  document.getElementById('editGuestBtn').addEventListener('click', () => {
+    if (!currentGuestId) return;
+    const guests = load();
+    const g = guests.find(x => x.id === currentGuestId);
+    if (!g) return;
+    document.getElementById('editName').value = g.name || '';
+    document.getElementById('editPhone').value = g.phone || '';
+    document.getElementById('editEmail').value = g.email || '';
+    document.getElementById('editStatus').value = g.status || 'regular';
+    document.getElementById('editVIP').checked = !!g.vip;
+    document.getElementById('editBirthday').value = g.birthday || '';
+    document.getElementById('editAnniversary').value = g.anniversary || '';
+    document.getElementById('editDrink').value = g.drink || '';
+    document.getElementById('editSeating').value = g.seating || '';
+    document.getElementById('editDietary').value = g.dietary || '';
+    document.getElementById('editNotes').value = g.notes || '';
+    document.getElementById('guestModal').classList.remove('open');
+    document.getElementById('editModal').classList.add('open');
+  });
+
+  document.getElementById('editModalClose').addEventListener('click', () => {
+    document.getElementById('editModal').classList.remove('open');
+  });
+
+  document.getElementById('saveEditBtn').addEventListener('click', () => {
+    if (!currentGuestId) return;
+    const guests = load();
+    const g = guests.find(x => x.id === currentGuestId);
+    if (!g) return;
+    g.name = document.getElementById('editName').value.trim();
+    g.phone = document.getElementById('editPhone').value.trim();
+    g.email = document.getElementById('editEmail').value.trim();
+    g.status = document.getElementById('editStatus').value;
+    g.vip = document.getElementById('editVIP').checked;
+    g.birthday = document.getElementById('editBirthday').value.trim();
+    g.anniversary = document.getElementById('editAnniversary').value.trim();
+    g.drink = document.getElementById('editDrink').value.trim();
+    g.seating = document.getElementById('editSeating').value;
+    g.dietary = document.getElementById('editDietary').value.trim();
+    g.notes = document.getElementById('editNotes').value.trim();
+    save(guests);
+    document.getElementById('editModal').classList.remove('open');
+    renderGuests();
+    updateKPIs();
+    showToast('Profile updated ✓');
+    // Reopen detail modal
+    openGuestModal(currentGuestId);
+  });
+
+  // ── Add Guest ─────────────────────────────────────────────
+  document.getElementById('saveGuestBtn').addEventListener('click', () => {
+    const name = document.getElementById('addName').value.trim();
+    if (!name) { alert('Please enter a guest name.'); return; }
+
+    const guest = {
+      id: uid(),
+      name,
+      phone: document.getElementById('addPhone').value.trim(),
+      email: document.getElementById('addEmail').value.trim(),
+      status: document.getElementById('addStatus').value,
+      vip: document.getElementById('addVIP').checked,
+      birthday: document.getElementById('addBirthday').value.trim(),
+      anniversary: document.getElementById('addAnniversary').value.trim(),
+      drink: document.getElementById('addDrink').value.trim(),
+      seating: document.getElementById('addSeating').value,
+      dietary: document.getElementById('addDietary').value.trim(),
+      notes: document.getElementById('addNotes').value.trim(),
+      visits: [],
+      createdAt: new Date().toISOString(),
+    };
+
+    const guests = load();
+    guests.push(guest);
+    save(guests);
+
+    // Reset form
+    ['addName','addPhone','addEmail','addBirthday','addAnniversary','addDrink','addDietary','addNotes'].forEach(id => {
+      document.getElementById(id).value = '';
+    });
+    document.getElementById('addStatus').value = 'regular';
+    document.getElementById('addSeating').value = '';
+    document.getElementById('addVIP').checked = false;
+
+    renderGuests();
+    updateKPIs();
+    showToast(`${name} added to the book ✓`);
+
+    // Switch to guests tab
+    document.querySelector('[data-tab="guests"]').click();
+  });
+
+  // ── Alerts ────────────────────────────────────────────────
+  function renderAlerts() {
+    const guests = load();
+    const alerts = [];
+
+    guests.forEach(g => {
+      const bd = daysUntilOccurrence(g.birthday);
+      if (bd !== null && bd <= 30) {
+        alerts.push({
+          type: bd === 0 ? 'error' : 'warning',
+          icon: '🎂',
+          name: g.name,
+          msg: bd === 0 ? `Birthday today! Make it special.` : `Birthday in ${bd} day${bd !== 1 ? 's' : ''}.`,
+          sub: g.drink ? `Favourite: ${g.drink}` : null,
+          id: g.id,
+        });
+      }
+      const an = daysUntilOccurrence(g.anniversary);
+      if (an !== null && an <= 30) {
+        alerts.push({
+          type: an === 0 ? 'error' : 'info',
+          icon: '💍',
+          name: g.name,
+          msg: an === 0 ? `Anniversary today!` : `Anniversary in ${an} day${an !== 1 ? 's' : ''}.`,
+          sub: g.seating ? `Preferred seating: ${g.seating}` : null,
+          id: g.id,
+        });
+      }
+      const sinceVisit = daysSince(lastVisitDate(g));
+      if ((g.visits || []).length >= 3 && sinceVisit !== null && sinceVisit >= 30) {
+        alerts.push({
+          type: 'info',
+          icon: '💤',
+          name: g.name,
+          msg: `Hasn't visited in ${sinceVisit} days.`,
+          sub: g.drink ? `Last known order: ${g.drink}` : null,
+          id: g.id,
+        });
+      }
+    });
+
+    const panel = document.getElementById('alertsPanel');
+    if (!alerts.length) {
+      panel.innerHTML = '<p class="alert-empty">No active alerts. All regulars present and accounted for. 🥃</p>';
+      return;
+    }
+
+    panel.innerHTML = alerts.map(a => `
+      <div class="alert-banner ${a.type}" data-id="${a.id}" style="cursor:pointer;">
+        <span class="alert-banner__icon">${a.icon}</span>
+        <div class="alert-banner__body">
+          <span class="alert-banner__name">${a.name}</span> — ${a.msg}
+          ${a.sub ? `<div style="opacity:0.75; font-size:0.8rem; margin-top:0.2rem;">${a.sub}</div>` : ''}
+        </div>
+      </div>
+    `).join('');
+
+    panel.querySelectorAll('.alert-banner[data-id]').forEach(el => {
+      el.addEventListener('click', () => openGuestModal(el.dataset.id));
+    });
+  }
+
+  // ── Quick Add ─────────────────────────────────────────────
+  let quickGuestId = null;
+  let quickTimerInterval = null;
+  let quickTimerStart = null;
+
+  document.getElementById('quickSearch').addEventListener('input', function() {
+    const val = this.value.toLowerCase().trim();
+    const results = document.getElementById('quickResults');
+    document.getElementById('quickNotePanel').style.display = 'none';
+    if (!val) { results.innerHTML = ''; return; }
+
+    const guests = load();
+    const matches = guests.filter(g => g.name.toLowerCase().includes(val)).slice(0, 5);
+
+    if (!matches.length) {
+      results.innerHTML = '<p style="font-size:0.8rem; color:var(--color-text-muted); padding: 0.5rem 0;">No match — add them via the Add Guest tab.</p>';
+      return;
+    }
+
+    results.innerHTML = matches.map(g => {
+      const status = guestStatus(g);
+      const lastVisit = lastVisitDate(g);
+      const since = daysSince(lastVisit);
+      return `
+        <div class="quick-result" data-id="${g.id}">
+          <div class="guest-row__avatar">${initials(g.name)}</div>
+          <div class="quick-result__name">${g.name}${g.vip ? ' ⭐' : ''}</div>
+          <div class="quick-result__hint">${g.drink || (status === 'vip' ? 'VIP' : status)} · ${since !== null ? since + 'd ago' : 'never'}</div>
+        </div>`;
+    }).join('');
+
+    results.querySelectorAll('.quick-result').forEach(el => {
+      el.addEventListener('click', () => openQuickNote(el.dataset.id));
+    });
+  });
+
+  function openQuickNote(id) {
+    const guests = load();
+    const g = guests.find(x => x.id === id);
+    if (!g) return;
+    quickGuestId = id;
+
+    document.getElementById('quickResults').innerHTML = '';
+    document.getElementById('quickSearch').value = '';
+    document.getElementById('quickGuestName').textContent = g.name + (g.vip ? ' ⭐' : '');
+    document.getElementById('quickNoteText').value = '';
+    document.getElementById('quickSpend').value = '';
+    document.getElementById('quickParty').value = '';
+
+    // Show preferences
+    const prefs = [
+      g.drink ? ['Favourite Drink', g.drink] : null,
+      g.dietary ? ['Dietary', g.dietary] : null,
+      g.seating ? ['Seating', g.seating] : null,
+      g.notes ? ['Notes', g.notes] : null,
+    ].filter(Boolean);
+    document.getElementById('quickGuestPrefs').innerHTML = prefs.map(([k,v]) =>
+      `<li><span>${k}</span><span>${v}</span></li>`
+    ).join('') || '<li><span style="color:var(--color-text-muted); font-size:0.78rem;">No preferences on file.</span></li>';
+
+    document.getElementById('quickNotePanel').style.display = 'block';
+    document.getElementById('quickNoteText').focus();
+
+    // Timer
+    quickTimerStart = Date.now();
+    clearInterval(quickTimerInterval);
+    quickTimerInterval = setInterval(() => {
+      const elapsed = Math.floor((Date.now() - quickTimerStart) / 1000);
+      document.getElementById('quickTimer').textContent = elapsed + 's';
+    }, 1000);
+  }
+
+  document.getElementById('quickSaveBtn').addEventListener('click', () => {
+    if (!quickGuestId) return;
+    clearInterval(quickTimerInterval);
+    const notes = document.getElementById('quickNoteText').value.trim();
+    const spend = parseFloat(document.getElementById('quickSpend').value) || 0;
+    const party = parseInt(document.getElementById('quickParty').value) || 1;
+    const date = new Date().toISOString().split('T')[0];
+
+    const guests = load();
+    const g = guests.find(x => x.id === quickGuestId);
+    if (!g) return;
+    if (!g.visits) g.visits = [];
+    g.visits.push({ date, party, spend, notes });
+    save(guests);
+    document.getElementById('quickNotePanel').style.display = 'none';
+    quickGuestId = null;
+    renderGuests();
+    updateKPIs();
+    showToast('Intel captured ✓');
+  });
+
+  document.getElementById('quickCancelBtn').addEventListener('click', () => {
+    clearInterval(quickTimerInterval);
+    document.getElementById('quickNotePanel').style.display = 'none';
+    quickGuestId = null;
+  });
+
+  // ── Init ──────────────────────────────────────────────────
+  renderGuests();
+  updateKPIs();
+  </script>
+</body>
+</html>
