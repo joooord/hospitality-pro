@@ -31,14 +31,14 @@ Premium, dark, editorial, restrained. Clean typography. Liquid-glass UI elements
 - Prep lists (what to batch, what to prep).
 - Maintenance logs.
 
-### 5. End-of-Night Cash & Revenue Reconciliation — NEXT BUILD
-- Till reconciliation: Expected cash (covers × avg spend) vs actual till reads.
-- Variance tracking: Cash over/short, card vs cash split, comp/void logging.
-- Cover count input: Walk-ins, bookings, no-shows — total seats turned.
-- Daily GP snapshot: Link to rota costs → live labor % vs target.
-- Night notes: Waste events, incidents, staff performance flags.
-- Historical log: Searchable by date, filterable by variance band.
-- Output: End-of-night PDF summary ready for owner/accountant.
+### 5. End-of-Night Cash & Revenue Reconciliation ✅ SHIPPED
+- Till reconciliation: Expected cash vs actual denomination count. Cash variance banner.
+- Cash/card split with visual bar. Float in/out tracking.
+- Comp & void logging with type tags (comp/void/manager discount).
+- Daily GP snapshot: Auto-pulls wage cost from Rota Optimizer localStorage, live GP% ring.
+- Historical log: localStorage persistence, date filtering, band filtering, click-to-reload.
+- End-of-night summary: One-tap copyable/printable report for WhatsApp/email.
+- Mobile-first, Liquid Glass dark premium aesthetic. Close in under 3 minutes.
 
 ### 6. Review Management
 - AI-assisted review responses (Google/TripAdvisor).
@@ -51,13 +51,15 @@ Premium, dark, editorial, restrained. Clean typography. Liquid-glass UI elements
 - Pairs with Supplier Automation Console for intelligent re-ordering.
 
 ## Infinite Loop · Immediate Next Build
-**End-of-Night Cash & Revenue Reconciliation Console**
-- `tools/eod-reconciliation/index.html`
-- Input: expected covers, avg spend, till reads (cash/card), comps, voids
-- Output: variance vs expected, labor % vs target, night summary PDF/copy
-- Historical log in localStorage — compare nights, track trends
-- Liquid Glass design, mobile-first (managers close on phone)
-- Zero friction — complete close in under 3 minutes
+**Staff Tip Pool & Distribution Calculator**
+- `tools/tip-pool/index.html`
+- The biggest manual nightmare at end of service — zero good tools exist for small venues
+- Directly pairs with the EOD Reconciliation Console (same workflow, same moment)
+- Input: total tips collected (cash + card), staff on shift, hours worked per person, role weights (bartender vs server vs barback)
+- Logic: weighted distribution by role tier + hours — fair, transparent, auditable
+- Output: per-person tip amount, printable/shareable breakdown, localStorage history per night
+- Pair with EOD: pull tonight's date automatically, link back to that night's close
+- Mobile-first, Liquid Glass, sub-60-second to complete
 
 ## Execution Strategy
 - **Autonomy**: Jim and the agents will continually build, test, refine, and deploy this app without asking for permission.
@@ -84,7 +86,8 @@ Premium, dark, editorial, restrained. Clean typography. Liquid-glass UI elements
 | AI Review Responder | /tools/review-responder/ | ✅ Live |
 | Allergen Matrix Builder | /tools/allergen-matrix/ | ✅ Live |
 | SOP Generator | /tools/sop-generator/ | ✅ Live |
-| End-of-Night Reconciliation | /tools/eod-reconciliation/ | 🔨 Next |
+| End-of-Night Reconciliation | /tools/eod-reconciliation/ | ✅ Live |
+| Staff Tip Pool & Distribution | /tools/tip-pool/ | 🔨 Next |
 
 ## The Infinite Loop Protocol
 At the end of every task list, the system MUST execute the following sequence indefinitely:
