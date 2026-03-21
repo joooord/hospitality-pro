@@ -60,10 +60,14 @@ Premium, dark, editorial, restrained. Clean typography. Liquid-glass UI elements
 - Certificate modal on assessment pass — staff can screenshot.
 - Manager/Staff mode toggle. 100% localStorage, mobile-first, Liquid Glass aesthetic.
 
-### 12. Food Safety & HACCP Compliance Logger
-- The next legal compliance gap: temperature logs, cleaning schedules, corrective actions.
-- EHOs request temperature records as first ask during inspections. Paper logs fail.
-- See spec below.
+### 12. Food Safety & HACCP Compliance Logger ✅ SHIPPED
+- Temperature logs (fridge/freezer/hot-hold), named units, auto pass/fail vs UK thresholds.
+- Cleaning schedule (daily/weekly/monthly) with staff sign-off + timestamp.
+- Corrective action records — open/resolved, EHO-standard format.
+- 14 allergen awareness panel with venue notes (Natasha's Law).
+- EHO-ready export: full dated compliance report, print-ready.
+- Dashboard: at-a-glance status for all zones, overdue tasks, open CAs.
+- 100% localStorage, mobile-first, Liquid Glass dark aesthetic.
 
 ### 10. Guest Micro-CRM ✅ SHIPPED
 - "Little black book" for premium venues — remember your regulars.
@@ -84,27 +88,28 @@ Premium, dark, editorial, restrained. Clean typography. Liquid-glass UI elements
 - Pairs with Rota Optimizer, EOD Reconciliation, and Financial Narrative.
 
 ## Infinite Loop · Immediate Next Build
-**Food Safety & HACCP Compliance Logger**
-- `tools/food-safety/index.html`
-- UK legal requirement: every food business must maintain HACCP records. EHOs request temperature logs as the first act of inspection. Paper logs get lost, forgotten, or forged. Digital replaces all of it.
+**Martyn's Law & Venue Safety Compliance Hub**
+- `tools/venue-safety/index.html`
+- **Why now:** Martyn's Law (Terrorism (Protection of Premises) Act) received Royal Assent in April 2025. All UK venues must now conduct formal counter-terrorism risk assessments and train staff. Non-compliance = criminal liability. Independent venues have NO tools for this.
 - **Core modules:**
-  - Temperature logs — fridge/freezer/hot hold/probe records with pass/fail vs legal thresholds (5°C cold, 63°C hot, -18°C frozen)
-  - Cleaning schedule — daily/weekly/monthly tasks with sign-off and timestamp
-  - Corrective action log — when something fails, record what you did about it (EHO requirement)
-  - HACCP summary — export-ready record of all logs for inspection day
-  - Dashboard — today's compliance health at a glance: red/amber/green per zone
-- **Legal context:** Hazard Analysis Critical Control Points (HACCP) is legally mandated under UK food law for all food businesses. Temperature records are the #1 thing EHOs check.
-- **Competitive gap:** ComplyFood, SafeKitchen, FoodDocs cost £50–£200/month. This is free.
-- 100% localStorage, no logins, mobile-first (kitchen staff log on their phones)
+  - Martyn's Law compliance checklist — step-by-step assessment aligned to government guidance for Standard and Enhanced tier venues
+  - Staff counter-terrorism training tracker — who's been trained, when, renewal reminders
+  - Emergency procedures builder — venue-specific action cards (bomb threat, suspicious package, hostile vehicle, knife attack protocols)
+  - Incident log — confidential record of security incidents and management responses
+  - Risk assessment export — printable/PDF report for licensing authority or police liaison
+  - Fire safety integration — fire risk assessment checklist and review log
+  - Capacity & crowd management log — venue capacity records, peak time tracking
+- **Legal context:** Martyn's Law (named after Manchester Arena bombing victim Martyn Hett) is now UK law. Venues with 200+ capacity face Enhanced tier requirements; all others face Standard tier. Failure to comply = criminal prosecution of the premises owner.
+- **Competitive gap:** Zero dedicated affordable tools exist for independent operators. Enterprise solutions cost £500+/year. This is free.
+- 100% localStorage, no logins, mobile-first
 - Liquid Glass dark premium aesthetic with red/amber/green compliance banding
-- One-tap "log temperature now" flow — under 10 seconds per reading
+- Pairs naturally with Food Safety Logger — the full compliance suite for any UK venue
 
 ### Why This Wins
-- **Legal shield**: proper HACCP records protect the licence and avoid criminal liability
-- **5-star hygiene rating**: inspectors love digital records — higher ratings = more bookings
-- **Zero cost**: eliminates SaaS subscriptions that operators are currently paying
-- **Pairs with**: Allergen Matrix Builder, Food Waste Audit Tracker — the compliance trio is complete
-- **Natural upsell**: Jordan can white-label or configure for each venue as a consulting deliverable
+- **New law, zero existing tools**: Martyn's Law is brand new — operators are scrambling
+- **Criminal liability**: the stakes are even higher than food safety — venue owners personally liable
+- **Consulting gold**: Jordan can walk into any venue and offer Martyn's Law readiness as a service
+- **PR angle**: "The only free Martyn's Law compliance tool for independent venues" — media-worthy
 
 ## Execution Strategy
 - **Autonomy**: Jim and the agents will continually build, test, refine, and deploy this app without asking for permission.
@@ -137,7 +142,8 @@ Premium, dark, editorial, restrained. Clean typography. Liquid-glass UI elements
 | Guest Micro-CRM | /tools/guest-crm/ | ✅ Live |
 | Food Waste Audit Tracker | /tools/food-waste/ | ✅ Live |
 | Staff Training & Onboarding Hub | /tools/staff-training/ | ✅ Live |
-| Food Safety & HACCP Compliance Logger | /tools/food-safety/ | 🔨 Next |
+| Food Safety & HACCP Compliance Logger | /tools/food-safety/ | ✅ Live |
+| Martyn's Law & Venue Safety Hub | /tools/venue-safety/ | 🔨 Next |
 
 ## The Infinite Loop Protocol
 At the end of every task list, the system MUST execute the following sequence indefinitely:
