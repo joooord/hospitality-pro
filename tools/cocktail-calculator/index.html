@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cocktail Profit & ABV Console · Hospitality Pro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="/assets/styles/system.css" />
+  <style>
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: var(--space-sm);
+    }
+    .form-field.full { grid-column: 1 / -1; }
+    .table-wrapper { overflow-x: auto; width: 100%; }
+    table { width: 100%; border-collapse: collapse; min-width: 720px; }
+    th, td { text-align: left; padding: 0.65rem; border-bottom: 1px solid rgba(12, 16, 23, 0.08); }
+    th { font-size: 0.8rem; letter-spacing: 0.03em; text-transform: uppercase; color: var(--color-text-muted); }
+    td input { height: 42px; }
+    td.numeric { text-align: right; font-family: var(--font-mono); font-size: 0.95rem; }
+    .chip-group { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip-group button {
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--color-border);
+      padding: 0.45rem 0.95rem;
+      font-size: 0.85rem;
+      background: rgba(15, 17, 23, 0.03);
+    }
+    .chip-group button.is-active {
+      border-color: var(--color-gold);
+      color: var(--color-gold);
+      background: var(--color-gold-faint);
+    }
+    .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--space-sm); }
+    .metric-card { border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-sm); background: rgba(255, 255, 255, 0.85); }
+    .metric-label { font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-text-muted); margin-bottom: 0.35rem; }
+    .metric-value { font-size: 1.4rem; font-weight: 600; margin: 0; }
+    .target-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.4rem; }
+    .target-list li { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0.85rem; border: 1px solid var(--color-border); border-radius: var(--radius-md); background: rgba(255, 255, 255, 0.9); }
+    .target-list span { font-weight: 600; }
+    .abv-panel { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--space-sm); align-items: center; }
+    .abv-value { font-size: 3rem; font-weight: 600; margin: 0; font-family: var(--font-serif); }
+    .mono { font-family: var(--font-mono); font-size: 0.95rem; }
+    .pill-note { font-size: 0.8rem; color: var(--color-text-soft); }
+    .inline-alert { border-left: 3px solid var(--color-gold); padding-left: 0.85rem; margin-top: var(--space-sm); color: var(--color-text-soft); font-size: 0.9rem; }
+    .support-table { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem; }
+    .support-table li { display: flex; justify-content: space-between; align-items: center; font-size: 0.95rem; }
+    .support-table strong { font-family: var(--font-mono); }
+    .help-text { font-size: 0.82rem; color: var(--color-text-muted); }
+  </style>
+</head>
+<body>
+  <nav class="site-nav"><a class="nav-brand" href="/">Hospitality <span>Pro</span></a><div class="nav-links"><a href="/#tools">Tools</a><a href="/#playbook">Playbook</a><a href="/#about">About</a><a class="nav-cta" href="/#tools">Get Started →</a></div></nav>
+  <main class="app-shell">
+    <a class="back-link" href="/#tools">Back to all tools</a>
+    <header class="glass-panel hero-panel">
+      <div class="stack">
+        <p class="eyebrow">Hidden bar · Middlestown</p>
+        <h1>Cocktail Profit &amp; ABV Console</h1>
+        <p>One surface that prices every pour, tracks dilution, and guarantees the guest-facing ABV stays compliant. Designed for shift-time decisions — 30 seconds per serve.</p>
+        <div class="cluster">
+          <span class="badge">ROI + ABV lockstep</span>
+          <span class="badge badge-warning">Shaken vs. stirred dilution</span>
+          <span class="badge">Cost / serve live</span>
+        </div>
+      </div>
+      <div class="cluster">
+        <button type="button" class="btn btn-ghost" id="startBlankBtn">Start clean build</button>
+        <button type="button" class="btn btn-primary" id="loadSampleBtn">Load signature serve</button>
+      </div>
+    </header>
+
+    <section class="grid-2 align-start">
+      <section class="stack">
+        <article class="glass-card stack">
+          <header class="section-header">
+            <div>
+              <p class="eyebrow">Financial levers</p>
+              <h2>Service inputs</h2>
+            </div>
+          </header>
+          <div class="form-grid">
+            <div class="form-field full">
+              <label for="cocktailName">Cocktail name</label>
+              <input id="cocktailName" type="text" placeholder="e.g., Signal Room Martini" />
+            </div>
+            <div class="form-field">
+              <label for="targetMargins">Target GP% (comma separated)
+                <span class="help-text">We'll price each target for you — e.g., 70, 75</span>
+              </label>
+              <input id="targetMargins" type="text" inputmode="numeric" />
+            </div>
+            <div class="form-field">
+              <label for="garnishCost">Garnish &amp; waste (£ / serve)</label>
+              <input id="garnishCost" type="number" min="0" step="0.05" inputmode="decimal" />
+            </div>
+            <div class="form-field">
+              <label for="actualPrice">Current sell (£)</label>
+              <input id="actualPrice" type="number" min="0" step="0.1" inputmode="decimal" />
+            </div>
+            <div class="form-field full">
+              <label>Method &amp; dilution</label>
+              <div class="chip-group" role="group" aria-label="Dilution presets">
+                <button type="button" data-dilution-mode="stirred">Stirred · 12%</button>
+                <button type="button" data-dilution-mode="shaken">Shaken · 25%</button>
+                <button type="button" data-dilution-mode="built">Built · 8%</button>
+                <button type="button" data-dilution-mode="custom">Custom</button>
+              </div>
+              <label for="dilutionSlider" class="help-text">Water gain % when diluting (used for ABV). Custom range 0–40%.</label>
+              <input id="dilutionSlider" type="range" min="0" max="40" step="1" />
+              <p class="pill-note">Active dilution: <span id="dilutionValue" class="mono">0%</span></p>
+            </div>
+          </div>
+        </article>
+
+        <article class="glass-card stack">
+          <header class="section-header" style="display:flex; justify-content:space-between; align-items:center; gap:1rem;">
+            <div>
+              <p class="eyebrow">Build sheet</p>
+              <h2>Ingredient economics</h2>
+            </div>
+            <button type="button" class="btn btn-ghost" id="addIngredientBtn">+ Add ingredient</button>
+          </header>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Ingredient</th>
+                  <th>ABV%</th>
+                  <th>Bottle size (ml)</th>
+                  <th>Bottle cost (£)</th>
+                  <th>Pour (ml)</th>
+                  <th>Cost / serve</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="ingredientTableBody"></tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+
+      <section class="stack">
+        <article class="glass-card stack">
+          <header class="section-header">
+            <div>
+              <p class="eyebrow">Profit picture</p>
+              <h2>ROI snapshot</h2>
+            </div>
+          </header>
+          <div class="metric-grid">
+            <div class="metric-card">
+              <p class="metric-label">Cost per serve</p>
+              <p class="metric-value" id="costPerServe">£0.00</p>
+            </div>
+            <div class="metric-card">
+              <p class="metric-label">Gross profit / serve</p>
+              <p class="metric-value" id="profitPerServe">£0.00</p>
+            </div>
+            <div class="metric-card">
+              <p class="metric-label">Actual GP%</p>
+              <p class="metric-value" id="actualGp">—</p>
+            </div>
+            <div class="metric-card">
+              <label for="actualPrice" class="metric-label" style="margin-bottom:0;">Current sell (£)</label>
+              <input id="actualPriceMirror" type="number" min="0" step="0.1" inputmode="decimal" />
+            </div>
+          </div>
+          <p class="muted" id="gpNarrative">Enter a sell price to benchmark GP.</p>
+          <div>
+            <p class="metric-label" style="margin-top:1rem;">Recommended sells</p>
+            <ul class="target-list" id="targetPriceList"></ul>
+          </div>
+        </article>
+
+        <article class="glass-card stack">
+          <header class="section-header">
+            <div>
+              <p class="eyebrow">Compliance</p>
+              <h2>ABV &amp; dilution model</h2>
+            </div>
+          </header>
+          <div class="abv-panel">
+            <div>
+              <p class="metric-label">Final ABV%</p>
+              <p class="abv-value" id="finalAbv">0%</p>
+            </div>
+            <div>
+              <p class="metric-label">Volumes</p>
+              <p class="mono">Pure alcohol: <span id="alcoholMl">0 ml</span></p>
+              <p class="mono">Pre-dilution volume: <span id="baseVolume">0 ml</span></p>
+              <p class="mono">Water gain: <span id="waterGain">0 ml</span></p>
+              <p class="mono">Final serve size: <span id="finalVolume">0 ml</span></p>
+            </div>
+          </div>
+          <p class="inline-alert" id="abvNote">Add pours to calculate ABV.</p>
+        </article>
+
+        <article class="glass-card stack">
+          <header class="section-header">
+            <div>
+              <p class="eyebrow">Bottle ROI</p>
+              <h2>Serves per bottle</h2>
+            </div>
+          </header>
+          <ul class="support-table" id="bottleStats"></ul>
+        </article>
+      </section>
+    </section>
+  </main>
+
+  <script src="/assets/scripts/venue-profile.js" defer></script>
+  <script defer>
+    (() => {
+      const dilutionPresets = {
+        stirred: { label: 'Stirred', percent: 12 },
+        shaken: { label: 'Shaken', percent: 25 },
+        built: { label: 'Built', percent: 8 }
+      };
+
+      const elements = {
+        cocktailName: document.getElementById('cocktailName'),
+        targetMargins: document.getElementById('targetMargins'),
+        garnishCost: document.getElementById('garnishCost'),
+        actualPrice: document.getElementById('actualPrice'),
+        actualPriceMirror: document.getElementById('actualPriceMirror'),
+        dilutionButtons: document.querySelectorAll('[data-dilution-mode]'),
+        dilutionSlider: document.getElementById('dilutionSlider'),
+        dilutionValue: document.getElementById('dilutionValue'),
+        ingredientTableBody: document.getElementById('ingredientTableBody'),
+        addIngredientBtn: document.getElementById('addIngredientBtn'),
+        costPerServe: document.getElementById('costPerServe'),
+        profitPerServe: document.getElementById('profitPerServe'),
+        actualGp: document.getElementById('actualGp'),
+        gpNarrative: document.getElementById('gpNarrative'),
+        targetPriceList: document.getElementById('targetPriceList'),
+        finalAbv: document.getElementById('finalAbv'),
+        alcoholMl: document.getElementById('alcoholMl'),
+        baseVolume: document.getElementById('baseVolume'),
+        waterGain: document.getElementById('waterGain'),
+        finalVolume: document.getElementById('finalVolume'),
+        abvNote: document.getElementById('abvNote'),
+        bottleStats: document.getElementById('bottleStats'),
+        startBlankBtn: document.getElementById('startBlankBtn'),
+        loadSampleBtn: document.getElementById('loadSampleBtn')
+      };
+
+      let state = createSampleState();
+
+      bindEvents();
+      render();
+
+      function bindEvents() {
+        elements.cocktailName.addEventListener('input', (event) => {
+          state.cocktailName = event.target.value;
+        });
+        elements.targetMargins.addEventListener('input', (event) => {
+          state.targetMargins = event.target.value;
+          renderTargets();
+        });
+        elements.garnishCost.addEventListener('input', (event) => {
+          state.garnishCost = event.target.value;
+          renderMetrics();
+        });
+        elements.actualPrice.addEventListener('input', syncPriceInputs);
+        elements.actualPriceMirror.addEventListener('input', syncPriceInputs);
+        elements.dilutionSlider.addEventListener('input', (event) => {
+          state.customDilution = Number(event.target.value);
+          if (state.dilutionMode === 'custom') renderDilution();
+          renderAbv();
+        });
+        elements.addIngredientBtn.addEventListener('click', () => {
+          state.ingredients.push(createIngredient());
+          renderIngredients();
+          renderAll();
+        });
+        elements.ingredientTableBody.addEventListener('input', handleIngredientInput);
+        elements.ingredientTableBody.addEventListener('click', handleIngredientClick);
+        elements.dilutionButtons.forEach((button) => {
+          button.addEventListener('click', () => {
+            state.dilutionMode = button.dataset.dilutionMode;
+            renderDilution();
+            renderAbv();
+          });
+        });
+        elements.startBlankBtn.addEventListener('click', () => {
+          state = createBlankState();
+          render();
+        });
+        elements.loadSampleBtn.addEventListener('click', () => {
+          state = createSampleState();
+          render();
+        });
+      }
+
+      function syncPriceInputs(event) {
+        const value = event.target.value;
+        state.actualPrice = value;
+        elements.actualPrice.value = value;
+        elements.actualPriceMirror.value = value;
+        renderMetrics();
+      }
+
+      function handleIngredientInput(event) {
+        const field = event.target.dataset.field;
+        const id = event.target.closest('tr')?.dataset.id;
+        if (!field || !id) return;
+        const ingredient = state.ingredients.find((item) => item.id === id);
+        if (!ingredient) return;
+        if (field === 'name') {
+          ingredient.name = event.target.value;
+        } else {
+          ingredient[field] = event.target.value === '' ? '' : Number(event.target.value);
+        }
+        renderAll();
+      }
+
+      function handleIngredientClick(event) {
+        const button = event.target.closest('button[data-action]');
+        if (!button) return;
+        const id = button.closest('tr')?.dataset.id;
+        if (!id) return;
+        if (button.dataset.action === 'remove') {
+          if (state.ingredients.length === 1) return;
+          state.ingredients = state.ingredients.filter((item) => item.id !== id);
+          renderAll();
+        }
+      }
+
+      function render() {
+        elements.cocktailName.value = state.cocktailName;
+        elements.targetMargins.value = state.targetMargins;
+        elements.garnishCost.value = state.garnishCost;
+        elements.actualPrice.value = state.actualPrice;
+        elements.actualPriceMirror.value = state.actualPrice;
+        renderIngredients();
+        renderAll();
+      }
+
+      function renderAll() {
+        renderDilution();
+        renderMetrics();
+        renderTargets();
+        renderAbv();
+        renderBottleStats();
+      }
+
+      function renderIngredients() {
+        elements.ingredientTableBody.innerHTML = state.ingredients
+          .map((ingredient) => {
+            const stats = computeIngredientStats(ingredient);
+            const servesLabel = stats.servesPerBottle ? `${stats.servesPerBottle.toFixed(1)} serves / bottle` : '—';
+            return `
+              <tr data-id="${ingredient.id}">
+                <td>
+                  <label class="sr-only" for="name-${ingredient.id}">Ingredient</label>
+                  <input id="name-${ingredient.id}" type="text" placeholder="Spirit or modifier" value="${escapeHtml(ingredient.name)}" data-field="name" />
+                  <p class="help-text">${servesLabel}</p>
+                </td>
+                <td>
+                  <input type="number" min="0" max="96" step="0.5" value="${ingredient.abv === '' ? '' : ingredient.abv}" data-field="abv" />
+                </td>
+                <td>
+                  <input type="number" min="1" step="10" value="${ingredient.bottleSize === '' ? '' : ingredient.bottleSize}" data-field="bottleSize" />
+                </td>
+                <td>
+                  <input type="number" min="0" step="0.1" value="${ingredient.bottleCost === '' ? '' : ingredient.bottleCost}" data-field="bottleCost" />
+                </td>
+                <td>
+                  <input type="number" min="0" step="1" value="${ingredient.pour === '' ? '' : ingredient.pour}" data-field="pour" />
+                </td>
+                <td class="numeric">£${formatCurrency(stats.costPerServe)}</td>
+                <td><button type="button" class="btn btn-ghost" data-action="remove" aria-label="Remove ingredient">×</button></td>
+              </tr>
+            `;
+          })
+          .join('');
+      }
+
+      function renderDilution() {
+        elements.dilutionButtons.forEach((button) => {
+          button.classList.toggle('is-active', button.dataset.dilutionMode === state.dilutionMode);
+        });
+        const percent = getDilutionPercent();
+        elements.dilutionSlider.value = state.dilutionMode === 'custom' ? state.customDilution : percent;
+        elements.dilutionSlider.disabled = state.dilutionMode !== 'custom';
+        elements.dilutionValue.textContent = `${percent.toFixed(0)}%`;
+      }
+
+      function renderMetrics() {
+        const metrics = calculateMetrics();
+        elements.costPerServe.textContent = formatCurrencyLabel(metrics.costPerServe);
+        elements.profitPerServe.textContent = metrics.actualGp == null ? '—' : formatCurrencyLabel(metrics.profitPerServe);
+        elements.actualGp.textContent = metrics.actualGp == null ? '—' : `${metrics.actualGp.toFixed(1)}%`;
+        if (metrics.actualGp == null) {
+          elements.gpNarrative.textContent = 'Enter a sell price to benchmark GP.';
+        } else if (!metrics.targetMargins.length) {
+          elements.gpNarrative.textContent = 'Actual GP set with no targets — add one to compare.';
+        } else {
+          const delta = metrics.actualGp - metrics.targetMargins[0];
+          const direction = delta >= 0 ? 'above' : 'below';
+          elements.gpNarrative.textContent = `Sitting ${Math.abs(delta).toFixed(1)}% ${direction} your first target.`;
+        }
+      }
+
+      function renderTargets() {
+        const metrics = calculateMetrics();
+        if (!metrics.targetMargins.length) {
+          elements.targetPriceList.innerHTML = '<li><span>No targets</span><strong>Set GP%</strong></li>';
+          return;
+        }
+        elements.targetPriceList.innerHTML = metrics.targetMargins
+          .map((gp) => {
+            const price = metrics.costPerServe / (1 - gp / 100 || 1);
+            return `<li><span>${gp}% GP</span><strong>£${formatCurrency(price)}</strong></li>`;
+          })
+          .join('');
+      }
+
+      function renderAbv() {
+        const metrics = calculateMetrics();
+        elements.finalAbv.textContent = `${metrics.finalAbv.toFixed(1)}%`;
+        elements.alcoholMl.textContent = `${metrics.pureAlcohol.toFixed(1)} ml`;
+        elements.baseVolume.textContent = `${metrics.preDilutionVolume.toFixed(1)} ml`;
+        elements.waterGain.textContent = `${metrics.waterGain.toFixed(1)} ml`;
+        elements.finalVolume.textContent = `${metrics.finalVolume.toFixed(1)} ml`;
+        elements.abvNote.textContent = metrics.preDilutionVolume > 0
+          ? `Method: ${state.dilutionMode === 'custom' ? 'Custom' : capitalize(state.dilutionMode)} · Dilution ${metrics.dilutionPercent.toFixed(0)}%`
+          : 'Add pours to calculate ABV.';
+      }
+
+      function renderBottleStats() {
+        const metrics = calculateMetrics();
+        if (!metrics.ingredientStats.length) {
+          elements.bottleStats.innerHTML = '<li>No ingredients added yet.</li>';
+          return;
+        }
+        elements.bottleStats.innerHTML = metrics.ingredientStats
+          .map((row) => `
+            <li>
+              <span>${escapeHtml(row.name || 'Unnamed')}</span>
+              <strong>${row.servesPerBottle ? `${row.servesPerBottle.toFixed(1)} serves` : '—'} · £${formatCurrency(row.costPerServe)} / serve</strong>
+            </li>
+          `)
+          .join('');
+      }
+
+      function calculateMetrics() {
+        const ingredientStats = [];
+        let costAccumulator = 0;
+        let pureAlcohol = 0;
+        let totalVolume = 0;
+
+        state.ingredients.forEach((ingredient) => {
+          const stats = computeIngredientStats(ingredient);
+          costAccumulator += stats.costPerServe;
+          pureAlcohol += stats.alcoholContribution;
+          totalVolume += stats.pour;
+          ingredientStats.push(stats);
+        });
+
+        const garnishCost = Number(state.garnishCost) || 0;
+        const costPerServe = costAccumulator + garnishCost;
+        const actualPrice = Number(state.actualPrice);
+        const hasPrice = Number.isFinite(actualPrice) && actualPrice > 0;
+        const profitPerServe = hasPrice ? actualPrice - costPerServe : 0;
+        const actualGp = hasPrice ? ((actualPrice - costPerServe) / actualPrice) * 100 : null;
+        const dilutionPercent = getDilutionPercent();
+        const waterGain = totalVolume * (dilutionPercent / 100);
+        const finalVolume = totalVolume + waterGain;
+        const finalAbv = finalVolume > 0 ? (pureAlcohol / finalVolume) * 100 : 0;
+
+        return {
+          ingredientStats,
+          costPerServe,
+          profitPerServe,
+          actualGp,
+          targetMargins: parseTargetMargins(),
+          pureAlcohol,
+          preDilutionVolume: totalVolume,
+          waterGain,
+          finalVolume,
+          finalAbv,
+          dilutionPercent
+        };
+      }
+
+      function computeIngredientStats(ingredient) {
+        const bottleSize = Number(ingredient.bottleSize) || 0;
+        const bottleCost = Number(ingredient.bottleCost) || 0;
+        const pour = Number(ingredient.pour) || 0;
+        const abv = Number(ingredient.abv) || 0;
+        const costPerMl = bottleSize > 0 ? bottleCost / bottleSize : 0;
+        const costPerServe = pour * costPerMl;
+        const servesPerBottle = pour > 0 ? bottleSize / pour : null;
+        const alcoholContribution = pour * (abv / 100);
+        return {
+          id: ingredient.id,
+          name: ingredient.name,
+          costPerServe,
+          servesPerBottle,
+          alcoholContribution,
+          pour
+        };
+      }
+
+      function parseTargetMargins() {
+        if (!state.targetMargins) return [];
+        return state.targetMargins
+          .split(',')
+          .map((value) => Number(value.trim()))
+          .filter((num) => Number.isFinite(num) && num > 10 && num < 95)
+          .slice(0, 4);
+      }
+
+      function getDilutionPercent() {
+        if (state.dilutionMode === 'custom') {
+          return Number(state.customDilution) || 0;
+        }
+        const preset = dilutionPresets[state.dilutionMode];
+        return preset ? preset.percent : 0;
+      }
+
+      function createIngredient(overrides = {}) {
+        return {
+          id: cryptoRandom(),
+          name: '',
+          abv: '',
+          bottleSize: '',
+          bottleCost: '',
+          pour: '',
+          ...overrides
+        };
+      }
+
+      function createBlankState() {
+        return {
+          cocktailName: '',
+          targetMargins: '70,75',
+          garnishCost: '',
+          actualPrice: '',
+          dilutionMode: 'stirred',
+          customDilution: 12,
+          ingredients: [createIngredient(), createIngredient()]
+        };
+      }
+
+      function createSampleState() {
+        return {
+          cocktailName: 'Signal Room Martini',
+          targetMargins: '72,78',
+          garnishCost: 0.45,
+          actualPrice: 15,
+          dilutionMode: 'stirred',
+          customDilution: 12,
+          ingredients: [
+            createIngredient({ name: 'Henley Small Batch Gin', abv: 43, bottleSize: 700, bottleCost: 33, pour: 40 }),
+            createIngredient({ name: 'Italicus Rosolio', abv: 20, bottleSize: 700, bottleCost: 27, pour: 10 }),
+            createIngredient({ name: 'Dry Vermouth', abv: 18, bottleSize: 1000, bottleCost: 16, pour: 15 }),
+            createIngredient({ name: 'Bergamot hydrosol', abv: 0, bottleSize: 500, bottleCost: 8, pour: 5 })
+          ]
+        };
+      }
+
+      function formatCurrency(value) {
+        if (!Number.isFinite(value)) return '0.00';
+        return value.toFixed(2);
+      }
+
+      function formatCurrencyLabel(value) {
+        if (!Number.isFinite(value)) return '£0.00';
+        const sign = value < 0 ? '-' : '';
+        return `${sign}£${formatCurrency(Math.abs(value))}`;
+      }
+
+      function escapeHtml(value = '') {
+        return value
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;');
+      }
+
+      function cryptoRandom() {
+        return Math.random().toString(36).slice(2, 10);
+      }
+
+      function capitalize(value) {
+        if (!value) return '';
+        return value.charAt(0).toUpperCase() + value.slice(1);
+      }
+    })();
+  </script>
+</body>
+</html>

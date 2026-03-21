@@ -3,7 +3,7 @@
 Hospitality Pro is Jordan Pitts' field-ready operating system for modern hospitality operators. It combines:
 
 1. **The AI Operations Toolkit for Hospitality** — a 9k-word playbook covering automations, department playbooks, and a 50+ prompt library.
-2. **Single-purpose AI/web tools** — 10 premium, self-hosted utilities for pricing, procurement, reviews, rotas, SOPs, allergen compliance, and more.
+2. **Single-purpose AI/web tools** — 11 premium, self-hosted utilities for pricing, procurement, reviews, rotas, SOPs, allergen compliance, and more.
 
 All tooling is static HTML/CSS/JS (file:// friendly) with per-tool OpenRouter API key inputs when LLM access is required. No vendor lock-in.
 
@@ -17,6 +17,7 @@ guide.md                  → full playbook
   review-responder/       → AI Review Responder
   procurement-generator/  → Smart Procurement Order Generator
   pre-arrival-email/      → Pre-Arrival Email Sequence Builder
+  cocktail-calculator/    → Cocktail Profit & ABV Console
   menu-engineering/       → Menu Engineering Analyzer
   rota-optimizer/         → AI Rota Optimizer
   financial-narrative/    → Weekly Financial Narrative Generator
