@@ -1,0 +1,1714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Martyn's Law & Venue Safety Compliance Hub · Hospitality Pro</title>
+  <link rel="stylesheet" href="/assets/styles/system.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Core Layout ──────────────────────────────────────── */
+    .page-shell { max-width: 900px; margin: 0 auto; padding: var(--space-md); }
+    .back-link { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--color-text-muted); font-size: 0.82rem; text-decoration: none; transition: color var(--transition-fast); margin-bottom: var(--space-md); }
+    .back-link:hover { color: var(--color-gold); }
+
+    /* ── Page Header ──────────────────────────────────────── */
+    .page-header { text-align: center; padding: var(--space-lg) 0 var(--space-md); }
+    .page-header .eyebrow { color: var(--color-text-muted); font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.5rem; }
+    .page-header h1 { font-family: var(--font-serif); font-size: clamp(1.7rem, 4.5vw, 2.6rem); margin: 0 0 0.5rem; line-height: 1.15; }
+    .page-header .subtitle { color: var(--color-text-muted); font-size: 0.9rem; margin: 0 0 1rem; }
+    .law-badge { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(246,124,124,0.1); border: 1px solid rgba(246,124,124,0.3); border-radius: 6px; padding: 0.5rem 1rem; font-size: 0.8rem; font-weight: 600; color: #f67c7c; letter-spacing: 0.04em; }
+    .law-badge .badge-icon { font-size: 1rem; }
+
+    /* ── Legal Notice ─────────────────────────────────────── */
+    .legal-notice { background: rgba(246,124,124,0.06); border: 1px solid rgba(246,124,124,0.2); border-left: 4px solid #f67c7c; border-radius: var(--radius-md); padding: var(--space-md); margin-bottom: var(--space-lg); }
+    .legal-notice-title { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #f67c7c; margin-bottom: 0.5rem; }
+    .legal-notice p { font-size: 0.84rem; color: var(--color-text-muted); margin: 0; line-height: 1.6; }
+    .legal-notice strong { color: var(--color-text); }
+
+    /* ── Tabs ─────────────────────────────────────────────── */
+    .tabs { display: flex; border-bottom: 1px solid var(--color-border); margin-bottom: var(--space-lg); overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; gap: 0; }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab-btn { flex-shrink: 0; padding: 0.85rem 1rem; background: none; border: none; cursor: pointer; color: var(--color-text-muted); font-size: 0.8rem; font-family: var(--font-sans); font-weight: 600; border-bottom: 2px solid transparent; transition: all var(--transition-base); white-space: nowrap; letter-spacing: 0.02em; }
+    .tab-btn:hover { color: var(--color-text); }
+    .tab-btn.active { color: var(--color-gold); border-bottom-color: var(--color-gold); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── Glass Cards ──────────────────────────────────────── */
+    .glass-card { background: rgba(255,255,255,0.035); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--space-md); backdrop-filter: blur(var(--glass-blur)); -webkit-backdrop-filter: blur(var(--glass-blur)); margin-bottom: var(--space-md); }
+    .section-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--color-text-muted); margin: 0 0 var(--space-sm); font-weight: 600; }
+    .stack { display: flex; flex-direction: column; gap: var(--space-md); }
+
+    /* ── Dashboard ────────────────────────────────────────── */
+    .compliance-score-panel { background: rgba(255,255,255,0.04); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--space-lg); text-align: center; margin-bottom: var(--space-md); position: relative; overflow: hidden; }
+    .compliance-score-panel::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #f67c7c, #f0a832, #4caf50); }
+    .score-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--color-text-muted); margin-bottom: 0.5rem; font-weight: 600; }
+    .score-value { font-family: var(--font-mono); font-size: 4rem; font-weight: 700; line-height: 1; }
+    .score-value.green { color: #4caf50; }
+    .score-value.amber { color: #f0a832; }
+    .score-value.red { color: #f67c7c; }
+    .score-status { font-size: 1rem; font-weight: 600; margin-top: 0.5rem; }
+    .score-sub { font-size: 0.82rem; color: var(--color-text-muted); margin-top: 0.25rem; }
+
+    .status-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: var(--space-sm); margin-bottom: var(--space-md); }
+    .status-card { background: rgba(255,255,255,0.04); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-sm); text-align: center; position: relative; overflow: hidden; }
+    .status-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+    .status-card.green::before { background: #4caf50; }
+    .status-card.amber::before { background: #f0a832; }
+    .status-card.red::before { background: #f67c7c; }
+    .status-card.grey::before { background: var(--color-border); }
+    .s-label { font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-muted); margin-bottom: 0.25rem; font-weight: 600; }
+    .s-value { font-size: 1.5rem; font-weight: 700; font-family: var(--font-mono); line-height: 1; }
+    .status-card.green .s-value { color: #4caf50; }
+    .status-card.amber .s-value { color: #f0a832; }
+    .status-card.red .s-value { color: #f67c7c; }
+    .status-card.grey .s-value { color: var(--color-text-muted); }
+    .s-sub { font-size: 0.65rem; color: var(--color-text-muted); margin-top: 0.2rem; }
+
+    .outstanding-list { display: flex; flex-direction: column; gap: 0.5rem; }
+    .outstanding-item { display: flex; align-items: flex-start; gap: 0.75rem; background: rgba(246,124,124,0.05); border: 1px solid rgba(246,124,124,0.15); border-radius: var(--radius-sm); padding: 0.65rem 0.85rem; }
+    .outstanding-item.amber { background: rgba(240,168,50,0.05); border-color: rgba(240,168,50,0.15); }
+    .outstanding-dot { width: 8px; height: 8px; border-radius: 50%; background: #f67c7c; flex-shrink: 0; margin-top: 0.35rem; }
+    .outstanding-item.amber .outstanding-dot { background: #f0a832; }
+    .outstanding-text { font-size: 0.84rem; flex: 1; }
+    .outstanding-text strong { font-weight: 600; display: block; margin-bottom: 0.1rem; }
+    .outstanding-text span { color: var(--color-text-muted); font-size: 0.77rem; }
+    .all-clear { text-align: center; padding: var(--space-lg); color: #4caf50; }
+    .all-clear .icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
+    .all-clear p { font-size: 0.9rem; margin: 0; }
+
+    /* ── Risk Assessment ──────────────────────────────────── */
+    .ra-step { background: rgba(255,255,255,0.035); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-md); margin-bottom: var(--space-sm); }
+    .ra-step-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: var(--space-sm); }
+    .ra-step-num { width: 32px; height: 32px; border-radius: 50%; background: rgba(243,201,139,0.15); border: 1px solid rgba(243,201,139,0.3); color: var(--color-gold); font-size: 0.8rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-family: var(--font-mono); }
+    .ra-step-title { font-size: 0.95rem; font-weight: 600; }
+    .ra-step-desc { font-size: 0.78rem; color: var(--color-text-muted); margin-bottom: var(--space-sm); }
+
+    .checklist { display: flex; flex-direction: column; gap: 0.4rem; }
+    .check-item { display: flex; align-items: flex-start; gap: 0.65rem; cursor: pointer; padding: 0.5rem 0.65rem; border-radius: var(--radius-sm); transition: background var(--transition-fast); }
+    .check-item:hover { background: rgba(255,255,255,0.03); }
+    .check-box { width: 18px; height: 18px; border-radius: 4px; border: 1.5px solid var(--color-border); background: transparent; flex-shrink: 0; margin-top: 0.15rem; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; transition: all var(--transition-fast); cursor: pointer; }
+    .check-box.checked { background: #4caf50; border-color: #4caf50; color: white; }
+    .check-text { font-size: 0.86rem; line-height: 1.45; flex: 1; }
+    .check-text.done { color: var(--color-text-muted); text-decoration: line-through; }
+
+    /* ── Emergency Procedures ─────────────────────────────── */
+    .procedure-card { background: rgba(255,255,255,0.035); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-md); margin-bottom: var(--space-sm); }
+    .procedure-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-sm); gap: 0.5rem; }
+    .procedure-title-row { display: flex; align-items: center; gap: 0.65rem; }
+    .threat-icon { font-size: 1.4rem; }
+    .procedure-title { font-size: 0.95rem; font-weight: 700; letter-spacing: 0.01em; }
+    .procedure-subtitle { font-size: 0.75rem; color: var(--color-text-muted); margin-top: 0.1rem; }
+    .severity-badge { font-size: 0.65rem; font-weight: 700; padding: 0.18rem 0.55rem; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.06em; flex-shrink: 0; }
+    .severity-badge.critical { background: rgba(246,124,124,0.12); color: #f67c7c; border: 1px solid rgba(246,124,124,0.25); }
+    .severity-badge.high { background: rgba(240,168,50,0.12); color: #f0a832; border: 1px solid rgba(240,168,50,0.25); }
+    .procedure-body { font-size: 0.86rem; color: var(--color-text-muted); line-height: 1.6; }
+    .procedure-steps { list-style: none; padding: 0; margin: 0.75rem 0 0; display: flex; flex-direction: column; gap: 0.4rem; }
+    .procedure-steps li { display: flex; gap: 0.65rem; align-items: flex-start; }
+    .step-num-badge { font-size: 0.7rem; font-weight: 700; font-family: var(--font-mono); color: var(--color-gold); background: rgba(243,201,139,0.1); border: 1px solid rgba(243,201,139,0.2); width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 0.05rem; }
+    .procedure-edit-area { margin-top: 0.75rem; }
+
+    /* ── Training Records ─────────────────────────────────── */
+    .training-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: var(--space-sm); margin-bottom: var(--space-md); }
+    .training-stat { background: rgba(255,255,255,0.04); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 0.85rem var(--space-sm); text-align: center; }
+    .t-val { font-family: var(--font-mono); font-size: 2rem; font-weight: 700; line-height: 1; }
+    .t-val.green { color: #4caf50; }
+    .t-val.amber { color: #f0a832; }
+    .t-val.red { color: #f67c7c; }
+    .t-lbl { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-muted); margin-top: 0.2rem; font-weight: 600; }
+
+    .staff-table-wrap { overflow-x: auto; }
+    .staff-table { width: 100%; border-collapse: collapse; font-size: 0.84rem; min-width: 600px; }
+    .staff-table th { font-size: 0.63rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-muted); padding: 0.55rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); font-weight: 600; }
+    .staff-table td { padding: 0.7rem 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: middle; }
+    .staff-table tr:last-child td { border-bottom: none; }
+    .staff-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .training-pill { display: inline-block; padding: 0.15rem 0.55rem; border-radius: 20px; font-size: 0.67rem; font-weight: 700; letter-spacing: 0.04em; }
+    .training-pill.current { background: rgba(76,175,80,0.12); color: #81c784; border: 1px solid rgba(76,175,80,0.25); }
+    .training-pill.expiring { background: rgba(240,168,50,0.12); color: #f0a832; border: 1px solid rgba(240,168,50,0.25); }
+    .training-pill.overdue { background: rgba(246,124,124,0.12); color: #f67c7c; border: 1px solid rgba(246,124,124,0.25); }
+    .training-pill.none { background: rgba(255,255,255,0.06); color: var(--color-text-muted); border: 1px solid var(--color-border); }
+
+    /* ── Incident Log ─────────────────────────────────────── */
+    .incident-card { background: rgba(255,255,255,0.035); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-sm) var(--space-md); border-left: 3px solid; margin-bottom: 0.5rem; }
+    .incident-card.serious { border-left-color: #f67c7c; }
+    .incident-card.minor { border-left-color: #f0a832; }
+    .incident-card.precautionary { border-left-color: #81c784; }
+    .incident-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem; margin-bottom: 0.35rem; }
+    .incident-title { font-weight: 600; font-size: 0.9rem; }
+    .incident-date { font-size: 0.72rem; color: var(--color-text-muted); font-family: var(--font-mono); flex-shrink: 0; }
+    .incident-meta { font-size: 0.77rem; color: var(--color-text-muted); }
+    .incident-actions-row { display: flex; gap: 0.4rem; margin-top: 0.5rem; }
+
+    /* ── Forms ────────────────────────────────────────────── */
+    .field-group { display: flex; flex-direction: column; gap: 0.3rem; }
+    .field-label { font-size: 0.79rem; color: var(--color-text-muted); font-weight: 500; }
+    .field-hint { font-size: 0.72rem; color: var(--color-text-muted); opacity: 0.7; margin-top: 0.15rem; }
+    input[type="text"], input[type="number"], input[type="date"], input[type="email"], input[type="tel"], select, textarea {
+      width: 100%; padding: 0.65rem 0.85rem;
+      background: rgba(255,255,255,0.06); border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm); color: var(--color-text); font-family: var(--font-sans); font-size: 0.9rem;
+      transition: border-color var(--transition-fast); box-sizing: border-box;
+    }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: rgba(243,201,139,0.45); }
+    input::placeholder, textarea::placeholder { color: var(--color-text-muted); opacity: 0.55; }
+    textarea { resize: vertical; min-height: 80px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-sm); }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--space-sm); }
+    @media (max-width: 580px) { .grid-3 { grid-template-columns: 1fr 1fr; } .grid-2 { grid-template-columns: 1fr; } }
+    @media (max-width: 420px) { .grid-3 { grid-template-columns: 1fr; } }
+
+    /* ── Buttons ──────────────────────────────────────────── */
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; padding: 0.7rem 1.2rem; border-radius: var(--radius-sm); font-family: var(--font-sans); font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: all var(--transition-fast); border: none; text-decoration: none; }
+    .btn-primary { background: var(--color-gold); color: #0a0a0a; }
+    .btn-primary:hover { filter: brightness(1.1); }
+    .btn-ghost { background: rgba(255,255,255,0.06); border: 1px solid var(--color-border); color: var(--color-text); }
+    .btn-ghost:hover { background: rgba(255,255,255,0.1); }
+    .btn-danger { background: rgba(246,124,124,0.1); border: 1px solid rgba(246,124,124,0.25); color: #f67c7c; }
+    .btn-danger:hover { background: rgba(246,124,124,0.18); }
+    .btn-success { background: rgba(76,175,80,0.12); border: 1px solid rgba(76,175,80,0.28); color: #81c784; }
+    .btn-success:hover { background: rgba(76,175,80,0.2); }
+    .btn-full { width: 100%; }
+    .btn-sm { padding: 0.35rem 0.7rem; font-size: 0.76rem; }
+    .btn-row { display: flex; gap: 0.65rem; flex-wrap: wrap; }
+
+    /* ── Section Titles ───────────────────────────────────── */
+    .section-title { font-family: var(--font-serif); font-size: 1.2rem; margin: 0 0 0.25rem; }
+    .section-desc { font-size: 0.82rem; color: var(--color-text-muted); margin: 0 0 var(--space-md); }
+    .divider { border: none; border-top: 1px solid var(--color-border); margin: var(--space-md) 0; }
+
+    /* ── Empty State ──────────────────────────────────────── */
+    .empty-state { text-align: center; padding: var(--space-lg) var(--space-md); color: var(--color-text-muted); font-size: 0.88rem; }
+    .empty-state .empty-icon { font-size: 2rem; margin-bottom: 0.5rem; display: block; }
+
+    /* ── Export ───────────────────────────────────────────── */
+    .export-panel { background: rgba(243,201,139,0.06); border: 1px solid rgba(243,201,139,0.2); border-radius: var(--radius-lg); padding: var(--space-md); }
+    .export-panel h3 { font-family: var(--font-serif); font-size: 1.05rem; margin: 0 0 0.4rem; }
+    .export-panel p { font-size: 0.82rem; color: var(--color-text-muted); margin: 0 0 var(--space-sm); }
+    .export-checklist { display: flex; flex-direction: column; gap: 0.3rem; margin-bottom: var(--space-sm); }
+    .export-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.82rem; }
+    .export-item .tick { color: #4caf50; }
+    .export-item .cross { color: #f67c7c; }
+
+    /* ── Tier Badge ───────────────────────────────────────── */
+    .tier-badge { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.3rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; }
+    .tier-badge.standard { background: rgba(3,169,244,0.1); color: #81d4fa; border: 1px solid rgba(3,169,244,0.25); }
+    .tier-badge.enhanced { background: rgba(147,112,219,0.1); color: #ce93d8; border: 1px solid rgba(147,112,219,0.25); }
+
+    /* ── Venue Profile ────────────────────────────────────── */
+    .venue-profile-bar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; background: rgba(255,255,255,0.04); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 0.85rem var(--space-md); margin-bottom: var(--space-md); }
+    .venue-name-display { font-weight: 700; font-size: 1rem; }
+    .venue-meta-display { font-size: 0.78rem; color: var(--color-text-muted); margin-top: 0.15rem; }
+    .venue-profile-actions { display: flex; align-items: center; gap: 0.5rem; }
+
+    /* ── Progress Bar ─────────────────────────────────────── */
+    .progress-bar-wrap { margin-top: 0.75rem; }
+    .progress-track { height: 6px; background: rgba(255,255,255,0.08); border-radius: 3px; overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 3px; transition: width 0.5s ease; }
+    .progress-fill.green { background: #4caf50; }
+    .progress-fill.amber { background: #f0a832; }
+    .progress-fill.red { background: #f67c7c; }
+    .progress-label { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--color-text-muted); margin-bottom: 0.3rem; }
+
+    /* ── Modal ────────────────────────────────────────────── */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); z-index: 1000; display: none; align-items: center; justify-content: center; padding: var(--space-md); }
+    .modal-overlay.open { display: flex; }
+    .modal-box { background: var(--color-surface, #111); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--space-lg); max-width: 520px; width: 100%; max-height: 90vh; overflow-y: auto; }
+    .modal-title { font-family: var(--font-serif); font-size: 1.2rem; margin: 0 0 0.4rem; }
+    .modal-subtitle { font-size: 0.82rem; color: var(--color-text-muted); margin: 0 0 var(--space-md); }
+    .modal-actions { display: flex; gap: 0.65rem; margin-top: var(--space-md); flex-wrap: wrap; }
+
+    /* ── Print ────────────────────────────────────────────── */
+    @media print {
+      body { background: white !important; color: black !important; }
+      .no-print, .tabs, .back-link, nav { display: none !important; }
+      .glass-card, .ra-step, .procedure-card, .incident-card { border: 1px solid #ccc !important; background: white !important; page-break-inside: avoid; }
+      .tab-panel { display: block !important; }
+    }
+
+    /* ── Responsive ───────────────────────────────────────── */
+    @media (max-width: 600px) {
+      .page-shell { padding: var(--space-sm); }
+      .glass-card { padding: var(--space-sm); }
+      .tab-btn { padding: 0.7rem 0.65rem; font-size: 0.73rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <a class="back-link no-print" href="/">← Hospitality Pro</a>
+
+    <header class="page-header">
+      <p class="eyebrow">Terrorism (Protection of Premises) Act 2025</p>
+      <h1>Martyn's Law<br>Venue Safety Compliance Hub</h1>
+      <p class="subtitle">Counter-terrorism risk assessment, staff training records, and emergency procedures — all in one place.</p>
+      <div class="law-badge">
+        <span class="badge-icon">⚖️</span>
+        UK Law · Royal Assent April 2025 · Criminal liability for non-compliance
+      </div>
+    </header>
+
+    <div class="legal-notice no-print">
+      <div class="legal-notice-title">⚠ Legal Obligation</div>
+      <p>Martyn's Law — named after <strong>Martyn Hett</strong>, killed in the Manchester Arena bombing (2017) — is now UK law. Every venue must conduct formal counter-terrorism risk assessments, train staff, and maintain documented procedures. <strong>Failure to comply is a criminal offence.</strong> This tool helps you build and maintain that compliance record. It does not constitute legal advice — consult a security professional or your local Counter Terrorism Security Advisor (CTSA) for complex situations.</p>
+    </div>
+
+    <!-- Venue Profile Bar -->
+    <div class="venue-profile-bar" id="venueBar">
+      <div>
+        <div class="venue-name-display" id="venueNameDisplay">No venue configured</div>
+        <div class="venue-meta-display" id="venueMetaDisplay">Set up your venue to begin →</div>
+      </div>
+      <div class="venue-profile-actions">
+        <span class="tier-badge standard" id="tierBadge">Standard Tier</span>
+        <button class="btn btn-ghost btn-sm no-print" onclick="openVenueModal()">Edit Venue</button>
+      </div>
+    </div>
+
+    <nav class="tabs no-print" role="tablist">
+      <button class="tab-btn active" role="tab" onclick="showTab('dashboard', this)">📊 Dashboard</button>
+      <button class="tab-btn" role="tab" onclick="showTab('risk', this)">🔍 Risk Assessment</button>
+      <button class="tab-btn" role="tab" onclick="showTab('procedures', this)">🚨 Emergency Procedures</button>
+      <button class="tab-btn" role="tab" onclick="showTab('training', this)">🎓 Training Records</button>
+      <button class="tab-btn" role="tab" onclick="showTab('incidents', this)">📋 Incident Log</button>
+      <button class="tab-btn" role="tab" onclick="showTab('export', this)">📄 Export</button>
+    </nav>
+
+    <!-- ═══════════════════════════════════════════════════════
+         TAB: DASHBOARD
+    ════════════════════════════════════════════════════════ -->
+    <div class="tab-panel active" id="tab-dashboard">
+      <div class="compliance-score-panel">
+        <div class="score-label">Overall Compliance Score</div>
+        <div class="score-value" id="overallScore">—</div>
+        <div class="score-status" id="overallStatus">Set up your venue to begin</div>
+        <div class="score-sub" id="overallSub">Complete all sections to achieve full compliance</div>
+        <div class="progress-bar-wrap">
+          <div class="progress-label"><span>Compliance progress</span><span id="progressPct">0%</span></div>
+          <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+        </div>
+      </div>
+
+      <div class="status-grid" id="statusGrid">
+        <div class="status-card grey">
+          <div class="s-label">Risk Assessment</div>
+          <div class="s-value" id="dashRisk">—</div>
+          <div class="s-sub" id="dashRiskSub">Not started</div>
+        </div>
+        <div class="status-card grey">
+          <div class="s-label">Procedures</div>
+          <div class="s-value" id="dashProc">—</div>
+          <div class="s-sub" id="dashProcSub">Not started</div>
+        </div>
+        <div class="status-card grey">
+          <div class="s-label">Staff Trained</div>
+          <div class="s-value" id="dashTrain">—</div>
+          <div class="s-sub" id="dashTrainSub">No staff logged</div>
+        </div>
+        <div class="status-card grey">
+          <div class="s-label">Incidents YTD</div>
+          <div class="s-value" id="dashInc">0</div>
+          <div class="s-sub" id="dashIncSub">All resolved</div>
+        </div>
+      </div>
+
+      <div class="glass-card">
+        <p class="section-label">Outstanding Actions</p>
+        <div id="outstandingList">
+          <div class="outstanding-item">
+            <span class="outstanding-dot"></span>
+            <div class="outstanding-text">
+              <strong>Venue not configured</strong>
+              <span>Go to Edit Venue to set up your venue profile and tier classification.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-card">
+        <p class="section-label">Martyn's Law Quick Reference</p>
+        <div class="stack">
+          <div>
+            <p style="font-size:0.84rem;color:var(--color-text-muted);margin:0 0 0.75rem;">The Act creates two tiers based on venue capacity. Know your tier — the obligations differ significantly.</p>
+            <div class="grid-2">
+              <div style="background:rgba(3,169,244,0.06);border:1px solid rgba(3,169,244,0.2);border-radius:var(--radius-md);padding:var(--space-sm);">
+                <div class="tier-badge standard" style="margin-bottom:0.5rem;">Standard Tier</div>
+                <p style="font-size:0.8rem;color:var(--color-text-muted);margin:0;line-height:1.5;">Venues with capacity <strong style="color:var(--color-text);">200–799 people</strong>. Must implement basic security measures and train staff in Counter-Terrorism Awareness.</p>
+              </div>
+              <div style="background:rgba(147,112,219,0.06);border:1px solid rgba(147,112,219,0.2);border-radius:var(--radius-md);padding:var(--space-sm);">
+                <div class="tier-badge enhanced" style="margin-bottom:0.5rem;">Enhanced Tier</div>
+                <p style="font-size:0.8rem;color:var(--color-text-muted);margin:0;line-height:1.5;">Venues with capacity <strong style="color:var(--color-text);">800+ people</strong>. Full documented risk assessment, security plan, and appointed Security Manager required.</p>
+              </div>
+            </div>
+          </div>
+          <div>
+            <p style="font-size:0.79rem;color:var(--color-text-muted);margin:0;"><strong style="color:var(--color-text);">Key contacts:</strong> Your local Counter Terrorism Security Advisor (CTSA) — free, confidential advice from police. ACT Awareness e-learning via <a href="https://www.gov.uk/government/collections/counter-terrorism-protect" target="_blank" rel="noopener" style="color:var(--color-gold);">gov.uk/protect</a>. ProtectUK platform for training resources.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         TAB: RISK ASSESSMENT
+    ════════════════════════════════════════════════════════ -->
+    <div class="tab-panel" id="tab-risk">
+      <h2 class="section-title">Counter-Terrorism Risk Assessment</h2>
+      <p class="section-desc">Work through each section systematically. Your answers are saved automatically and can be exported as a formal risk assessment document.</p>
+
+      <!-- Step 1: Venue Overview -->
+      <div class="ra-step">
+        <div class="ra-step-header">
+          <div class="ra-step-num">1</div>
+          <div>
+            <div class="ra-step-title">Venue Overview & Crowd Profile</div>
+          </div>
+        </div>
+        <p class="ra-step-desc">Establish the baseline — who visits, when, and in what numbers. This defines your threat profile.</p>
+        <div class="stack">
+          <div class="grid-2">
+            <div class="field-group">
+              <label class="field-label">Maximum Capacity</label>
+              <input type="number" id="ra_capacity" placeholder="e.g. 350" oninput="saveRA()" />
+            </div>
+            <div class="field-group">
+              <label class="field-label">Typical Footfall (per event/day)</label>
+              <input type="number" id="ra_footfall" placeholder="e.g. 180" oninput="saveRA()" />
+            </div>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Venue Type & Events Hosted</label>
+            <textarea id="ra_venueType" placeholder="e.g. Cocktail bar and private event venue. Regular ticketed events, private hire, wedding receptions. Peak evenings Fri/Sat with 200–280 covers." oninput="saveRA()"></textarea>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Visitor Demographics & Vulnerabilities</label>
+            <textarea id="ra_demographics" placeholder="e.g. Adults 21–60. Occasional weddings with elderly guests and children. No regular vulnerable adult events." oninput="saveRA()"></textarea>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Peak Times & High-Risk Periods</label>
+            <textarea id="ra_peakTimes" placeholder="e.g. Friday & Saturday 20:00–02:00. New Year's Eve, Valentine's Day, bank holiday weekends. Private hire events." oninput="saveRA()"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: Entry/Exit -->
+      <div class="ra-step">
+        <div class="ra-step-header">
+          <div class="ra-step-num">2</div>
+          <div><div class="ra-step-title">Entry & Exit Points</div></div>
+        </div>
+        <p class="ra-step-desc">Document all ways people can enter or exit the venue. Include service entrances, fire exits, and any access routes that may be exploited.</p>
+        <div class="stack">
+          <div class="field-group">
+            <label class="field-label">Main Public Entrance(s)</label>
+            <textarea id="ra_mainEntrance" placeholder="e.g. Single main entrance on High Street. Double doors, no airlock. Covered by CCTV camera 1. Door staff on Fri/Sat evenings." oninput="saveRA()"></textarea>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Secondary / Staff / Service Entrances</label>
+            <textarea id="ra_secondaryEntrance" placeholder="e.g. Rear service entrance — side street access. Kept locked, key-coded. CCTV camera 4. Used for deliveries 08:00–12:00 only." oninput="saveRA()"></textarea>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Fire Exits</label>
+            <textarea id="ra_fireExits" placeholder="e.g. Two fire exits — rear of main bar (opens to car park) and kitchen corridor (opens to service alley). Push bars, alarmed, no external handles." oninput="saveRA()"></textarea>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Access Control Measures in Place</label>
+            <textarea id="ra_accessControl" placeholder="e.g. ID checks on Fri/Sat via SIA door staff. No public access after 23:00 without pre-booking. Rear entrance on keypad lock." oninput="saveRA()"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3: Vulnerable Areas -->
+      <div class="ra-step">
+        <div class="ra-step-header">
+          <div class="ra-step-num">3</div>
+          <div><div class="ra-step-title">Vulnerable Areas & Crowding Points</div></div>
+        </div>
+        <p class="ra-step-desc">Identify areas that could be targeted or become dangerous in an emergency. Think about choke points, queuing areas, and places where crowds gather.</p>
+        <div class="stack">
+          <div class="field-group">
+            <label class="field-label">Crowding / Queuing Zones</label>
+            <textarea id="ra_crowding" placeholder="e.g. Main bar area (standing capacity 80). External queue forms on High Street pavement at peak times, unprotected from road." oninput="saveRA()"></textarea>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Areas Concealing Suspicious Objects (unattended bags risk)</label>
+            <textarea id="ra_concealAreas" placeholder="e.g. Under seating booths, behind DJ booth, large plant display near entrance, coat rack area in corridor." oninput="saveRA()"></textarea>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Infrastructure / Utility Vulnerabilities</label>
+            <textarea id="ra_utilities" placeholder="e.g. Gas meter in unlocked external box on alley. Electrical distribution board in accessible store cupboard. Server room unlocked." oninput="saveRA()"></textarea>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Vehicle Access Points (hostile vehicle risk)</label>
+            <textarea id="ra_vehicle" placeholder="e.g. Main entrance directly faces road — no bollards or barriers. Car park entrance 20m from main door. Service road at rear has no vehicle barriers." oninput="saveRA()"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 4: Security Measures -->
+      <div class="ra-step">
+        <div class="ra-step-header">
+          <div class="ra-step-num">4</div>
+          <div><div class="ra-step-title">Current Security Measures</div></div>
+        </div>
+        <p class="ra-step-desc">Document what is already in place. Honest assessment — gaps identified here become your action plan.</p>
+        <div class="checklist" id="securityChecklist">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+
+      <!-- Step 5: Threat Assessment -->
+      <div class="ra-step">
+        <div class="ra-step-header">
+          <div class="ra-step-num">5</div>
+          <div><div class="ra-step-title">Threat & Risk Assessment</div></div>
+        </div>
+        <p class="ra-step-desc">Based on your venue type, location, and profile — what are the most likely threats? Rate likelihood and impact honestly.</p>
+        <div class="stack">
+          <div class="field-group">
+            <label class="field-label">Threat Assessment Narrative</label>
+            <textarea id="ra_threats" rows="5" placeholder="e.g. Given our central location and late-night operation, the primary threats assessed are: (1) Knife attack by intoxicated individual — Likelihood: Moderate, Impact: High. (2) Suspicious package — Likelihood: Low, Impact: High. (3) Hostile vehicle — Likelihood: Low, Impact: Very High — no vehicle barriers currently in place. (4) Marauding Terrorist Attack (MTA) — Likelihood: Very Low, Impact: Catastrophic. Current mitigations: SIA door staff Fri/Sat, CCTV coverage, all staff trained Run-Hide-Tell." oninput="saveRA()"></textarea>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Identified Gaps & Required Actions</label>
+            <textarea id="ra_gaps" rows="4" placeholder="e.g. 1. No hostile vehicle mitigation — explore planters/bollards for front entrance. 2. Gas meter box requires padlock. 3. Store cupboard with electrical board to be locked at all times. 4. External queue management procedure needed for peak nights." oninput="saveRA()"></textarea>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Assessment Completed By</label>
+            <input type="text" id="ra_assessor" placeholder="Full name and role" oninput="saveRA()" />
+          </div>
+          <div class="field-group">
+            <label class="field-label">Date of Assessment</label>
+            <input type="date" id="ra_date" oninput="saveRA()" />
+          </div>
+          <div class="field-group">
+            <label class="field-label">Next Review Date</label>
+            <input type="date" id="ra_reviewDate" oninput="saveRA()" />
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="showTab('procedures', document.querySelectorAll('.tab-btn')[2])">Next: Emergency Procedures →</button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         TAB: EMERGENCY PROCEDURES
+    ════════════════════════════════════════════════════════ -->
+    <div class="tab-panel" id="tab-procedures">
+      <h2 class="section-title">Emergency Procedures</h2>
+      <p class="section-desc">Venue-specific action cards for each threat scenario. Customise with your venue layout, contact details, and specific protocols. These can be printed and posted in staff areas.</p>
+
+      <div id="proceduresList">
+        <!-- Rendered by JS -->
+      </div>
+
+      <div class="glass-card">
+        <p class="section-label">Key Contacts</p>
+        <div class="stack">
+          <div class="grid-2">
+            <div class="field-group">
+              <label class="field-label">Police Non-Emergency</label>
+              <input type="tel" id="proc_police" value="101" oninput="saveProcs()" />
+            </div>
+            <div class="field-group">
+              <label class="field-label">Manager On Duty (mobile)</label>
+              <input type="tel" id="proc_manager" placeholder="07xxx xxxxxx" oninput="saveProcs()" />
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="field-group">
+              <label class="field-label">Local CTSA Contact</label>
+              <input type="text" id="proc_ctsa" placeholder="Contact via local police" oninput="saveProcs()" />
+            </div>
+            <div class="field-group">
+              <label class="field-label">Building/Property Owner</label>
+              <input type="tel" id="proc_landlord" placeholder="Name & number" oninput="saveProcs()" />
+            </div>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Assembly Point(s)</label>
+            <input type="text" id="proc_assembly" placeholder="e.g. Car park to rear, minimum 50m from building. Secondary: Church Street corner." oninput="saveProcs()" />
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-ghost no-print" onclick="window.print()">🖨 Print Procedures</button>
+        <button class="btn btn-primary" onclick="showTab('training', document.querySelectorAll('.tab-btn')[3])">Next: Training Records →</button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         TAB: TRAINING RECORDS
+    ════════════════════════════════════════════════════════ -->
+    <div class="tab-panel" id="tab-training">
+      <h2 class="section-title">Staff Training Records</h2>
+      <p class="section-desc">Track counter-terrorism awareness training for every team member. Training certificates must be retained and renewed every 3 years (ACT Awareness standard).</p>
+
+      <div class="training-summary">
+        <div class="training-stat">
+          <div class="t-val green" id="trainTotal">0</div>
+          <div class="t-lbl">Total Staff</div>
+        </div>
+        <div class="training-stat">
+          <div class="t-val green" id="trainCurrent">0</div>
+          <div class="t-lbl">Training Current</div>
+        </div>
+        <div class="training-stat">
+          <div class="t-val amber" id="trainExpiring">0</div>
+          <div class="t-lbl">Expiring Soon</div>
+        </div>
+        <div class="training-stat">
+          <div class="t-val red" id="trainOverdue">0</div>
+          <div class="t-lbl">Overdue / None</div>
+        </div>
+      </div>
+
+      <div class="glass-card">
+        <p class="section-label">Add / Update Staff Member</p>
+        <div class="stack">
+          <div class="grid-2">
+            <div class="field-group">
+              <label class="field-label">Full Name</label>
+              <input type="text" id="tr_name" placeholder="e.g. Sarah Mitchell" />
+            </div>
+            <div class="field-group">
+              <label class="field-label">Role</label>
+              <input type="text" id="tr_role" placeholder="e.g. Bar Manager" />
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="field-group">
+              <label class="field-label">Training Type</label>
+              <select id="tr_type">
+                <option value="">Select training...</option>
+                <option value="ACT Awareness e-Learning">ACT Awareness e-Learning (gov.uk)</option>
+                <option value="Run Hide Tell">Run Hide Tell Briefing</option>
+                <option value="ACT Counter Terrorism Awareness">ACT Counter Terrorism Awareness</option>
+                <option value="Suspicious Package Awareness">Suspicious Package Awareness</option>
+                <option value="Hostile Vehicle Awareness">Hostile Vehicle Awareness</option>
+                <option value="Counter Terrorism Security Advisor Briefing">CTSA Briefing</option>
+                <option value="ProtectUK Training">ProtectUK Training</option>
+                <option value="Bespoke Security Training">Bespoke Security Training</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label class="field-label">Date Trained</label>
+              <input type="date" id="tr_date" />
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="field-group">
+              <label class="field-label">Trainer / Provider</label>
+              <input type="text" id="tr_trainer" placeholder="e.g. ACT e-Learning / online, or trainer name" />
+            </div>
+            <div class="field-group">
+              <label class="field-label">Certificate Reference (optional)</label>
+              <input type="text" id="tr_cert" placeholder="e.g. ACT-2025-0034812" />
+            </div>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Notes</label>
+            <input type="text" id="tr_notes" placeholder="Any additional notes" />
+          </div>
+          <button class="btn btn-primary" onclick="addTrainingRecord()">Add Training Record</button>
+        </div>
+      </div>
+
+      <div class="glass-card">
+        <p class="section-label">Training Log</p>
+        <div class="staff-table-wrap">
+          <table class="staff-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Role</th>
+                <th>Training</th>
+                <th>Date</th>
+                <th>Trainer</th>
+                <th>Expires</th>
+                <th>Status</th>
+                <th class="no-print"></th>
+              </tr>
+            </thead>
+            <tbody id="trainingTbody">
+              <tr><td colspan="8" class="empty-state">No training records yet. Add your first record above.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         TAB: INCIDENT LOG
+    ════════════════════════════════════════════════════════ -->
+    <div class="tab-panel" id="tab-incidents">
+      <h2 class="section-title">Security Incident Log</h2>
+      <p class="section-desc">A confidential record of all security incidents and management responses. This log demonstrates due diligence and may be required by authorities or insurers.</p>
+
+      <div class="glass-card">
+        <p class="section-label">Log New Incident</p>
+        <div class="stack">
+          <div class="grid-2">
+            <div class="field-group">
+              <label class="field-label">Date & Time</label>
+              <input type="datetime-local" id="inc_datetime" />
+            </div>
+            <div class="field-group">
+              <label class="field-label">Incident Type</label>
+              <select id="inc_type">
+                <option value="">Select type...</option>
+                <option value="Suspicious Package / Item">Suspicious Package / Item</option>
+                <option value="Suspicious Behaviour">Suspicious Behaviour / Individual</option>
+                <option value="Hostile Vehicle">Hostile Vehicle Threat</option>
+                <option value="Knife / Weapon Threat">Knife / Weapon Threat</option>
+                <option value="Bomb Threat (call)">Bomb Threat (call/written)</option>
+                <option value="Evacuation Triggered">Evacuation Triggered</option>
+                <option value="Lockdown Triggered">Lockdown Triggered</option>
+                <option value="Intruder">Unauthorized Intruder</option>
+                <option value="Threatening Individual">Threatening Individual</option>
+                <option value="Near Miss">Near Miss / Precautionary</option>
+                <option value="Other Security">Other Security Concern</option>
+              </select>
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="field-group">
+              <label class="field-label">Severity</label>
+              <select id="inc_severity">
+                <option value="precautionary">Precautionary / Minor</option>
+                <option value="minor">Minor</option>
+                <option value="serious">Serious</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label class="field-label">Reported By</label>
+              <input type="text" id="inc_reporter" placeholder="Name & role" />
+            </div>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Incident Description</label>
+            <textarea id="inc_description" rows="4" placeholder="Describe what happened, where, who was involved, and what action was taken immediately..."></textarea>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Management Response & Outcome</label>
+            <textarea id="inc_response" rows="3" placeholder="Actions taken, agencies contacted, outcome..."></textarea>
+          </div>
+          <div class="grid-2">
+            <div class="field-group">
+              <label class="field-label">Police Reference (if applicable)</label>
+              <input type="text" id="inc_police" placeholder="e.g. CAD 3452/21032026" />
+            </div>
+            <div class="field-group">
+              <label class="field-label">Follow-Up Required</label>
+              <select id="inc_followup">
+                <option value="none">No follow-up required</option>
+                <option value="pending">Follow-up pending</option>
+                <option value="completed">Follow-up completed</option>
+              </select>
+            </div>
+          </div>
+          <button class="btn btn-primary" onclick="addIncident()">Log Incident</button>
+        </div>
+      </div>
+
+      <div class="glass-card">
+        <p class="section-label">Incident Record</p>
+        <div id="incidentsList">
+          <div class="empty-state"><span class="empty-icon">📋</span>No incidents logged. Records will appear here.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         TAB: EXPORT
+    ════════════════════════════════════════════════════════ -->
+    <div class="tab-panel" id="tab-export">
+      <h2 class="section-title">EHO / Authority-Ready Export</h2>
+      <p class="section-desc">Generate a complete, formatted compliance package for inspection by the Environmental Health Officer, licensing authority, police liaison, or insurance assessor.</p>
+
+      <div class="export-panel" style="margin-bottom:var(--space-md);">
+        <h3>Compliance Package Contents</h3>
+        <p>The export will include all completed sections of this record. Incomplete sections are flagged.</p>
+        <div class="export-checklist" id="exportChecklist">
+          <!-- Rendered by JS -->
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="generateExport()">📄 Generate Compliance Report</button>
+          <button class="btn btn-ghost" onclick="window.print()">🖨 Print Current View</button>
+        </div>
+      </div>
+
+      <div class="glass-card">
+        <p class="section-label">Data Management</p>
+        <div style="font-size:0.84rem;color:var(--color-text-muted);margin-bottom:var(--space-sm);line-height:1.6;">
+          All data is stored locally in your browser using <code style="background:rgba(255,255,255,0.08);padding:0.1rem 0.35rem;border-radius:3px;font-family:var(--font-mono);font-size:0.8rem;">localStorage</code>. No data is transmitted to any server. To transfer between devices, use the backup/restore function below.
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-ghost btn-sm" onclick="exportJSON()">⬇ Backup Data (JSON)</button>
+          <button class="btn btn-ghost btn-sm" onclick="document.getElementById('importFile').click()">⬆ Restore Backup</button>
+          <input type="file" id="importFile" accept=".json" style="display:none" onchange="importJSON(this)" />
+          <button class="btn btn-danger btn-sm" onclick="confirmClearAll()">🗑 Clear All Data</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /page-shell -->
+
+  <!-- ═══════════════════════════════════════════════════════
+       MODALS
+  ════════════════════════════════════════════════════════ -->
+
+  <!-- Venue Setup Modal -->
+  <div class="modal-overlay" id="venueModal">
+    <div class="modal-box">
+      <h2 class="modal-title">Venue Profile</h2>
+      <p class="modal-subtitle">This information appears on all exported compliance documents.</p>
+      <div class="stack">
+        <div class="field-group">
+          <label class="field-label">Venue Name</label>
+          <input type="text" id="venue_name" placeholder="e.g. Hidden Cocktail Bar" />
+        </div>
+        <div class="grid-2">
+          <div class="field-group">
+            <label class="field-label">Address Line 1</label>
+            <input type="text" id="venue_addr1" placeholder="Street address" />
+          </div>
+          <div class="field-group">
+            <label class="field-label">Town / City</label>
+            <input type="text" id="venue_city" placeholder="e.g. Wakefield" />
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="field-group">
+            <label class="field-label">Postcode</label>
+            <input type="text" id="venue_postcode" placeholder="e.g. WF1 2AB" />
+          </div>
+          <div class="field-group">
+            <label class="field-label">Maximum Capacity</label>
+            <input type="number" id="venue_capacity" placeholder="e.g. 350" oninput="updateTier()" />
+          </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Premises Licence Number (if applicable)</label>
+          <input type="text" id="venue_licence" placeholder="e.g. PA/12345/2019" />
+        </div>
+        <div class="grid-2">
+          <div class="field-group">
+            <label class="field-label">Designated Premises Supervisor</label>
+            <input type="text" id="venue_dps" placeholder="Full name" />
+          </div>
+          <div class="field-group">
+            <label class="field-label">Security / Safety Manager</label>
+            <input type="text" id="venue_security" placeholder="Full name or N/A" />
+          </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Martyn's Law Tier</label>
+          <select id="venue_tier">
+            <option value="standard">Standard Tier (200–799 capacity)</option>
+            <option value="enhanced">Enhanced Tier (800+ capacity)</option>
+          </select>
+          <p class="field-hint" id="tierHint">Standard Tier: basic security measures and staff CT awareness training required.</p>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-primary" onclick="saveVenue()">Save Venue Profile</button>
+        <button class="btn btn-ghost" onclick="closeVenueModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Export Modal -->
+  <div class="modal-overlay" id="exportModal">
+    <div class="modal-box" style="max-width:700px;">
+      <h2 class="modal-title">Compliance Package</h2>
+      <p class="modal-subtitle" id="exportModalSub">Generated for export</p>
+      <div id="exportContent" style="font-size:0.84rem;line-height:1.7;color:var(--color-text-muted);max-height:60vh;overflow-y:auto;border:1px solid var(--color-border);border-radius:var(--radius-sm);padding:var(--space-md);background:rgba(255,255,255,0.02);"></div>
+      <div class="modal-actions">
+        <button class="btn btn-primary" onclick="printExport()">🖨 Print / Save as PDF</button>
+        <button class="btn btn-ghost" onclick="document.getElementById('exportModal').classList.remove('open')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  // ═══════════════════════════════════════════════════════════
+  // STATE
+  // ═══════════════════════════════════════════════════════════
+  const LS = {
+    venue: 'vs_venue',
+    ra: 'vs_ra',
+    procs: 'vs_procs',
+    training: 'vs_training',
+    incidents: 'vs_incidents',
+    secChecks: 'vs_secChecks',
+    procNotes: 'vs_procNotes'
+  };
+
+  let state = {
+    venue: {},
+    ra: {},
+    procs: {},
+    training: [],
+    incidents: [],
+    secChecks: {},
+    procNotes: {}
+  };
+
+  // ── Security Measures Checklist ─────────────────────────
+  const SECURITY_ITEMS = [
+    { id: 'cctv', label: 'CCTV system covering entry/exit points and key areas' },
+    { id: 'cctv_signage', label: 'CCTV signage displayed (legal requirement)' },
+    { id: 'door_staff', label: 'SIA-licensed door staff employed at peak times' },
+    { id: 'bag_search', label: 'Bag search policy and procedure in place' },
+    { id: 'id_checks', label: 'ID check policy documented and consistently applied' },
+    { id: 'staff_ct', label: 'All staff received counter-terrorism awareness training' },
+    { id: 'emergency_plan', label: 'Written emergency response plan available to all staff' },
+    { id: 'run_hide_tell', label: 'Run Hide Tell briefing given to all staff' },
+    { id: 'evac_drills', label: 'Regular evacuation drills conducted (min. 1 per year)' },
+    { id: 'suspicious_pkg', label: 'Suspicious package procedure displayed in staff areas' },
+    { id: 'comms', label: 'Communication plan for staff during incident (radios/phones)' },
+    { id: 'assembly_point', label: 'Assembly point(s) identified, signed, and communicated to staff' },
+    { id: 'first_aid', label: 'First aid trained staff on duty at all times' },
+    { id: 'first_aid_kit', label: 'First aid kit stocked and accessible' },
+    { id: 'defibrillator', label: 'Defibrillator on site (AED)' },
+    { id: 'lighting', label: 'Emergency lighting tested regularly' },
+    { id: 'locked_utilities', label: 'Utility access (gas, electric) secured against unauthorised access' },
+    { id: 'vehicle_barriers', label: 'Vehicle access mitigation in place (barriers, planters, bollards)' },
+    { id: 'reporting', label: 'Staff briefed on how and when to report suspicious activity (non-emergency 101 / anonymous Crimestoppers)' },
+    { id: 'ctsa_liaison', label: 'Counter Terrorism Security Advisor (CTSA) contacted for free guidance' }
+  ];
+
+  // ── Emergency Procedures ────────────────────────────────
+  const PROCEDURES = [
+    {
+      id: 'suspicious_package',
+      icon: '📦',
+      title: 'Suspicious Package',
+      subtitle: 'Unattended item / IED concern',
+      severity: 'critical',
+      steps: [
+        'Do NOT touch, move, or cover the item.',
+        'Clear the immediate area calmly — do not create panic.',
+        'Call 999 immediately. Use the POST acronym: Position (where is it?), Object (describe it), Size (approximate dimensions), Time (when was it found?).',
+        'Evacuate the building using the primary evacuation plan.',
+        'Establish a 100m cordon if safe to do so.',
+        'Do NOT use mobile phones or radios near the device.',
+        'Meet police at the assembly point and brief them on arrival.',
+        'Do not re-enter until cleared by police.'
+      ]
+    },
+    {
+      id: 'evacuation',
+      icon: '🚪',
+      title: 'Evacuation',
+      subtitle: 'Full or partial building evacuation',
+      severity: 'critical',
+      steps: [
+        'Activate the evacuation alarm (if applicable) or give clear verbal instruction.',
+        'Direct all guests to the nearest safe exit. Assist any guests with mobility needs.',
+        'Staff to conduct a sweep of all areas before leaving — toilets, private areas, service corridors.',
+        'Proceed to the designated assembly point. Do NOT use lifts.',
+        'Manager to take headcount and account for all guests and staff.',
+        'Report any missing persons to emergency services immediately.',
+        'Do not re-enter the building until given the all-clear by the fire brigade or police.',
+        'Log the evacuation in the incident record with time, trigger, and headcount result.'
+      ]
+    },
+    {
+      id: 'lockdown',
+      icon: '🔒',
+      title: 'Lockdown',
+      subtitle: 'Threat outside venue — shelter in place',
+      severity: 'critical',
+      steps: [
+        'Do NOT evacuate — move everyone away from windows and doors.',
+        'Lock all external doors and windows immediately.',
+        'Turn off lights and keep everyone quiet.',
+        'Call 999 and report your location, number of people, and what you know.',
+        'Stay away from the threat side of the building.',
+        'Do not allow anyone to leave or enter.',
+        'Stay on line with emergency services and follow their instructions.',
+        'Only move or evacuate when police confirm it is safe to do so.'
+      ]
+    },
+    {
+      id: 'hostile_individual',
+      icon: '⚠️',
+      title: 'Hostile / Armed Individual',
+      subtitle: 'Knife attack, assault, or marauding threat (MTA)',
+      severity: 'critical',
+      steps: [
+        'RUN: If it is safe to do so, leave immediately. Take others with you. Do not collect belongings.',
+        'HIDE: If you cannot run, find cover. Lock or barricade doors. Stay silent.',
+        'TELL: When safe, call 999. State: your location, number of attackers, description, weapons seen, number of casualties.',
+        'Do not confront the attacker unless there is absolutely no alternative.',
+        'When police arrive: keep hands visible, follow all instructions immediately.',
+        'Do not approach or stop for police on your way out of the building — keep moving.',
+        'Brief staff and guests: stay away from the venue until police declare it safe.',
+        'Notify management as soon as safe. Preserve CCTV footage.'
+      ]
+    },
+    {
+      id: 'bomb_threat',
+      icon: '📞',
+      title: 'Bomb Threat (Call)',
+      subtitle: 'Telephone or written threat received',
+      severity: 'critical',
+      steps: [
+        'Keep the caller talking as long as possible. Note exact words used.',
+        'Record: time of call, caller\'s voice/accent, background noise, exact wording.',
+        'Ask: When is the bomb going to explode? Where is it right now? What does it look like? What kind of bomb is it? Why did you place it?',
+        'After call: immediately notify the manager and call 999.',
+        'Do not discuss the call with guests or non-essential staff.',
+        'Await police instruction before deciding whether to evacuate.',
+        'Retain any written threat as evidence. Do not handle with bare hands.',
+        'Complete the bomb threat log (report form) for police.'
+      ]
+    },
+    {
+      id: 'hostile_vehicle',
+      icon: '🚗',
+      title: 'Hostile Vehicle',
+      subtitle: 'Vehicle driving at crowd or building',
+      severity: 'critical',
+      steps: [
+        'Get behind solid cover immediately — walls, vehicles, pillars. NOT glass.',
+        'Call 999. State: location, direction of travel, description of vehicle, casualties.',
+        'Direct people away from the vehicle\'s likely direction of travel.',
+        'If vehicle has stopped: treat as suspicious package — do not approach, evacuate, call 999.',
+        'Assist any injured persons only if it is safe to do so — do not put yourself at risk.',
+        'Do not approach or move any vehicle involved.',
+        'Provide police with any CCTV footage upon arrival.',
+        'Lockdown the venue if the driver/passengers may be an ongoing threat.'
+      ]
+    }
+  ];
+
+  // ═══════════════════════════════════════════════════════════
+  // INIT
+  // ═══════════════════════════════════════════════════════════
+  function init() {
+    loadState();
+    renderSecurityChecklist();
+    renderProcedures();
+    renderTraining();
+    renderIncidents();
+    renderExportChecklist();
+    updateDashboard();
+    populateVenueBar();
+    populateRAFields();
+    populateProcFields();
+    if (!state.venue.name) {
+      openVenueModal();
+    }
+  }
+
+  function loadState() {
+    try {
+      state.venue = JSON.parse(localStorage.getItem(LS.venue) || '{}');
+      state.ra = JSON.parse(localStorage.getItem(LS.ra) || '{}');
+      state.procs = JSON.parse(localStorage.getItem(LS.procs) || '{}');
+      state.training = JSON.parse(localStorage.getItem(LS.training) || '[]');
+      state.incidents = JSON.parse(localStorage.getItem(LS.incidents) || '[]');
+      state.secChecks = JSON.parse(localStorage.getItem(LS.secChecks) || '{}');
+      state.procNotes = JSON.parse(localStorage.getItem(LS.procNotes) || '{}');
+    } catch(e) { console.error('Load state error', e); }
+  }
+
+  function saveState(key) {
+    localStorage.setItem(LS[key], JSON.stringify(state[key]));
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // TABS
+  // ═══════════════════════════════════════════════════════════
+  function showTab(id, btn) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    const panel = document.getElementById('tab-' + id);
+    if (panel) panel.classList.add('active');
+    if (btn) btn.classList.add('active');
+    updateDashboard();
+    renderExportChecklist();
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // VENUE
+  // ═══════════════════════════════════════════════════════════
+  function openVenueModal() {
+    const v = state.venue;
+    document.getElementById('venue_name').value = v.name || '';
+    document.getElementById('venue_addr1').value = v.addr1 || '';
+    document.getElementById('venue_city').value = v.city || '';
+    document.getElementById('venue_postcode').value = v.postcode || '';
+    document.getElementById('venue_capacity').value = v.capacity || '';
+    document.getElementById('venue_licence').value = v.licence || '';
+    document.getElementById('venue_dps').value = v.dps || '';
+    document.getElementById('venue_security').value = v.security || '';
+    document.getElementById('venue_tier').value = v.tier || 'standard';
+    document.getElementById('venueModal').classList.add('open');
+    updateTier();
+  }
+
+  function closeVenueModal() {
+    document.getElementById('venueModal').classList.remove('open');
+  }
+
+  function updateTier() {
+    const cap = parseInt(document.getElementById('venue_capacity').value) || 0;
+    const tierSelect = document.getElementById('venue_tier');
+    const hint = document.getElementById('tierHint');
+    if (cap >= 800) {
+      tierSelect.value = 'enhanced';
+      hint.textContent = 'Enhanced Tier: full risk assessment, documented security plan, and appointed Security Manager required.';
+    } else if (cap >= 200) {
+      tierSelect.value = 'standard';
+      hint.textContent = 'Standard Tier: basic security measures and staff counter-terrorism awareness training required.';
+    } else if (cap > 0) {
+      hint.textContent = 'Venues under 200 capacity — Martyn\'s Law does not currently apply, but best practice compliance is strongly recommended.';
+    }
+  }
+
+  function saveVenue() {
+    state.venue = {
+      name: document.getElementById('venue_name').value.trim(),
+      addr1: document.getElementById('venue_addr1').value.trim(),
+      city: document.getElementById('venue_city').value.trim(),
+      postcode: document.getElementById('venue_postcode').value.trim(),
+      capacity: document.getElementById('venue_capacity').value,
+      licence: document.getElementById('venue_licence').value.trim(),
+      dps: document.getElementById('venue_dps').value.trim(),
+      security: document.getElementById('venue_security').value.trim(),
+      tier: document.getElementById('venue_tier').value
+    };
+    saveState('venue');
+    closeVenueModal();
+    populateVenueBar();
+    updateDashboard();
+  }
+
+  function populateVenueBar() {
+    const v = state.venue;
+    const nameEl = document.getElementById('venueNameDisplay');
+    const metaEl = document.getElementById('venueMetaDisplay');
+    const tierBadge = document.getElementById('tierBadge');
+    if (v.name) {
+      nameEl.textContent = v.name;
+      metaEl.textContent = [v.addr1, v.city, v.postcode].filter(Boolean).join(', ') + (v.dps ? ` · DPS: ${v.dps}` : '');
+      tierBadge.textContent = v.tier === 'enhanced' ? 'Enhanced Tier' : 'Standard Tier';
+      tierBadge.className = 'tier-badge ' + (v.tier || 'standard');
+    } else {
+      nameEl.textContent = 'No venue configured';
+      metaEl.textContent = 'Set up your venue to begin →';
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // RISK ASSESSMENT
+  // ═══════════════════════════════════════════════════════════
+  const RA_FIELDS = ['ra_capacity','ra_footfall','ra_venueType','ra_demographics','ra_peakTimes',
+    'ra_mainEntrance','ra_secondaryEntrance','ra_fireExits','ra_accessControl',
+    'ra_crowding','ra_concealAreas','ra_utilities','ra_vehicle',
+    'ra_threats','ra_gaps','ra_assessor','ra_date','ra_reviewDate'];
+
+  function saveRA() {
+    RA_FIELDS.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) state.ra[id] = el.value;
+    });
+    saveState('ra');
+    updateDashboard();
+  }
+
+  function populateRAFields() {
+    RA_FIELDS.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && state.ra[id]) el.value = state.ra[id];
+    });
+  }
+
+  function renderSecurityChecklist() {
+    const container = document.getElementById('securityChecklist');
+    if (!container) return;
+    container.innerHTML = SECURITY_ITEMS.map(item => `
+      <div class="check-item" onclick="toggleCheck('${item.id}')">
+        <div class="check-box ${state.secChecks[item.id] ? 'checked' : ''}" id="chk_${item.id}">${state.secChecks[item.id] ? '✓' : ''}</div>
+        <div class="check-text ${state.secChecks[item.id] ? 'done' : ''}" id="chktext_${item.id}">${item.label}</div>
+      </div>
+    `).join('');
+  }
+
+  function toggleCheck(id) {
+    state.secChecks[id] = !state.secChecks[id];
+    saveState('secChecks');
+    const box = document.getElementById('chk_' + id);
+    const txt = document.getElementById('chktext_' + id);
+    if (box) { box.classList.toggle('checked', state.secChecks[id]); box.textContent = state.secChecks[id] ? '✓' : ''; }
+    if (txt) { txt.classList.toggle('done', state.secChecks[id]); }
+    updateDashboard();
+  }
+
+  function getRiskScore() {
+    const filled = RA_FIELDS.filter(id => state.ra[id] && state.ra[id].trim()).length;
+    const checks = Object.values(state.secChecks).filter(Boolean).length;
+    return { filled, total: RA_FIELDS.length, checks, totalChecks: SECURITY_ITEMS.length };
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // PROCEDURES
+  // ═══════════════════════════════════════════════════════════
+  function renderProcedures() {
+    const container = document.getElementById('proceduresList');
+    if (!container) return;
+    container.innerHTML = PROCEDURES.map(p => `
+      <div class="procedure-card">
+        <div class="procedure-header">
+          <div class="procedure-title-row">
+            <span class="threat-icon">${p.icon}</span>
+            <div>
+              <div class="procedure-title">${p.title}</div>
+              <div class="procedure-subtitle">${p.subtitle}</div>
+            </div>
+          </div>
+          <span class="severity-badge critical">Critical Protocol</span>
+        </div>
+        <div class="procedure-body">
+          <ul class="procedure-steps">
+            ${p.steps.map((s,i) => `<li><span class="step-num-badge">${i+1}</span><span>${s}</span></li>`).join('')}
+          </ul>
+        </div>
+        <div class="procedure-edit-area">
+          <div class="field-group">
+            <label class="field-label">Venue-specific notes (${p.title})</label>
+            <textarea id="proc_note_${p.id}" placeholder="Add your venue-specific details, contact names, specific locations, etc." oninput="saveProcNote('${p.id}')" rows="2">${state.procNotes[p.id] || ''}</textarea>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function saveProcNote(id) {
+    state.procNotes[id] = document.getElementById('proc_note_' + id).value;
+    saveState('procNotes');
+  }
+
+  function saveProcs() {
+    const fields = ['proc_police','proc_manager','proc_ctsa','proc_landlord','proc_assembly'];
+    fields.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) state.procs[id] = el.value;
+    });
+    saveState('procs');
+    updateDashboard();
+  }
+
+  function populateProcFields() {
+    const fields = ['proc_police','proc_manager','proc_ctsa','proc_landlord','proc_assembly'];
+    fields.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && state.procs[id]) el.value = state.procs[id];
+    });
+  }
+
+  function getProcScore() {
+    const fields = ['proc_police','proc_manager','proc_assembly'];
+    const filled = fields.filter(id => state.procs[id] && state.procs[id].trim()).length;
+    return { filled, total: fields.length };
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // TRAINING
+  // ═══════════════════════════════════════════════════════════
+  function addTrainingRecord() {
+    const name = document.getElementById('tr_name').value.trim();
+    const role = document.getElementById('tr_role').value.trim();
+    const type = document.getElementById('tr_type').value;
+    const date = document.getElementById('tr_date').value;
+    const trainer = document.getElementById('tr_trainer').value.trim();
+    const cert = document.getElementById('tr_cert').value.trim();
+    const notes = document.getElementById('tr_notes').value.trim();
+
+    if (!name || !type || !date) {
+      alert('Please fill in Name, Training Type, and Date.');
+      return;
+    }
+
+    // Calculate expiry (3 years from training date)
+    const trainDate = new Date(date);
+    const expiry = new Date(trainDate);
+    expiry.setFullYear(expiry.getFullYear() + 3);
+
+    state.training.push({
+      id: Date.now(),
+      name, role, type, date, trainer, cert, notes,
+      expiry: expiry.toISOString().split('T')[0]
+    });
+    saveState('training');
+
+    // Clear form
+    ['tr_name','tr_role','tr_date','tr_trainer','tr_cert','tr_notes'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('tr_type').value = '';
+
+    renderTraining();
+    updateDashboard();
+  }
+
+  function deleteTraining(id) {
+    if (!confirm('Remove this training record?')) return;
+    state.training = state.training.filter(t => t.id !== id);
+    saveState('training');
+    renderTraining();
+    updateDashboard();
+  }
+
+  function getTrainingStatus(expiry) {
+    const now = new Date();
+    const exp = new Date(expiry);
+    const daysUntil = Math.floor((exp - now) / (1000 * 60 * 60 * 24));
+    if (daysUntil < 0) return { status: 'overdue', label: 'Expired', class: 'overdue' };
+    if (daysUntil <= 90) return { status: 'expiring', label: `Exp. ${formatDate(expiry)}`, class: 'expiring' };
+    return { status: 'current', label: `Exp. ${formatDate(expiry)}`, class: 'current' };
+  }
+
+  function renderTraining() {
+    const tbody = document.getElementById('trainingTbody');
+    if (!tbody) return;
+    if (state.training.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="8" class="empty-state">No training records yet. Add your first record above.</td></tr>';
+      updateTrainingStats();
+      return;
+    }
+    tbody.innerHTML = state.training.map(t => {
+      const ts = getTrainingStatus(t.expiry);
+      return `
+        <tr>
+          <td><strong>${escHtml(t.name)}</strong></td>
+          <td>${escHtml(t.role || '—')}</td>
+          <td>${escHtml(t.type)}</td>
+          <td style="font-family:var(--font-mono);font-size:0.8rem;">${formatDate(t.date)}</td>
+          <td>${escHtml(t.trainer || '—')}</td>
+          <td style="font-family:var(--font-mono);font-size:0.8rem;">${formatDate(t.expiry)}</td>
+          <td><span class="training-pill ${ts.class}">${ts.label}</span></td>
+          <td class="no-print"><button class="btn btn-danger btn-sm" onclick="deleteTraining(${t.id})">✕</button></td>
+        </tr>
+      `;
+    }).join('');
+    updateTrainingStats();
+  }
+
+  function updateTrainingStats() {
+    const current = state.training.filter(t => getTrainingStatus(t.expiry).status === 'current').length;
+    const expiring = state.training.filter(t => getTrainingStatus(t.expiry).status === 'expiring').length;
+    const overdue = state.training.filter(t => getTrainingStatus(t.expiry).status === 'overdue').length;
+    document.getElementById('trainTotal').textContent = state.training.length;
+    document.getElementById('trainCurrent').textContent = current;
+    document.getElementById('trainExpiring').textContent = expiring;
+    document.getElementById('trainOverdue').textContent = overdue;
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // INCIDENTS
+  // ═══════════════════════════════════════════════════════════
+  function addIncident() {
+    const dt = document.getElementById('inc_datetime').value;
+    const type = document.getElementById('inc_type').value;
+    const sev = document.getElementById('inc_severity').value;
+    const reporter = document.getElementById('inc_reporter').value.trim();
+    const desc = document.getElementById('inc_description').value.trim();
+    const resp = document.getElementById('inc_response').value.trim();
+    const police = document.getElementById('inc_police').value.trim();
+    const followup = document.getElementById('inc_followup').value;
+
+    if (!dt || !type || !desc) {
+      alert('Please fill in Date/Time, Incident Type, and Description.');
+      return;
+    }
+
+    state.incidents.unshift({ id: Date.now(), dt, type, sev, reporter, desc, resp, police, followup });
+    saveState('incidents');
+
+    ['inc_datetime','inc_reporter','inc_description','inc_response','inc_police'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('inc_type').value = '';
+    document.getElementById('inc_severity').value = 'precautionary';
+    document.getElementById('inc_followup').value = 'none';
+
+    renderIncidents();
+    updateDashboard();
+  }
+
+  function deleteIncident(id) {
+    if (!confirm('Delete this incident record? This cannot be undone.')) return;
+    state.incidents = state.incidents.filter(i => i.id !== id);
+    saveState('incidents');
+    renderIncidents();
+    updateDashboard();
+  }
+
+  function renderIncidents() {
+    const container = document.getElementById('incidentsList');
+    if (!container) return;
+    if (state.incidents.length === 0) {
+      container.innerHTML = '<div class="empty-state"><span class="empty-icon">📋</span>No incidents logged. Records will appear here.</div>';
+      return;
+    }
+    container.innerHTML = state.incidents.map(inc => `
+      <div class="incident-card ${inc.sev}">
+        <div class="incident-header">
+          <div class="incident-title">${escHtml(inc.type)}</div>
+          <div class="incident-date">${formatDateTime(inc.dt)}</div>
+        </div>
+        <div class="incident-meta">
+          ${inc.reporter ? `<strong>Reported by:</strong> ${escHtml(inc.reporter)} · ` : ''}
+          <strong>Severity:</strong> ${inc.sev.charAt(0).toUpperCase() + inc.sev.slice(1)}
+          ${inc.police ? ` · <strong>Police ref:</strong> ${escHtml(inc.police)}` : ''}
+          ${inc.followup !== 'none' ? ` · <strong>Follow-up:</strong> ${inc.followup === 'pending' ? '⚠ Pending' : '✓ Complete'}` : ''}
+        </div>
+        <div style="font-size:0.83rem;margin-top:0.4rem;line-height:1.55;">${escHtml(inc.desc)}</div>
+        ${inc.resp ? `<div style="font-size:0.8rem;color:var(--color-text-muted);margin-top:0.3rem;border-top:1px solid var(--color-border);padding-top:0.35rem;"><strong style="color:var(--color-text);">Response:</strong> ${escHtml(inc.resp)}</div>` : ''}
+        <div class="incident-actions-row no-print">
+          <button class="btn btn-danger btn-sm" onclick="deleteIncident(${inc.id})">Delete</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // DASHBOARD
+  // ═══════════════════════════════════════════════════════════
+  function updateDashboard() {
+    const ra = getRiskScore();
+    const proc = getProcScore();
+    const outstanding = [];
+    let score = 0;
+    let total = 0;
+
+    // Risk assessment score
+    total += ra.total + ra.totalChecks;
+    score += ra.filled + ra.checks;
+
+    const raPct = Math.round(((ra.filled + ra.checks) / (ra.total + ra.totalChecks)) * 100);
+    let raStatus = 'red';
+    if (raPct >= 80) raStatus = 'green';
+    else if (raPct >= 40) raStatus = 'amber';
+    updateStatusCard('dashRisk', `${raPct}%`, `${ra.filled}/${ra.total} fields + ${ra.checks}/${ra.totalChecks} checks`, raStatus);
+    if (raPct < 80) outstanding.push({ label: 'Risk Assessment incomplete', sub: `${ra.total - ra.filled} fields and ${ra.totalChecks - ra.checks} security checks outstanding`, sev: raPct < 40 ? 'red' : 'amber' });
+
+    // Procedures score
+    total += proc.total;
+    score += proc.filled;
+    const procPct = Math.round((proc.filled / proc.total) * 100);
+    let procStatus = 'red';
+    if (procPct >= 80) procStatus = 'green';
+    else if (procPct >= 40) procStatus = 'amber';
+    updateStatusCard('dashProc', `${procPct}%`, `Key contacts: ${proc.filled}/${proc.total}`, procStatus);
+    if (procPct < 80) outstanding.push({ label: 'Emergency procedures incomplete', sub: 'Add key contacts and venue-specific notes to all procedures', sev: procPct < 40 ? 'red' : 'amber' });
+
+    // Training score
+    const trainTotal = state.training.length;
+    const trainOverdue = state.training.filter(t => getTrainingStatus(t.expiry).status === 'overdue').length;
+    const trainExpiring = state.training.filter(t => getTrainingStatus(t.expiry).status === 'expiring').length;
+    total += 1;
+    if (trainTotal > 0 && trainOverdue === 0) score += 1;
+    let trainStatus = trainTotal === 0 ? 'red' : trainOverdue > 0 ? 'red' : trainExpiring > 0 ? 'amber' : 'green';
+    updateStatusCard('dashTrain', trainTotal, trainTotal === 0 ? 'No staff logged' : `${trainOverdue} overdue, ${trainExpiring} expiring`, trainStatus);
+    if (trainTotal === 0) outstanding.push({ label: 'No staff training records', sub: 'All staff must complete ACT Awareness e-Learning or equivalent', sev: 'red' });
+    else if (trainOverdue > 0) outstanding.push({ label: `${trainOverdue} staff training expired`, sub: 'Expired training must be renewed immediately', sev: 'red' });
+    else if (trainExpiring > 0) outstanding.push({ label: `${trainExpiring} staff training expiring soon`, sub: 'Renew training within the next 90 days', sev: 'amber' });
+
+    // Incidents with open follow-up
+    const openInc = state.incidents.filter(i => i.followup === 'pending').length;
+    updateStatusCard('dashInc', state.incidents.length, openInc > 0 ? `${openInc} awaiting follow-up` : 'All resolved', openInc > 0 ? 'amber' : 'green');
+    if (openInc > 0) outstanding.push({ label: `${openInc} incident(s) awaiting follow-up`, sub: 'Review and close outstanding incident records', sev: 'amber' });
+
+    // Overall
+    const overallPct = total > 0 ? Math.round((score / total) * 100) : 0;
+    const scoreEl = document.getElementById('overallScore');
+    const statusEl = document.getElementById('overallStatus');
+    const subEl = document.getElementById('overallSub');
+    const progFill = document.getElementById('progressFill');
+    const progPct = document.getElementById('progressPct');
+
+    scoreEl.textContent = `${overallPct}%`;
+    progFill.style.width = `${overallPct}%`;
+    progPct.textContent = `${overallPct}%`;
+
+    let fillClass = 'red';
+    if (overallPct >= 80) {
+      scoreEl.className = 'score-value green';
+      statusEl.textContent = '✓ Compliance Achieved';
+      statusEl.style.color = '#4caf50';
+      subEl.textContent = 'Your venue meets Martyn\'s Law requirements. Maintain records and review annually.';
+      fillClass = 'green';
+    } else if (overallPct >= 50) {
+      scoreEl.className = 'score-value amber';
+      statusEl.textContent = '⚠ Partially Compliant';
+      statusEl.style.color = '#f0a832';
+      subEl.textContent = 'Progress made — address outstanding actions to achieve full compliance.';
+      fillClass = 'amber';
+    } else {
+      scoreEl.className = 'score-value red';
+      statusEl.textContent = '✗ Non-Compliant';
+      statusEl.style.color = '#f67c7c';
+      subEl.textContent = `${outstanding.length} action(s) required. Non-compliance is a criminal offence.`;
+      fillClass = 'red';
+    }
+    progFill.className = `progress-fill ${fillClass}`;
+
+    // Outstanding list
+    const outEl = document.getElementById('outstandingList');
+    if (outEl) {
+      if (outstanding.length === 0) {
+        outEl.innerHTML = '<div class="all-clear"><div class="icon">✅</div><p>No outstanding actions. Your compliance record is complete.</p></div>';
+      } else {
+        outEl.innerHTML = outstanding.map(o => `
+          <div class="outstanding-item ${o.sev === 'amber' ? 'amber' : ''}">
+            <span class="outstanding-dot"></span>
+            <div class="outstanding-text"><strong>${escHtml(o.label)}</strong><span>${escHtml(o.sub)}</span></div>
+          </div>
+        `).join('');
+      }
+    }
+  }
+
+  function updateStatusCard(id, value, sub, status) {
+    const el = document.getElementById(id);
+    const subEl = document.getElementById(id + 'Sub');
+    if (el) { el.textContent = value; el.parentElement.className = `status-card ${status}`; }
+    if (subEl) subEl.textContent = sub;
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // EXPORT
+  // ═══════════════════════════════════════════════════════════
+  function renderExportChecklist() {
+    const container = document.getElementById('exportChecklist');
+    if (!container) return;
+    const ra = getRiskScore();
+    const proc = getProcScore();
+    const items = [
+      { label: 'Venue Profile', done: !!state.venue.name },
+      { label: 'Risk Assessment (fields)', done: ra.filled >= Math.floor(ra.total * 0.6) },
+      { label: 'Security Measures Checklist', done: ra.checks >= Math.floor(ra.totalChecks * 0.5) },
+      { label: 'Emergency Procedures (key contacts)', done: proc.filled >= 2 },
+      { label: 'Staff Training Records', done: state.training.length > 0 },
+      { label: 'Incident Log (may be empty)', done: true }
+    ];
+    container.innerHTML = items.map(i => `
+      <div class="export-item">
+        <span class="${i.done ? 'tick' : 'cross'}">${i.done ? '✓' : '✗'}</span>
+        <span style="${!i.done ? 'color:var(--color-text-muted)' : ''}">${i.label}</span>
+      </div>
+    `).join('');
+  }
+
+  function generateExport() {
+    const v = state.venue;
+    const ra = state.ra;
+    const procs = state.procs;
+    const now = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' });
+
+    let html = `
+      <div style="font-family:Georgia,serif;color:#111;line-height:1.7;">
+        <div style="text-align:center;border-bottom:3px solid #111;padding-bottom:1.5rem;margin-bottom:2rem;">
+          <p style="font-size:0.75rem;letter-spacing:0.12em;text-transform:uppercase;color:#666;margin:0 0 0.5rem;">MARTYN'S LAW COMPLIANCE DOCUMENTATION</p>
+          <h1 style="margin:0;font-size:1.8rem;">${escHtml(v.name || 'Venue Name Not Set')}</h1>
+          <p style="margin:0.25rem 0 0;color:#555;">${[v.addr1, v.city, v.postcode].filter(Boolean).join(', ')}</p>
+          <p style="margin:0.5rem 0 0;font-size:0.85rem;color:#777;">Generated: ${now} · Tier: ${v.tier === 'enhanced' ? 'Enhanced' : 'Standard'} · Capacity: ${v.capacity || 'Not set'}</p>
+          ${v.licence ? `<p style="margin:0.25rem 0 0;font-size:0.8rem;color:#777;">Premises Licence: ${escHtml(v.licence)}</p>` : ''}
+          ${v.dps ? `<p style="margin:0.1rem 0 0;font-size:0.8rem;color:#777;">DPS: ${escHtml(v.dps)}</p>` : ''}
+        </div>
+
+        <h2 style="font-size:1.1rem;border-bottom:1px solid #ddd;padding-bottom:0.5rem;">SECTION 1: COUNTER-TERRORISM RISK ASSESSMENT</h2>
+        ${raField('Venue Type & Events', ra.ra_venueType)}
+        ${raField('Visitor Demographics', ra.ra_demographics)}
+        ${raField('Peak Times & High-Risk Periods', ra.ra_peakTimes)}
+        ${raField('Main Public Entrance(s)', ra.ra_mainEntrance)}
+        ${raField('Secondary / Staff Entrances', ra.ra_secondaryEntrance)}
+        ${raField('Fire Exits', ra.ra_fireExits)}
+        ${raField('Access Control Measures', ra.ra_accessControl)}
+        ${raField('Crowding / Queuing Zones', ra.ra_crowding)}
+        ${raField('Concealment Risk Areas', ra.ra_concealAreas)}
+        ${raField('Infrastructure / Utility Risks', ra.ra_utilities)}
+        ${raField('Hostile Vehicle Risk', ra.ra_vehicle)}
+        ${raField('Threat Assessment Narrative', ra.ra_threats)}
+        ${raField('Identified Gaps & Required Actions', ra.ra_gaps)}
+        <p style="font-size:0.85rem;"><strong>Assessment completed by:</strong> ${escHtml(ra.ra_assessor || 'Not completed')} · <strong>Date:</strong> ${ra.ra_date ? formatDate(ra.ra_date) : 'Not set'} · <strong>Next review:</strong> ${ra.ra_reviewDate ? formatDate(ra.ra_reviewDate) : 'Not set'}</p>
+
+        <h2 style="font-size:1.1rem;border-bottom:1px solid #ddd;padding-bottom:0.5rem;margin-top:2rem;">SECTION 2: SECURITY MEASURES IN PLACE</h2>
+        <ul style="font-size:0.88rem;line-height:2;">
+          ${SECURITY_ITEMS.map(item => `<li>${state.secChecks[item.id] ? '✓' : '☐'} ${item.label}</li>`).join('')}
+        </ul>
+
+        <h2 style="font-size:1.1rem;border-bottom:1px solid #ddd;padding-bottom:0.5rem;margin-top:2rem;">SECTION 3: EMERGENCY PROCEDURES</h2>
+        <p style="font-size:0.85rem;"><strong>Emergency contacts:</strong> Police (non-emergency): ${escHtml(procs.proc_police || '101')} · Manager: ${escHtml(procs.proc_manager || 'Not set')} · Assembly point: ${escHtml(procs.proc_assembly || 'Not set')}</p>
+        ${PROCEDURES.map(p => `
+          <div style="margin:1rem 0;page-break-inside:avoid;">
+            <h3 style="font-size:0.95rem;margin:0.75rem 0 0.3rem;">${p.icon} ${p.title}</h3>
+            <ol style="font-size:0.85rem;line-height:1.8;margin:0;padding-left:1.5rem;">
+              ${p.steps.map(s => `<li>${s}</li>`).join('')}
+            </ol>
+            ${state.procNotes[p.id] ? `<p style="font-size:0.82rem;color:#555;border-left:3px solid #ccc;padding-left:0.75rem;margin-top:0.5rem;"><strong>Venue notes:</strong> ${escHtml(state.procNotes[p.id])}</p>` : ''}
+          </div>
+        `).join('')}
+
+        <h2 style="font-size:1.1rem;border-bottom:1px solid #ddd;padding-bottom:0.5rem;margin-top:2rem;">SECTION 4: STAFF TRAINING RECORDS</h2>
+        ${state.training.length === 0 ? '<p style="color:#c00;font-size:0.88rem;">No training records logged.</p>' : `
+          <table style="width:100%;border-collapse:collapse;font-size:0.82rem;">
+            <thead><tr style="border-bottom:2px solid #ccc;"><th style="text-align:left;padding:0.4rem;">Name</th><th style="text-align:left;padding:0.4rem;">Role</th><th style="text-align:left;padding:0.4rem;">Training</th><th style="text-align:left;padding:0.4rem;">Date</th><th style="text-align:left;padding:0.4rem;">Trainer</th><th style="text-align:left;padding:0.4rem;">Expires</th><th style="text-align:left;padding:0.4rem;">Status</th></tr></thead>
+            <tbody>${state.training.map(t => {
+              const ts = getTrainingStatus(t.expiry);
+              return `<tr style="border-bottom:1px solid #eee;"><td style="padding:0.35rem;">${escHtml(t.name)}</td><td style="padding:0.35rem;">${escHtml(t.role||'')}</td><td style="padding:0.35rem;">${escHtml(t.type)}</td><td style="padding:0.35rem;">${formatDate(t.date)}</td><td style="padding:0.35rem;">${escHtml(t.trainer||'')}</td><td style="padding:0.35rem;">${formatDate(t.expiry)}</td><td style="padding:0.35rem;color:${ts.status==='current'?'#2e7d32':ts.status==='expiring'?'#f57f17':'#c62828'}">${ts.label}</td></tr>`;
+            }).join('')}</tbody>
+          </table>
+        `}
+
+        <h2 style="font-size:1.1rem;border-bottom:1px solid #ddd;padding-bottom:0.5rem;margin-top:2rem;">SECTION 5: INCIDENT LOG</h2>
+        ${state.incidents.length === 0 ? '<p style="font-size:0.88rem;">No security incidents recorded in this period.</p>' : state.incidents.map(inc => `
+          <div style="border-left:3px solid ${inc.sev==='serious'?'#c00':inc.sev==='minor'?'#f0a832':'#4caf50'};padding-left:0.75rem;margin:0.75rem 0;font-size:0.85rem;">
+            <strong>${escHtml(inc.type)}</strong> · ${formatDateTime(inc.dt)} · Severity: ${inc.sev}
+            ${inc.reporter ? ` · Reported by: ${escHtml(inc.reporter)}` : ''}
+            <br>${escHtml(inc.desc)}
+            ${inc.resp ? `<br><em>Response: ${escHtml(inc.resp)}</em>` : ''}
+            ${inc.police ? `<br>Police ref: ${escHtml(inc.police)}` : ''}
+          </div>
+        `).join('')}
+
+        <div style="margin-top:3rem;padding-top:1.5rem;border-top:1px solid #ddd;font-size:0.78rem;color:#888;text-align:center;">
+          Generated by Hospitality Pro · Martyn's Law Venue Safety Compliance Hub · ${now}<br>
+          This document is for compliance record-keeping purposes. Consult a Counter Terrorism Security Advisor (CTSA) for specialist guidance.
+        </div>
+      </div>
+    `;
+
+    document.getElementById('exportContent').innerHTML = html;
+    document.getElementById('exportModalSub').textContent = `${v.name || 'Venue'} · Generated ${now}`;
+    document.getElementById('exportModal').classList.add('open');
+  }
+
+  function raField(label, val) {
+    if (!val || !val.trim()) return `<p style="font-size:0.85rem;"><strong>${label}:</strong> <span style="color:#aaa;">Not completed</span></p>`;
+    return `<p style="font-size:0.85rem;"><strong>${label}:</strong> ${escHtml(val)}</p>`;
+  }
+
+  function printExport() {
+    const content = document.getElementById('exportContent').innerHTML;
+    const win = window.open('', '_blank');
+    win.document.write(`<!DOCTYPE html><html><head><title>Compliance Report</title><style>body{font-family:Georgia,serif;max-width:800px;margin:2rem auto;color:#111;line-height:1.7;}@media print{body{margin:0;}}</style></head><body>${content}</body></html>`);
+    win.document.close();
+    win.print();
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // DATA MANAGEMENT
+  // ═══════════════════════════════════════════════════════════
+  function exportJSON() {
+    const data = {
+      exported: new Date().toISOString(),
+      venue: state.venue,
+      ra: state.ra,
+      procs: state.procs,
+      secChecks: state.secChecks,
+      procNotes: state.procNotes,
+      training: state.training,
+      incidents: state.incidents
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `venue-safety-backup-${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function importJSON(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        const data = JSON.parse(e.target.result);
+        if (confirm('This will replace all current data. Continue?')) {
+          if (data.venue) { state.venue = data.venue; saveState('venue'); }
+          if (data.ra) { state.ra = data.ra; saveState('ra'); }
+          if (data.procs) { state.procs = data.procs; saveState('procs'); }
+          if (data.secChecks) { state.secChecks = data.secChecks; saveState('secChecks'); }
+          if (data.procNotes) { state.procNotes = data.procNotes; saveState('procNotes'); }
+          if (data.training) { state.training = data.training; saveState('training'); }
+          if (data.incidents) { state.incidents = data.incidents; saveState('incidents'); }
+          populateVenueBar();
+          populateRAFields();
+          populateProcFields();
+          renderSecurityChecklist();
+          renderProcedures();
+          renderTraining();
+          renderIncidents();
+          renderExportChecklist();
+          updateDashboard();
+          alert('Data restored successfully.');
+        }
+      } catch(err) { alert('Invalid backup file.'); }
+    };
+    reader.readAsText(file);
+    input.value = '';
+  }
+
+  function confirmClearAll() {
+    if (!confirm('Clear ALL compliance data? This cannot be undone.')) return;
+    if (!confirm('Are you absolutely sure? This will delete your entire compliance record.')) return;
+    Object.values(LS).forEach(key => localStorage.removeItem(key));
+    state = { venue: {}, ra: {}, procs: {}, training: [], incidents: [], secChecks: {}, procNotes: {} };
+    populateVenueBar();
+    populateRAFields();
+    populateProcFields();
+    renderSecurityChecklist();
+    renderProcedures();
+    renderTraining();
+    renderIncidents();
+    renderExportChecklist();
+    updateDashboard();
+    alert('All data cleared.');
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // UTILITIES
+  // ═══════════════════════════════════════════════════════════
+  function formatDate(d) {
+    if (!d) return '—';
+    try {
+      const dt = new Date(d);
+      return dt.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+    } catch { return d; }
+  }
+
+  function formatDateTime(d) {
+    if (!d) return '—';
+    try {
+      const dt = new Date(d);
+      return dt.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) + ' ' + dt.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+    } catch { return d; }
+  }
+
+  function escHtml(str) {
+    if (!str) return '';
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+  }
+
+  // Close modals on overlay click
+  document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', function(e) {
+      if (e.target === this) this.classList.remove('open');
+    });
+  });
+
+  // Init
+  init();
+  </script>
+</body>
+</html>
