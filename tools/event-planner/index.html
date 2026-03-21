@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Private Event & Hire Planner · Hospitality Pro</title>
+  <link rel="stylesheet" href="/assets/styles/system.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Layout ───────────────────────────────────────────── */
+    .page-header { text-align: center; padding: var(--space-lg) 0 var(--space-md); }
+    .page-header .eyebrow { color: var(--color-text-muted); font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem; }
+    .page-header h1 { font-family: var(--font-serif); font-size: clamp(1.6rem, 4.5vw, 2.5rem); margin: 0 0 0.5rem; }
+    .page-header p { color: var(--color-text-muted); margin: 0; font-size: 0.9rem; }
+
+    .back-link { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--color-text-muted); font-size: 0.82rem; text-decoration: none; transition: color var(--transition-fast); margin-bottom: var(--space-md); }
+    .back-link:hover { color: var(--color-gold); }
+
+    /* ── Tabs ─────────────────────────────────────────────── */
+    .tabs { display: flex; border-bottom: 1px solid var(--color-border); margin-bottom: var(--space-lg); overflow-x: auto; -webkit-overflow-scrolling: touch; gap: 0; }
+    .tab-btn { flex: 1; min-width: 100px; padding: 0.8rem 1rem; background: none; border: none; cursor: pointer; color: var(--color-text-muted); font-size: 0.84rem; font-family: var(--font-sans); font-weight: 500; border-bottom: 2px solid transparent; transition: all var(--transition-base); white-space: nowrap; }
+    .tab-btn:hover { color: var(--color-text); }
+    .tab-btn.active { color: var(--color-gold); border-bottom-color: var(--color-gold); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── Glass Cards ──────────────────────────────────────── */
+    .glass-card { background: rgba(255,255,255,0.035); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--space-md); backdrop-filter: blur(var(--glass-blur)); -webkit-backdrop-filter: blur(var(--glass-blur)); }
+    .glass-card + .glass-card { margin-top: var(--space-md); }
+    .section-title { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-text-muted); margin: 0 0 var(--space-sm); }
+    .card-title { font-family: var(--font-serif); font-size: 1.1rem; margin: 0 0 var(--space-sm); }
+
+    /* ── Forms ────────────────────────────────────────────── */
+    .field-group { display: flex; flex-direction: column; gap: 0.35rem; }
+    .field-label { font-size: 0.8rem; color: var(--color-text-muted); font-weight: 500; }
+    .field-hint { font-size: 0.72rem; color: var(--color-text-muted); opacity: 0.65; }
+    input[type="number"], input[type="text"], input[type="date"], input[type="time"], input[type="email"], select, textarea {
+      width: 100%; padding: 0.65rem 0.9rem;
+      background: rgba(255,255,255,0.06); border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm); color: var(--color-text); font-family: var(--font-sans); font-size: 0.95rem;
+      transition: border-color var(--transition-fast);
+    }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: rgba(243,201,139,0.5); }
+    input::placeholder, textarea::placeholder { color: var(--color-text-muted); opacity: 0.6; }
+    textarea { resize: vertical; min-height: 80px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-sm); }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--space-sm); }
+    .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: var(--space-sm); }
+    @media (max-width: 600px) { .grid-4 { grid-template-columns: 1fr 1fr; } .grid-3 { grid-template-columns: 1fr 1fr; } .grid-2 { grid-template-columns: 1fr; } }
+    @media (max-width: 380px) { .grid-3 { grid-template-columns: 1fr; } }
+
+    /* ── Buttons ──────────────────────────────────────────── */
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.45rem; padding: 0.7rem 1.2rem; border-radius: var(--radius-sm); font-family: var(--font-sans); font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: all var(--transition-base); border: none; white-space: nowrap; }
+    .btn-primary { background: var(--color-gold); color: #0a0b10; }
+    .btn-primary:hover { background: #ffe7bf; }
+    .btn-ghost { background: rgba(255,255,255,0.06); border: 1px solid var(--color-border); color: var(--color-text); }
+    .btn-ghost:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.15); }
+    .btn-danger { background: rgba(246,124,124,0.12); border: 1px solid rgba(246,124,124,0.25); color: var(--color-error); }
+    .btn-danger:hover { background: rgba(246,124,124,0.2); }
+    .btn-sm { padding: 0.45rem 0.85rem; font-size: 0.8rem; }
+    .btn-full { width: 100%; }
+    .btn-group { display: flex; gap: var(--space-sm); flex-wrap: wrap; }
+
+    /* ── KPI Strip ────────────────────────────────────────── */
+    .kpi-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: var(--space-sm); margin-bottom: var(--space-md); }
+    .kpi-card { background: rgba(255,255,255,0.04); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-sm); text-align: center; }
+    .kpi-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-muted); margin-bottom: 0.25rem; }
+    .kpi-value { font-size: 1.35rem; font-weight: 700; font-family: var(--font-mono); line-height: 1.1; }
+    .kpi-sub { font-size: 0.7rem; color: var(--color-text-muted); margin-top: 0.2rem; }
+    .kpi-card.gold .kpi-value { color: var(--color-gold); }
+    .kpi-card.success .kpi-value { color: var(--color-success); }
+    .kpi-card.warning .kpi-value { color: var(--color-warning); }
+    .kpi-card.info .kpi-value { color: var(--color-info); }
+    .kpi-card.error .kpi-value { color: var(--color-error); }
+
+    /* ── Pipeline (Kanban) ────────────────────────────────── */
+    .pipeline { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-sm); min-height: 420px; }
+    @media (max-width: 900px) { .pipeline { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 520px) { .pipeline { grid-template-columns: 1fr; } }
+
+    .pipeline-col {
+      background: rgba(255,255,255,0.025); border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg); padding: var(--space-sm);
+      display: flex; flex-direction: column; gap: var(--space-sm);
+      min-height: 300px; transition: background var(--transition-fast);
+    }
+    .pipeline-col.drag-over { background: rgba(243,201,139,0.07); border-color: rgba(243,201,139,0.3); }
+    .pipeline-col-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.25rem; }
+    .pipeline-col-title { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-text-muted); font-weight: 600; }
+    .pipeline-badge { font-size: 0.65rem; font-family: var(--font-mono); background: rgba(255,255,255,0.08); border-radius: var(--radius-pill); padding: 0.15rem 0.5rem; color: var(--color-text-muted); }
+
+    .event-card {
+      background: rgba(255,255,255,0.045); border: 1px solid var(--color-border);
+      border-radius: var(--radius-md); padding: 0.75rem;
+      cursor: grab; transition: all var(--transition-base);
+      user-select: none;
+    }
+    .event-card:active { cursor: grabbing; }
+    .event-card:hover { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.15); transform: translateY(-1px); }
+    .event-card.dragging { opacity: 0.4; transform: scale(0.97); }
+    .event-card-name { font-weight: 600; font-size: 0.9rem; margin-bottom: 0.2rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .event-card-date { font-size: 0.75rem; color: var(--color-text-muted); font-family: var(--font-mono); }
+    .event-card-meta { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.4rem; }
+    .event-tag { font-size: 0.65rem; padding: 0.15rem 0.5rem; border-radius: var(--radius-pill); background: rgba(255,255,255,0.07); color: var(--color-text-muted); white-space: nowrap; }
+    .event-tag.gold { background: rgba(243,201,139,0.12); color: var(--color-gold); }
+    .event-tag.success { background: rgba(76,225,173,0.12); color: var(--color-success); }
+    .event-tag.warning { background: rgba(246,174,91,0.12); color: var(--color-warning); }
+    .event-card-actions { display: flex; gap: 0.35rem; margin-top: 0.5rem; }
+    .btn-card-action { background: rgba(255,255,255,0.05); border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 0.25rem 0.5rem; font-size: 0.72rem; color: var(--color-text-muted); cursor: pointer; transition: all var(--transition-fast); font-family: var(--font-sans); }
+    .btn-card-action:hover { background: rgba(255,255,255,0.1); color: var(--color-text); }
+    .btn-card-action.edit-btn:hover { color: var(--color-gold); border-color: rgba(243,201,139,0.3); }
+    .btn-card-action.del-btn:hover { color: var(--color-error); border-color: rgba(246,124,124,0.3); }
+
+    /* Stage colours on left border */
+    .stage-enquiry .event-card { border-left: 3px solid var(--color-info); }
+    .stage-confirmed .event-card { border-left: 3px solid var(--color-gold); }
+    .stage-invoiced .event-card { border-left: 3px solid var(--color-warning); }
+    .stage-complete .event-card { border-left: 3px solid var(--color-success); }
+
+    /* ── Quote Builder ────────────────────────────────────── */
+    .quote-section { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md); }
+    @media (max-width: 800px) { .quote-section { grid-template-columns: 1fr; } }
+
+    .quote-output {
+      background: rgba(255,255,255,0.02); border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg); padding: var(--space-md);
+      font-size: 0.85rem; line-height: 1.75;
+    }
+    .quote-output h4 { font-family: var(--font-serif); font-size: 1.05rem; margin: 0 0 var(--space-sm); color: var(--color-gold); }
+    .quote-output .quote-block { white-space: pre-wrap; color: var(--color-text-soft); font-family: var(--font-sans); font-size: 0.84rem; }
+    .quote-divider { border: none; border-top: 1px solid var(--color-border); margin: 0.75rem 0; }
+    .quote-total-row { display: flex; justify-content: space-between; font-weight: 700; color: var(--color-gold); font-family: var(--font-mono); font-size: 1rem; padding-top: 0.5rem; }
+
+    /* ── Min Spend Calculator ─────────────────────────────── */
+    .min-spend-result { background: rgba(243,201,139,0.06); border: 1px solid rgba(243,201,139,0.18); border-radius: var(--radius-md); padding: var(--space-md); text-align: center; }
+    .min-spend-amount { font-family: var(--font-mono); font-size: 2.4rem; font-weight: 700; color: var(--color-gold); line-height: 1; }
+    .min-spend-label { font-size: 0.78rem; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0.35rem; }
+    .min-spend-breakdown { margin-top: var(--space-sm); font-size: 0.82rem; color: var(--color-text-muted); }
+    .min-spend-breakdown div { display: flex; justify-content: space-between; padding: 0.2rem 0; }
+    .min-spend-breakdown .line-bold { color: var(--color-text); font-weight: 600; border-top: 1px solid var(--color-border); margin-top: 0.4rem; padding-top: 0.4rem; }
+
+    /* ── Deposit Tracker ──────────────────────────────────── */
+    .deposit-row {
+      background: rgba(255,255,255,0.03); border: 1px solid var(--color-border);
+      border-radius: var(--radius-md); padding: var(--space-sm);
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr auto;
+      gap: var(--space-sm); align-items: center;
+    }
+    @media (max-width: 700px) { .deposit-row { grid-template-columns: 1fr 1fr; gap: 0.5rem; } .deposit-row > *:last-child { grid-column: 1 / -1; } }
+    .deposit-event-name { font-weight: 600; font-size: 0.88rem; }
+    .deposit-amount { font-family: var(--font-mono); font-size: 0.9rem; }
+    .status-badge { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.2rem 0.6rem; border-radius: var(--radius-pill); font-size: 0.72rem; font-weight: 600; cursor: pointer; transition: all var(--transition-fast); }
+    .status-badge.pending { background: rgba(246,174,91,0.12); color: var(--color-warning); border: 1px solid rgba(246,174,91,0.25); }
+    .status-badge.paid { background: rgba(76,225,173,0.12); color: var(--color-success); border: 1px solid rgba(76,225,173,0.25); }
+    .balance-due { font-family: var(--font-mono); font-size: 0.9rem; }
+    .balance-due.outstanding { color: var(--color-error); }
+    .balance-due.cleared { color: var(--color-success); }
+
+    /* ── Event Log Filters ────────────────────────────────── */
+    .log-filters { display: flex; gap: var(--space-sm); flex-wrap: wrap; align-items: center; margin-bottom: var(--space-md); }
+    .log-filters select, .log-filters input[type="date"] { width: auto; flex: 1; min-width: 120px; }
+    .log-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    .log-table th { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-muted); padding: 0.5rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+    .log-table td { padding: 0.7rem 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 0.84rem; }
+    .log-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .log-table tr:last-child td { border-bottom: none; }
+    .log-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+    /* ── Stage Select Dropdown ────────────────────────────── */
+    .stage-select { appearance: none; -webkit-appearance: none; padding: 0.3rem 0.6rem; font-size: 0.75rem; border-radius: var(--radius-sm); cursor: pointer; border: 1px solid var(--color-border); background: rgba(255,255,255,0.06); color: var(--color-text); font-family: var(--font-sans); }
+
+    /* ── Quote Export Modal ───────────────────────────────── */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(2,4,10,0.85); backdrop-filter: blur(8px); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: var(--space-md); opacity: 0; pointer-events: none; transition: opacity var(--transition-base); }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal-box { background: #0d1124; border: 1px solid var(--color-border-strong); border-radius: var(--radius-lg); padding: var(--space-lg); max-width: 680px; width: 100%; max-height: 85vh; overflow-y: auto; box-shadow: 0 24px 80px rgba(0,0,0,0.6); }
+    .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-md); }
+    .modal-title { font-family: var(--font-serif); font-size: 1.3rem; margin: 0; }
+    .modal-close { background: none; border: none; color: var(--color-text-muted); font-size: 1.4rem; cursor: pointer; padding: 0.2rem; line-height: 1; transition: color var(--transition-fast); }
+    .modal-close:hover { color: var(--color-text); }
+    .quote-print-area { white-space: pre-wrap; font-family: var(--font-sans); font-size: 0.85rem; line-height: 1.8; color: var(--color-text-soft); background: rgba(255,255,255,0.025); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-md); margin-bottom: var(--space-md); }
+    @media print { .modal-overlay { position: static; opacity: 1; pointer-events: all; background: none; backdrop-filter: none; display: block; padding: 0; } .modal-box { box-shadow: none; border: none; max-height: none; padding: 1cm; } .no-print { display: none !important; } .quote-print-area { border: none; background: none; } }
+
+    /* ── Toast ────────────────────────────────────────────── */
+    .toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(1rem); background: rgba(12,16,31,0.96); border: 1px solid var(--color-border-strong); border-radius: var(--radius-md); padding: 0.7rem 1.2rem; font-size: 0.85rem; color: var(--color-text); box-shadow: 0 8px 32px rgba(0,0,0,0.4); z-index: 2000; opacity: 0; pointer-events: none; transition: all 250ms ease; white-space: nowrap; }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .toast.success { border-color: rgba(76,225,173,0.4); color: var(--color-success); }
+    .toast.error { border-color: rgba(246,124,124,0.4); color: var(--color-error); }
+
+    /* ── Misc helpers ─────────────────────────────────────── */
+    .form-stack { display: flex; flex-direction: column; gap: var(--space-sm); }
+    .separator { border: none; border-top: 1px solid var(--color-border); margin: var(--space-md) 0; }
+    .empty-state { text-align: center; padding: var(--space-lg); color: var(--color-text-muted); font-size: 0.85rem; }
+    .empty-state .empty-icon { font-size: 2rem; margin-bottom: 0.5rem; opacity: 0.5; }
+    .inline-label { font-size: 0.75rem; color: var(--color-text-muted); font-weight: 500; margin-bottom: 0.2rem; }
+
+    /* F&B Package rows */
+    .package-list { display: flex; flex-direction: column; gap: 0.5rem; }
+    .package-row { display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 0.5rem; align-items: center; background: rgba(255,255,255,0.025); border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 0.55rem 0.75rem; }
+    @media (max-width: 500px) { .package-row { grid-template-columns: 1fr 1fr; gap: 0.35rem; } .package-row > *:last-child { grid-column: 2; justify-self: end; } }
+    .package-row input, .package-row select { background: rgba(255,255,255,0.06); border-color: transparent; }
+    .package-row input:focus, .package-row select:focus { border-color: rgba(243,201,139,0.4); }
+    .btn-remove { background: none; border: none; color: var(--color-text-muted); cursor: pointer; font-size: 1rem; padding: 0.2rem 0.35rem; border-radius: var(--radius-sm); opacity: 0.6; transition: all var(--transition-fast); }
+    .btn-remove:hover { opacity: 1; color: var(--color-error); background: rgba(246,124,124,0.1); }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <a class="back-link" href="/index.html">← Back to all tools</a>
+
+    <header class="page-header">
+      <p class="eyebrow">Hospitality Pro · Hidden Café Bar</p>
+      <h1>Private Event & Hire Planner</h1>
+      <p>Quote-to-complete pipeline. No Tripleseat subscription required.</p>
+    </header>
+
+    <!-- Pipeline KPI Strip -->
+    <div class="kpi-strip" id="pipeline-kpis">
+      <div class="kpi-card info"><div class="kpi-label">Enquiries</div><div class="kpi-value" id="kpi-enquiry">0</div></div>
+      <div class="kpi-card gold"><div class="kpi-label">Confirmed</div><div class="kpi-value" id="kpi-confirmed">0</div></div>
+      <div class="kpi-card warning"><div class="kpi-label">Invoiced</div><div class="kpi-value" id="kpi-invoiced">0</div></div>
+      <div class="kpi-card success"><div class="kpi-label">Complete</div><div class="kpi-value" id="kpi-complete">0</div></div>
+      <div class="kpi-card gold"><div class="kpi-label">Pipeline Value</div><div class="kpi-value" id="kpi-total">£0</div><div class="kpi-sub">total min spend</div></div>
+      <div class="kpi-card success"><div class="kpi-label">Deposits Paid</div><div class="kpi-value" id="kpi-deposits">£0</div></div>
+    </div>
+
+    <!-- Tabs -->
+    <nav class="tabs" id="main-tabs">
+      <button class="tab-btn active" data-tab="pipeline">🗂 Pipeline</button>
+      <button class="tab-btn" data-tab="new-event">➕ New Event</button>
+      <button class="tab-btn" data-tab="min-spend">💷 Min Spend</button>
+      <button class="tab-btn" data-tab="deposits">💳 Deposits</button>
+      <button class="tab-btn" data-tab="log">📋 Event Log</button>
+    </nav>
+
+    <!-- ── TAB: Pipeline ────────────────────────────────────── -->
+    <div class="tab-panel active" id="tab-pipeline">
+      <div class="pipeline" id="pipeline-board">
+        <div class="pipeline-col stage-enquiry" data-stage="enquiry" id="col-enquiry">
+          <div class="pipeline-col-header">
+            <span class="pipeline-col-title">Enquiry</span>
+            <span class="pipeline-badge" id="badge-enquiry">0</span>
+          </div>
+        </div>
+        <div class="pipeline-col stage-confirmed" data-stage="confirmed" id="col-confirmed">
+          <div class="pipeline-col-header">
+            <span class="pipeline-col-title">Confirmed</span>
+            <span class="pipeline-badge" id="badge-confirmed">0</span>
+          </div>
+        </div>
+        <div class="pipeline-col stage-invoiced" data-stage="invoiced" id="col-invoiced">
+          <div class="pipeline-col-header">
+            <span class="pipeline-col-title">Invoiced</span>
+            <span class="pipeline-badge" id="badge-invoiced">0</span>
+          </div>
+        </div>
+        <div class="pipeline-col stage-complete" data-stage="complete" id="col-complete">
+          <div class="pipeline-col-header">
+            <span class="pipeline-col-title">Complete</span>
+            <span class="pipeline-badge" id="badge-complete">0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB: New Event / Quote Generator ─────────────────── -->
+    <div class="tab-panel" id="tab-new-event">
+      <div class="quote-section">
+        <!-- Left: Form -->
+        <div>
+          <!-- Event Details -->
+          <div class="glass-card">
+            <p class="section-title">Event Details</p>
+            <div class="form-stack">
+              <div class="grid-2">
+                <div class="field-group">
+                  <label class="field-label">Client Name *</label>
+                  <input type="text" id="q-client" placeholder="e.g. Sarah & Tom" />
+                </div>
+                <div class="field-group">
+                  <label class="field-label">Event Type</label>
+                  <select id="q-type">
+                    <option value="Private Hire">Private Hire (Full Buyout)</option>
+                    <option value="Birthday">Birthday Celebration</option>
+                    <option value="Corporate">Corporate Event</option>
+                    <option value="Cocktail Tasting">Cocktail Tasting</option>
+                    <option value="Engagement">Engagement Party</option>
+                    <option value="Hen / Stag">Hen / Stag</option>
+                    <option value="Networking">Networking Event</option>
+                    <option value="Product Launch">Product Launch</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="grid-3">
+                <div class="field-group">
+                  <label class="field-label">Event Date *</label>
+                  <input type="date" id="q-date" />
+                </div>
+                <div class="field-group">
+                  <label class="field-label">Start Time</label>
+                  <input type="time" id="q-start" value="19:00" />
+                </div>
+                <div class="field-group">
+                  <label class="field-label">Duration (hrs)</label>
+                  <input type="number" id="q-duration" value="4" min="1" max="12" step="0.5" />
+                </div>
+              </div>
+
+              <div class="grid-3">
+                <div class="field-group">
+                  <label class="field-label">Guest Count</label>
+                  <input type="number" id="q-guests" value="30" min="1" max="300" />
+                </div>
+                <div class="field-group">
+                  <label class="field-label">Area / Room</label>
+                  <select id="q-room">
+                    <option value="Whole Venue">Whole Venue</option>
+                    <option value="Main Bar">Main Bar</option>
+                    <option value="Private Dining Room">Private Dining Room</option>
+                    <option value="Terrace">Terrace</option>
+                    <option value="Basement Bar">Basement Bar</option>
+                    <option value="Snug">Snug</option>
+                  </select>
+                </div>
+                <div class="field-group">
+                  <label class="field-label">Room Hire Fee (£)</label>
+                  <input type="number" id="q-hire-fee" value="0" min="0" />
+                </div>
+              </div>
+
+              <div class="field-group">
+                <label class="field-label">Client Email</label>
+                <input type="email" id="q-email" placeholder="client@email.com" />
+              </div>
+
+              <div class="field-group">
+                <label class="field-label">Notes / Special Requirements</label>
+                <textarea id="q-notes" placeholder="e.g. dietary requirements, decorations, AV needs..."></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- F&B Packages -->
+          <div class="glass-card" style="margin-top: var(--space-md)">
+            <p class="section-title">Food & Drinks Packages</p>
+            <div class="package-list" id="package-list"></div>
+            <button class="btn btn-ghost btn-sm" style="margin-top: var(--space-sm);" onclick="addPackage()">+ Add Package</button>
+          </div>
+
+          <!-- Deposit -->
+          <div class="glass-card" style="margin-top: var(--space-md)">
+            <p class="section-title">Deposit</p>
+            <div class="grid-2">
+              <div class="field-group">
+                <label class="field-label">Deposit % (of min spend)</label>
+                <input type="number" id="q-deposit-pct" value="25" min="0" max="100" />
+              </div>
+              <div class="field-group">
+                <label class="field-label">Deposit Due Date</label>
+                <input type="date" id="q-deposit-due" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="btn-group" style="margin-top: var(--space-md);">
+            <button class="btn btn-primary" onclick="generateQuote()">Generate Quote →</button>
+            <button class="btn btn-ghost" onclick="resetQuoteForm()">Reset</button>
+          </div>
+        </div>
+
+        <!-- Right: Live Quote Output -->
+        <div>
+          <div class="quote-output glass-card" id="quote-output-panel">
+            <h4>📋 Quote Preview</h4>
+            <p style="color: var(--color-text-muted); font-size: 0.82rem;">Fill in the details on the left and click <strong>Generate Quote</strong> to create a professional, shareable proposal.</p>
+          </div>
+          <div class="btn-group" style="margin-top: var(--space-sm);" id="quote-actions" style="display:none">
+            <button class="btn btn-primary btn-sm" onclick="openExportModal()" id="btn-export" style="display:none">📤 Export / Print</button>
+            <button class="btn btn-ghost btn-sm" onclick="saveEventFromQuote()" id="btn-save-event" style="display:none">💾 Save to Pipeline</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB: Min Spend Calculator ────────────────────────── -->
+    <div class="tab-panel" id="tab-min-spend">
+      <div class="quote-section">
+        <div class="glass-card">
+          <p class="section-title">Input</p>
+          <div class="form-stack">
+            <div class="field-group">
+              <label class="field-label">Room Hire Fee (£)</label>
+              <input type="number" id="ms-hire" value="0" min="0" oninput="calcMinSpend()" />
+            </div>
+            <div class="field-group">
+              <label class="field-label">Drinks Minimum (£)</label>
+              <input type="number" id="ms-drinks" value="500" min="0" oninput="calcMinSpend()" />
+              <span class="field-hint">Bar tab / drinks package minimum</span>
+            </div>
+            <div class="field-group">
+              <label class="field-label">Food Minimum (£)</label>
+              <input type="number" id="ms-food" value="0" min="0" oninput="calcMinSpend()" />
+              <span class="field-hint">Set to 0 if drinks-only event</span>
+            </div>
+            <div class="field-group">
+              <label class="field-label">Service Charge %</label>
+              <input type="number" id="ms-service" value="12.5" min="0" max="30" step="0.5" oninput="calcMinSpend()" />
+            </div>
+            <div class="field-group">
+              <label class="field-label">Deposit % (for reference)</label>
+              <input type="number" id="ms-deposit-pct" value="25" min="0" max="100" oninput="calcMinSpend()" />
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="min-spend-result glass-card" id="ms-result">
+            <div class="min-spend-amount" id="ms-total">£0</div>
+            <div class="min-spend-label">Total Minimum Commitment</div>
+            <div class="min-spend-breakdown" id="ms-breakdown"></div>
+          </div>
+          <div class="glass-card" style="margin-top: var(--space-md);">
+            <p class="section-title">Deposit Scenarios</p>
+            <div id="ms-deposit-scenarios"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB: Deposits ─────────────────────────────────────── -->
+    <div class="tab-panel" id="tab-deposits">
+      <div class="glass-card">
+        <p class="section-title">Deposit Tracker</p>
+        <div id="deposit-list">
+          <div class="empty-state"><div class="empty-icon">💳</div>No events in pipeline yet. Create events from the New Event tab.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB: Event Log ────────────────────────────────────── -->
+    <div class="tab-panel" id="tab-log">
+      <div class="glass-card">
+        <div class="log-filters">
+          <select id="log-filter-stage" onchange="renderLog()">
+            <option value="">All Stages</option>
+            <option value="enquiry">Enquiry</option>
+            <option value="confirmed">Confirmed</option>
+            <option value="invoiced">Invoiced</option>
+            <option value="complete">Complete</option>
+          </select>
+          <input type="date" id="log-date-from" onchange="renderLog()" />
+          <input type="date" id="log-date-to" onchange="renderLog()" />
+          <button class="btn btn-ghost btn-sm" onclick="clearLogFilters()">Clear Filters</button>
+          <button class="btn btn-ghost btn-sm" onclick="exportCSV()">⬇ Export CSV</button>
+        </div>
+        <div class="log-wrap">
+          <table class="log-table">
+            <thead>
+              <tr>
+                <th>Client</th>
+                <th>Type</th>
+                <th>Date</th>
+                <th>Guests</th>
+                <th>Min Spend</th>
+                <th>Deposit</th>
+                <th>Stage</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="log-tbody"></tbody>
+          </table>
+        </div>
+        <div id="log-empty" class="empty-state" style="display:none"><div class="empty-icon">📋</div>No events match the filters.</div>
+      </div>
+    </div>
+  </div><!-- /app-shell -->
+
+  <!-- ── Quote Export Modal ────────────────────────────────── -->
+  <div class="modal-overlay" id="export-modal">
+    <div class="modal-box">
+      <div class="modal-header no-print">
+        <h2 class="modal-title">Export Quote</h2>
+        <button class="modal-close" onclick="closeExportModal()">✕</button>
+      </div>
+      <div class="quote-print-area" id="modal-quote-text"></div>
+      <div class="btn-group no-print">
+        <button class="btn btn-primary" onclick="copyQuoteToClipboard()">📋 Copy to Clipboard</button>
+        <button class="btn btn-ghost" onclick="window.print()">🖨 Print</button>
+        <button class="btn btn-ghost" onclick="closeExportModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+  // ── State ────────────────────────────────────────────────────
+  const STORAGE_KEY = 'hospitality_pro_events_v1';
+  let events = [];
+  let lastGeneratedQuote = '';
+  let lastGeneratedEvent = null;
+  let dragSrcId = null;
+  let packages = [];
+  let editingId = null;
+
+  // ── Init ─────────────────────────────────────────────────────
+  function init() {
+    loadEvents();
+    initPackages();
+    initDragDrop();
+    renderAll();
+    calcMinSpend();
+    // set default date to today
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('q-date').value = today;
+    const depositDue = new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0];
+    document.getElementById('q-deposit-due').value = depositDue;
+  }
+
+  // ── Storage ──────────────────────────────────────────────────
+  function loadEvents() {
+    try { events = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch { events = []; }
+  }
+  function saveEvents() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(events));
+  }
+
+  // ── Tabs ─────────────────────────────────────────────────────
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+      if (btn.dataset.tab === 'log') renderLog();
+      if (btn.dataset.tab === 'deposits') renderDeposits();
+      if (btn.dataset.tab === 'pipeline') renderPipeline();
+    });
+  });
+
+  // ── Packages ─────────────────────────────────────────────────
+  function initPackages() {
+    packages = [
+      { name: 'Drinks Package', type: 'drinks', pricePerHead: 35, guests: null },
+      { name: 'Canapés', type: 'food', pricePerHead: 15, guests: null }
+    ];
+    renderPackages();
+  }
+
+  function addPackage() {
+    packages.push({ name: '', type: 'drinks', pricePerHead: 0, guests: null });
+    renderPackages();
+  }
+
+  function removePackage(i) {
+    packages.splice(i, 1);
+    renderPackages();
+  }
+
+  function renderPackages() {
+    const list = document.getElementById('package-list');
+    if (packages.length === 0) {
+      list.innerHTML = '<p style="color:var(--color-text-muted);font-size:0.82rem;margin:0">No packages added. Add a drinks or food package below.</p>';
+      return;
+    }
+    list.innerHTML = packages.map((p, i) => `
+      <div class="package-row">
+        <input type="text" value="${escHtml(p.name)}" placeholder="Package name" onchange="packages[${i}].name=this.value" />
+        <select onchange="packages[${i}].type=this.value">
+          <option value="drinks" ${p.type==='drinks'?'selected':''}>Drinks</option>
+          <option value="food" ${p.type==='food'?'selected':''}>Food</option>
+          <option value="entertainment" ${p.type==='entertainment'?'selected':''}>Entertainment</option>
+        </select>
+        <input type="number" value="${p.pricePerHead}" placeholder="£ / head" min="0" step="0.5" onchange="packages[${i}].pricePerHead=parseFloat(this.value)||0" style="width:100%" />
+        <button class="btn-remove" onclick="removePackage(${i})" title="Remove">✕</button>
+      </div>
+    `).join('');
+  }
+
+  // ── Quote Generator ──────────────────────────────────────────
+  function generateQuote() {
+    const client = document.getElementById('q-client').value.trim();
+    const type = document.getElementById('q-type').value;
+    const date = document.getElementById('q-date').value;
+    const start = document.getElementById('q-start').value;
+    const duration = parseFloat(document.getElementById('q-duration').value) || 4;
+    const guests = parseInt(document.getElementById('q-guests').value) || 0;
+    const room = document.getElementById('q-room').value;
+    const hireFee = parseFloat(document.getElementById('q-hire-fee').value) || 0;
+    const email = document.getElementById('q-email').value.trim();
+    const notes = document.getElementById('q-notes').value.trim();
+    const depositPct = parseFloat(document.getElementById('q-deposit-pct').value) || 25;
+    const depositDue = document.getElementById('q-deposit-due').value;
+
+    if (!client) { toast('Please enter a client name', 'error'); return; }
+    if (!date) { toast('Please select an event date', 'error'); return; }
+    if (!guests) { toast('Please enter a guest count', 'error'); return; }
+
+    // Calculate packages total
+    const pkgLines = packages.map(p => ({
+      ...p,
+      effectiveGuests: p.guests || guests,
+      total: (p.guests || guests) * p.pricePerHead
+    }));
+    const fbTotal = pkgLines.reduce((s, p) => s + p.total, 0);
+    const minSpend = hireFee + fbTotal;
+    const deposit = minSpend * (depositPct / 100);
+    const balance = minSpend - deposit;
+
+    // Format date nicely
+    const eventDate = date ? new Date(date + 'T12:00:00').toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) : '';
+    // End time
+    const [sh, sm] = start.split(':').map(Number);
+    const endMins = sh * 60 + sm + duration * 60;
+    const endH = Math.floor(endMins / 60) % 24;
+    const endM = endMins % 60;
+    const endStr = `${String(endH).padStart(2,'0')}:${String(endM).padStart(2,'0')}`;
+
+    const pkgText = pkgLines.length > 0
+      ? pkgLines.map(p => `  • ${p.name} — £${p.pricePerHead.toFixed(2)}/head × ${p.effectiveGuests} guests = £${p.total.toFixed(2)}`).join('\n')
+      : '  • No packages selected';
+
+    const quoteText = `PRIVATE EVENT PROPOSAL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Hidden Café Bar · Private Events
+
+Dear ${client},
+
+Thank you for your interest in hosting your ${type.toLowerCase()} at Hidden. We'd be delighted to welcome you and your guests for an exceptional evening.
+
+Please find your tailored event proposal below.
+
+─── EVENT DETAILS ───────────────────────
+
+  Event Type:   ${type}
+  Client:       ${client}${email ? '\n  Contact:      ' + email : ''}
+  Date:         ${eventDate}
+  Time:         ${start} – ${endStr} (${duration} hours)
+  Guests:       ${guests} guests
+  Area Hired:   ${room}
+
+─── PRICING BREAKDOWN ───────────────────
+${hireFee > 0 ? `\n  Room Hire Fee:            £${hireFee.toFixed(2)}\n` : ''}
+  F&B Packages:
+${pkgText}
+
+  ─────────────────────────────────────
+  Total Minimum Spend:     £${minSpend.toFixed(2)}
+
+─── DEPOSIT & PAYMENT ───────────────────
+
+  Deposit Required (${depositPct}%):  £${deposit.toFixed(2)}
+${depositDue ? `  Deposit Due By:          ${new Date(depositDue + 'T12:00:00').toLocaleDateString('en-GB', {day:'numeric',month:'long',year:'numeric'})}\n` : ''}  Balance Due:             £${balance.toFixed(2)}
+  Balance Payable:         On the night / prior to event
+
+─── WHAT'S INCLUDED ─────────────────────
+
+  ✓ Exclusive use of ${room}
+  ✓ Dedicated events host for the evening
+  ✓ Private bar service throughout
+  ✓ Bespoke cocktail welcome drink for all guests
+  ✓ Table styling to your brief
+  ✓ Complimentary consultation call prior to the event
+${notes ? `\n─── SPECIAL REQUIREMENTS ────────────────\n\n  ${notes}\n` : ''}
+─── NEXT STEPS ──────────────────────────
+
+  To secure your date, please return a signed copy of
+  this proposal along with your deposit payment of
+  £${deposit.toFixed(2)} to confirm your booking.
+
+  We look forward to hosting you at Hidden.
+
+  Warm regards,
+  The Hidden Events Team
+  hello@hiddencafebar.co.uk
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Quote valid for 14 days. Subject to availability.`;
+
+    lastGeneratedQuote = quoteText;
+
+    // Store event object for saving
+    lastGeneratedEvent = {
+      id: editingId || genId(),
+      client, type, date, start, duration, guests, room,
+      hireFee, fbTotal, minSpend, deposit, depositPct,
+      balance, depositDue, email, notes,
+      packages: JSON.parse(JSON.stringify(packages)),
+      stage: editingId ? (events.find(e=>e.id===editingId)||{}).stage || 'enquiry' : 'enquiry',
+      depositStatus: editingId ? (events.find(e=>e.id===editingId)||{}).depositStatus || 'pending' : 'pending',
+      created: editingId ? (events.find(e=>e.id===editingId)||{}).created || Date.now() : Date.now(),
+      updated: Date.now()
+    };
+
+    // Render preview
+    const panel = document.getElementById('quote-output-panel');
+    panel.innerHTML = `
+      <h4>📋 Quote Preview</h4>
+      <div style="display:flex;gap:var(--space-sm);flex-wrap:wrap;margin-bottom:var(--space-sm)">
+        <div class="kpi-card gold" style="flex:1;min-width:100px"><div class="kpi-label">Min Spend</div><div class="kpi-value" style="font-size:1.2rem">£${minSpend.toFixed(0)}</div></div>
+        <div class="kpi-card info" style="flex:1;min-width:100px"><div class="kpi-label">Deposit</div><div class="kpi-value" style="font-size:1.2rem">£${deposit.toFixed(0)}</div></div>
+        <div class="kpi-card" style="flex:1;min-width:100px"><div class="kpi-label">Balance</div><div class="kpi-value" style="font-size:1.2rem">£${balance.toFixed(0)}</div></div>
+      </div>
+      <hr class="quote-divider" />
+      <div class="quote-block">${escHtml(quoteText)}</div>
+    `;
+
+    document.getElementById('btn-export').style.display = 'inline-flex';
+    document.getElementById('btn-save-event').style.display = 'inline-flex';
+    document.getElementById('quote-actions').style.display = 'flex';
+  }
+
+  function saveEventFromQuote() {
+    if (!lastGeneratedEvent) return;
+    const idx = events.findIndex(e => e.id === lastGeneratedEvent.id);
+    if (idx >= 0) {
+      events[idx] = lastGeneratedEvent;
+      toast('Event updated ✓', 'success');
+    } else {
+      events.push(lastGeneratedEvent);
+      toast('Event saved to pipeline ✓', 'success');
+    }
+    saveEvents();
+    renderAll();
+    editingId = null;
+    // Switch to pipeline
+    setTimeout(() => {
+      document.querySelector('[data-tab="pipeline"]').click();
+    }, 400);
+  }
+
+  function resetQuoteForm() {
+    editingId = null;
+    document.getElementById('q-client').value = '';
+    document.getElementById('q-type').value = 'Private Hire';
+    document.getElementById('q-date').value = new Date().toISOString().split('T')[0];
+    document.getElementById('q-start').value = '19:00';
+    document.getElementById('q-duration').value = 4;
+    document.getElementById('q-guests').value = 30;
+    document.getElementById('q-room').value = 'Whole Venue';
+    document.getElementById('q-hire-fee').value = 0;
+    document.getElementById('q-email').value = '';
+    document.getElementById('q-notes').value = '';
+    document.getElementById('q-deposit-pct').value = 25;
+    initPackages();
+    document.getElementById('quote-output-panel').innerHTML = '<h4>📋 Quote Preview</h4><p style="color:var(--color-text-muted);font-size:0.82rem;">Fill in the details on the left and click <strong>Generate Quote</strong> to create a professional, shareable proposal.</p>';
+    document.getElementById('btn-export').style.display = 'none';
+    document.getElementById('btn-save-event').style.display = 'none';
+    lastGeneratedQuote = '';
+    lastGeneratedEvent = null;
+  }
+
+  // ── Min Spend Calculator ─────────────────────────────────────
+  function calcMinSpend() {
+    const hire = parseFloat(document.getElementById('ms-hire').value) || 0;
+    const drinks = parseFloat(document.getElementById('ms-drinks').value) || 0;
+    const food = parseFloat(document.getElementById('ms-food').value) || 0;
+    const svcPct = parseFloat(document.getElementById('ms-service').value) || 0;
+    const depPct = parseFloat(document.getElementById('ms-deposit-pct').value) || 25;
+
+    const subtotal = hire + drinks + food;
+    const service = subtotal * (svcPct / 100);
+    const total = subtotal + service;
+    const deposit = total * (depPct / 100);
+
+    document.getElementById('ms-total').textContent = '£' + total.toFixed(2);
+
+    document.getElementById('ms-breakdown').innerHTML = `
+      <div><span>Room Hire</span><span>£${hire.toFixed(2)}</span></div>
+      <div><span>Drinks Minimum</span><span>£${drinks.toFixed(2)}</span></div>
+      <div><span>Food Minimum</span><span>£${food.toFixed(2)}</span></div>
+      <div><span>Service Charge (${svcPct}%)</span><span>£${service.toFixed(2)}</span></div>
+      <div class="line-bold"><span>Total Minimum Commitment</span><span>£${total.toFixed(2)}</span></div>
+    `;
+
+    document.getElementById('ms-deposit-scenarios').innerHTML = [25, 33, 50].map(pct => {
+      const dep = total * (pct / 100);
+      const bal = total - dep;
+      return `<div style="display:flex;justify-content:space-between;padding:0.4rem 0;border-bottom:1px solid var(--color-border);font-size:0.83rem;">
+        <span style="color:var(--color-text-muted)">${pct}% deposit</span>
+        <span style="font-family:var(--font-mono)">£${dep.toFixed(2)} <span style="color:var(--color-text-muted);font-size:0.72rem">/ £${bal.toFixed(2)} balance</span></span>
+      </div>`;
+    }).join('') + `<div style="display:flex;justify-content:space-between;padding:0.4rem 0;font-size:0.83rem;">
+        <span style="color:var(--color-text-muted)">Custom (${depPct}%)</span>
+        <span style="font-family:var(--font-mono);color:var(--color-gold)">£${deposit.toFixed(2)} <span style="color:var(--color-text-muted);font-size:0.72rem">/ £${(total-deposit).toFixed(2)} balance</span></span>
+      </div>`;
+  }
+
+  // ── Pipeline / Kanban ────────────────────────────────────────
+  function renderPipeline() {
+    const stages = ['enquiry', 'confirmed', 'invoiced', 'complete'];
+    stages.forEach(stage => {
+      const col = document.getElementById('col-' + stage);
+      // Clear existing cards (keep header)
+      Array.from(col.children).forEach(child => {
+        if (!child.classList.contains('pipeline-col-header')) col.removeChild(child);
+      });
+      const stageEvents = events.filter(e => e.stage === stage);
+      document.getElementById('badge-' + stage).textContent = stageEvents.length;
+      if (stageEvents.length === 0) {
+        const empty = document.createElement('div');
+        empty.className = 'empty-state';
+        empty.style.padding = '1rem 0.5rem';
+        empty.innerHTML = '<div style="font-size:1.5rem;opacity:0.3">◦</div><div style="font-size:0.75rem">No events</div>';
+        col.appendChild(empty);
+      } else {
+        stageEvents.forEach(ev => {
+          const card = buildEventCard(ev);
+          col.appendChild(card);
+        });
+      }
+    });
+    updateKPIs();
+  }
+
+  function buildEventCard(ev) {
+    const card = document.createElement('div');
+    card.className = 'event-card';
+    card.draggable = true;
+    card.dataset.id = ev.id;
+
+    const eventDate = ev.date ? new Date(ev.date + 'T12:00:00').toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'}) : '—';
+    const depTag = ev.depositStatus === 'paid'
+      ? '<span class="event-tag success">Dep. Paid</span>'
+      : '<span class="event-tag warning">Dep. Pending</span>';
+
+    card.innerHTML = `
+      <div class="event-card-name">${escHtml(ev.client)}</div>
+      <div class="event-card-date">${eventDate} · ${ev.guests} guests</div>
+      <div class="event-card-meta">
+        <span class="event-tag">${escHtml(ev.type)}</span>
+        <span class="event-tag gold">£${ev.minSpend.toFixed(0)}</span>
+        ${depTag}
+      </div>
+      <div class="event-card-actions">
+        <button class="btn-card-action edit-btn" onclick="editEvent('${ev.id}')">Edit</button>
+        <button class="btn-card-action edit-btn" onclick="openExportForEvent('${ev.id}')">Quote</button>
+        <button class="btn-card-action del-btn" onclick="deleteEvent('${ev.id}')">Delete</button>
+      </div>
+    `;
+
+    card.addEventListener('dragstart', e => {
+      dragSrcId = ev.id;
+      card.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    card.addEventListener('dragend', () => card.classList.remove('dragging'));
+    return card;
+  }
+
+  function initDragDrop() {
+    document.querySelectorAll('.pipeline-col').forEach(col => {
+      col.addEventListener('dragover', e => {
+        e.preventDefault();
+        col.classList.add('drag-over');
+        e.dataTransfer.dropEffect = 'move';
+      });
+      col.addEventListener('dragleave', () => col.classList.remove('drag-over'));
+      col.addEventListener('drop', e => {
+        e.preventDefault();
+        col.classList.remove('drag-over');
+        if (!dragSrcId) return;
+        const newStage = col.dataset.stage;
+        const ev = events.find(e => e.id === dragSrcId);
+        if (ev && ev.stage !== newStage) {
+          ev.stage = newStage;
+          ev.updated = Date.now();
+          saveEvents();
+          renderAll();
+          toast(`Moved to ${capitalize(newStage)} ✓`, 'success');
+        }
+        dragSrcId = null;
+      });
+    });
+  }
+
+  // ── Deposits ─────────────────────────────────────────────────
+  function renderDeposits() {
+    const list = document.getElementById('deposit-list');
+    const active = events.filter(e => e.stage !== 'complete');
+    if (active.length === 0) {
+      list.innerHTML = '<div class="empty-state"><div class="empty-icon">💳</div>No active events. Create events from the New Event tab.</div>';
+      return;
+    }
+    list.innerHTML = active.sort((a,b) => a.date < b.date ? -1 : 1).map(ev => {
+      const depStatus = ev.depositStatus || 'pending';
+      const balance = depStatus === 'paid' ? ev.balance : ev.minSpend;
+      const eventDate = ev.date ? new Date(ev.date + 'T12:00:00').toLocaleDateString('en-GB', {day:'numeric',month:'short'}) : '—';
+      return `
+        <div class="deposit-row" id="dep-${ev.id}">
+          <div>
+            <div class="deposit-event-name">${escHtml(ev.client)}</div>
+            <div style="font-size:0.72rem;color:var(--color-text-muted)">${eventDate} · ${escHtml(ev.type)}</div>
+          </div>
+          <div>
+            <div class="inline-label">Deposit</div>
+            <div class="deposit-amount">£${ev.deposit.toFixed(2)}</div>
+          </div>
+          <div>
+            <div class="inline-label">Status</div>
+            <span class="status-badge ${depStatus}" onclick="toggleDepositStatus('${ev.id}')">
+              ${depStatus === 'paid' ? '✓ Paid' : '⏳ Pending'}
+            </span>
+          </div>
+          <div>
+            <div class="inline-label">Balance Due</div>
+            <div class="balance-due ${depStatus === 'paid' ? 'outstanding' : 'outstanding'}">£${ev.balance.toFixed(2)}</div>
+          </div>
+          <div>
+            <button class="btn btn-ghost btn-sm" onclick="editEvent('${ev.id}')">Edit</button>
+          </div>
+        </div>
+      `;
+    }).join('<hr class="separator" style="margin:0.5rem 0">');
+  }
+
+  function toggleDepositStatus(id) {
+    const ev = events.find(e => e.id === id);
+    if (!ev) return;
+    ev.depositStatus = ev.depositStatus === 'paid' ? 'pending' : 'paid';
+    ev.updated = Date.now();
+    saveEvents();
+    renderDeposits();
+    updateKPIs();
+    toast(ev.depositStatus === 'paid' ? 'Deposit marked as paid ✓' : 'Deposit marked as pending', ev.depositStatus === 'paid' ? 'success' : '');
+  }
+
+  // ── Event Log ────────────────────────────────────────────────
+  function renderLog() {
+    const stageFilter = document.getElementById('log-filter-stage').value;
+    const dateFrom = document.getElementById('log-date-from').value;
+    const dateTo = document.getElementById('log-date-to').value;
+
+    let filtered = events;
+    if (stageFilter) filtered = filtered.filter(e => e.stage === stageFilter);
+    if (dateFrom) filtered = filtered.filter(e => e.date >= dateFrom);
+    if (dateTo) filtered = filtered.filter(e => e.date <= dateTo);
+    filtered = [...filtered].sort((a,b) => a.date < b.date ? -1 : 1);
+
+    const tbody = document.getElementById('log-tbody');
+    const empty = document.getElementById('log-empty');
+
+    if (filtered.length === 0) {
+      tbody.innerHTML = '';
+      empty.style.display = 'block';
+      return;
+    }
+    empty.style.display = 'none';
+
+    const stageColours = { enquiry: 'info', confirmed: 'gold', invoiced: 'warning', complete: 'success' };
+
+    tbody.innerHTML = filtered.map(ev => {
+      const eventDate = ev.date ? new Date(ev.date + 'T12:00:00').toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'}) : '—';
+      const sc = stageColours[ev.stage] || '';
+      return `<tr>
+        <td><strong>${escHtml(ev.client)}</strong>${ev.email ? '<br><span style="font-size:0.72rem;color:var(--color-text-muted)">' + escHtml(ev.email) + '</span>' : ''}</td>
+        <td>${escHtml(ev.type)}</td>
+        <td style="font-family:var(--font-mono);font-size:0.82rem">${eventDate}</td>
+        <td style="text-align:right">${ev.guests}</td>
+        <td style="font-family:var(--font-mono);text-align:right;color:var(--color-gold)">£${ev.minSpend.toFixed(0)}</td>
+        <td style="font-family:var(--font-mono);text-align:right">
+          £${ev.deposit.toFixed(0)}
+          <br><span style="font-size:0.68rem;color:${ev.depositStatus==='paid'?'var(--color-success)':'var(--color-warning)'}">
+            ${ev.depositStatus==='paid'?'✓ paid':'pending'}
+          </span>
+        </td>
+        <td><span style="font-size:0.72rem;padding:0.2rem 0.55rem;border-radius:999px;background:rgba(255,255,255,0.06);color:var(--color-${sc})">${capitalize(ev.stage)}</span></td>
+        <td>
+          <div style="display:flex;gap:0.35rem;flex-wrap:wrap">
+            <select class="stage-select" onchange="changeStageFromLog('${ev.id}', this.value)">
+              <option value="enquiry" ${ev.stage==='enquiry'?'selected':''}>Enquiry</option>
+              <option value="confirmed" ${ev.stage==='confirmed'?'selected':''}>Confirmed</option>
+              <option value="invoiced" ${ev.stage==='invoiced'?'selected':''}>Invoiced</option>
+              <option value="complete" ${ev.stage==='complete'?'selected':''}>Complete</option>
+            </select>
+            <button class="btn btn-ghost btn-sm" onclick="editEvent('${ev.id}')">Edit</button>
+            <button class="btn btn-ghost btn-sm" onclick="openExportForEvent('${ev.id}')">Quote</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteEvent('${ev.id}')">Delete</button>
+          </div>
+        </td>
+      </tr>`;
+    }).join('');
+  }
+
+  function changeStageFromLog(id, newStage) {
+    const ev = events.find(e => e.id === id);
+    if (!ev) return;
+    ev.stage = newStage;
+    ev.updated = Date.now();
+    saveEvents();
+    renderAll();
+    toast(`Moved to ${capitalize(newStage)} ✓`, 'success');
+  }
+
+  function clearLogFilters() {
+    document.getElementById('log-filter-stage').value = '';
+    document.getElementById('log-date-from').value = '';
+    document.getElementById('log-date-to').value = '';
+    renderLog();
+  }
+
+  // ── Edit Event ───────────────────────────────────────────────
+  function editEvent(id) {
+    const ev = events.find(e => e.id === id);
+    if (!ev) return;
+    editingId = id;
+
+    document.getElementById('q-client').value = ev.client || '';
+    document.getElementById('q-type').value = ev.type || 'Private Hire';
+    document.getElementById('q-date').value = ev.date || '';
+    document.getElementById('q-start').value = ev.start || '19:00';
+    document.getElementById('q-duration').value = ev.duration || 4;
+    document.getElementById('q-guests').value = ev.guests || 30;
+    document.getElementById('q-room').value = ev.room || 'Whole Venue';
+    document.getElementById('q-hire-fee').value = ev.hireFee || 0;
+    document.getElementById('q-email').value = ev.email || '';
+    document.getElementById('q-notes').value = ev.notes || '';
+    document.getElementById('q-deposit-pct').value = ev.depositPct || 25;
+    document.getElementById('q-deposit-due').value = ev.depositDue || '';
+
+    packages = ev.packages ? JSON.parse(JSON.stringify(ev.packages)) : [];
+    renderPackages();
+
+    // Switch to new-event tab
+    document.querySelector('[data-tab="new-event"]').click();
+    toast('Editing: ' + ev.client, '');
+  }
+
+  // ── Delete Event ─────────────────────────────────────────────
+  function deleteEvent(id) {
+    if (!confirm('Delete this event? This cannot be undone.')) return;
+    events = events.filter(e => e.id !== id);
+    saveEvents();
+    renderAll();
+    toast('Event deleted', '');
+  }
+
+  // ── Export ───────────────────────────────────────────────────
+  function openExportModal() {
+    if (!lastGeneratedQuote) return;
+    document.getElementById('modal-quote-text').textContent = lastGeneratedQuote;
+    document.getElementById('export-modal').classList.add('open');
+  }
+
+  function openExportForEvent(id) {
+    const ev = events.find(e => e.id === id);
+    if (!ev) return;
+    // Reconstruct quote text from stored event
+    editEvent(id);
+    setTimeout(() => {
+      generateQuote();
+      setTimeout(() => openExportModal(), 100);
+    }, 100);
+  }
+
+  function closeExportModal() {
+    document.getElementById('export-modal').classList.remove('open');
+  }
+
+  function copyQuoteToClipboard() {
+    const text = document.getElementById('modal-quote-text').textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      toast('Quote copied to clipboard ✓', 'success');
+    }).catch(() => {
+      // Fallback
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      toast('Quote copied to clipboard ✓', 'success');
+    });
+  }
+
+  // Close modal on overlay click
+  document.getElementById('export-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeExportModal();
+  });
+
+  // ── CSV Export ───────────────────────────────────────────────
+  function exportCSV() {
+    if (events.length === 0) { toast('No events to export', 'error'); return; }
+    const headers = ['Client', 'Type', 'Date', 'Guests', 'Room', 'Min Spend', 'Hire Fee', 'F&B Total', 'Deposit %', 'Deposit Amount', 'Deposit Status', 'Balance', 'Stage', 'Email', 'Notes'];
+    const rows = events.map(ev => [
+      ev.client, ev.type, ev.date, ev.guests, ev.room,
+      ev.minSpend.toFixed(2), ev.hireFee.toFixed(2), ev.fbTotal.toFixed(2),
+      ev.depositPct, ev.deposit.toFixed(2), ev.depositStatus,
+      ev.balance.toFixed(2), ev.stage, ev.email || '', (ev.notes || '').replace(/\n/g,' ')
+    ].map(v => `"${String(v).replace(/"/g,'""')}"`).join(','));
+
+    const csv = [headers.join(','), ...rows].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `hidden-events-${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast('CSV exported ✓', 'success');
+  }
+
+  // ── KPI update ───────────────────────────────────────────────
+  function updateKPIs() {
+    const stages = ['enquiry', 'confirmed', 'invoiced', 'complete'];
+    stages.forEach(s => {
+      const n = events.filter(e => e.stage === s).length;
+      document.getElementById('kpi-' + s).textContent = n;
+    });
+    const pipelineVal = events.filter(e => e.stage !== 'complete').reduce((s, e) => s + e.minSpend, 0);
+    const depositsTotal = events.filter(e => e.depositStatus === 'paid').reduce((s, e) => s + e.deposit, 0);
+    document.getElementById('kpi-total').textContent = '£' + pipelineVal.toFixed(0);
+    document.getElementById('kpi-deposits').textContent = '£' + depositsTotal.toFixed(0);
+  }
+
+  // ── Render All ───────────────────────────────────────────────
+  function renderAll() {
+    renderPipeline();
+    updateKPIs();
+    // Re-render active tab
+    const activeTab = document.querySelector('.tab-btn.active')?.dataset.tab;
+    if (activeTab === 'log') renderLog();
+    if (activeTab === 'deposits') renderDeposits();
+  }
+
+  // ── Helpers ──────────────────────────────────────────────────
+  function genId() {
+    return 'ev_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
+  }
+  function escHtml(s) {
+    return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+  function capitalize(s) {
+    return s ? s.charAt(0).toUpperCase() + s.slice(1) : '';
+  }
+  function toast(msg, type = '') {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.className = 'toast show' + (type ? ' ' + type : '');
+    setTimeout(() => el.classList.remove('show'), 3000);
+  }
+
+  // ── Boot ─────────────────────────────────────────────────────
+  init();
+  </script>
+</body>
+</html>
