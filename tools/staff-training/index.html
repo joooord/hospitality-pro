@@ -1,0 +1,1385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Staff Training & Onboarding Hub · Hospitality Pro</title>
+  <link rel="stylesheet" href="/assets/styles/system.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Layout ─────────────────────────────────────────── */
+    .page-header { text-align: center; padding: var(--space-lg) 0 var(--space-md); }
+    .page-header .eyebrow { color: var(--color-text-muted); font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem; }
+    .page-header h1 { font-family: var(--font-serif); font-size: clamp(1.6rem, 4.5vw, 2.4rem); margin: 0 0 0.5rem; }
+    .page-header p { color: var(--color-text-muted); margin: 0; font-size: 0.9rem; }
+
+    .back-link { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--color-text-muted); font-size: 0.82rem; text-decoration: none; transition: color var(--transition-fast); margin-bottom: var(--space-md); }
+    .back-link:hover { color: var(--color-gold); }
+
+    /* ── Tabs ───────────────────────────────────────────── */
+    .tabs { display: flex; border-bottom: 1px solid var(--color-border); margin-bottom: var(--space-lg); overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab-btn { flex-shrink: 0; padding: 0.75rem 1rem; background: none; border: none; cursor: pointer; color: var(--color-text-muted); font-size: 0.82rem; font-family: var(--font-sans); font-weight: 500; border-bottom: 2px solid transparent; transition: all var(--transition-base); white-space: nowrap; }
+    .tab-btn:hover { color: var(--color-text); }
+    .tab-btn.active { color: var(--color-gold); border-bottom-color: var(--color-gold); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── Glass Cards ─────────────────────────────────────── */
+    .glass-card { background: rgba(255,255,255,0.035); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--space-md); backdrop-filter: blur(var(--glass-blur)); -webkit-backdrop-filter: blur(var(--glass-blur)); }
+    .glass-card + .glass-card { margin-top: var(--space-md); }
+    .section-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-text-muted); margin: 0 0 var(--space-sm); }
+
+    /* ── Forms ───────────────────────────────────────────── */
+    .field-group { display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: var(--space-sm); }
+    .field-label { font-size: 0.8rem; color: var(--color-text-muted); font-weight: 500; }
+    input[type="text"], input[type="number"], input[type="date"], select, textarea {
+      width: 100%; padding: 0.65rem 0.9rem;
+      background: rgba(255,255,255,0.06); border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm); color: var(--color-text); font-family: var(--font-sans); font-size: 0.9rem;
+      transition: border-color var(--transition-fast);
+    }
+    textarea { resize: vertical; min-height: 80px; }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: rgba(243,201,139,0.5); }
+    input::placeholder, textarea::placeholder { color: var(--color-text-muted); opacity: 0.6; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-sm); }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--space-sm); }
+    @media (max-width: 480px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+
+    /* ── Buttons ─────────────────────────────────────────── */
+    .btn { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.6rem 1.1rem; border-radius: var(--radius-sm); font-family: var(--font-sans); font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all var(--transition-fast); border: none; }
+    .btn-primary { background: var(--color-gold); color: #0d0d12; }
+    .btn-primary:hover { background: #ffe7bf; }
+    .btn-ghost { background: rgba(255,255,255,0.06); border: 1px solid var(--color-border); color: var(--color-text-soft); }
+    .btn-ghost:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); }
+    .btn-danger { background: rgba(246,124,124,0.15); border: 1px solid rgba(246,124,124,0.3); color: var(--color-error); }
+    .btn-danger:hover { background: rgba(246,124,124,0.25); }
+    .btn-success { background: rgba(76,225,173,0.15); border: 1px solid rgba(76,225,173,0.3); color: var(--color-success); }
+    .btn-sm { padding: 0.4rem 0.75rem; font-size: 0.78rem; }
+    .btn-xs { padding: 0.3rem 0.55rem; font-size: 0.73rem; }
+
+    /* ── KPI strip ───────────────────────────────────────── */
+    .kpi-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: var(--space-sm); margin-bottom: var(--space-md); }
+    .kpi-card { background: rgba(255,255,255,0.04); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-sm); text-align: center; }
+    .kpi-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-muted); margin-bottom: 0.2rem; }
+    .kpi-value { font-size: 1.5rem; font-weight: 700; font-family: var(--font-mono); line-height: 1.1; }
+    .kpi-sub { font-size: 0.68rem; color: var(--color-text-muted); margin-top: 0.15rem; }
+    .kpi-card.gold .kpi-value { color: var(--color-gold); }
+    .kpi-card.success .kpi-value { color: var(--color-success); }
+    .kpi-card.info .kpi-value { color: var(--color-info); }
+    .kpi-card.warn .kpi-value { color: var(--color-warning); }
+
+    /* ── Progress bar ────────────────────────────────────── */
+    .progress-wrap { background: rgba(255,255,255,0.07); border-radius: var(--radius-pill); height: 6px; overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: var(--radius-pill); transition: width 0.4s ease; background: linear-gradient(90deg, var(--color-gold), #ffe7bf); }
+    .progress-fill.success { background: linear-gradient(90deg, var(--color-success), #a8f5db); }
+    .progress-label { font-size: 0.73rem; color: var(--color-text-muted); margin-top: 0.3rem; display: flex; justify-content: space-between; }
+
+    /* ── Pill badges ─────────────────────────────────────── */
+    .badge { display: inline-block; padding: 0.2rem 0.55rem; border-radius: var(--radius-pill); font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+    .badge-gold { background: rgba(243,201,139,0.15); border: 1px solid rgba(243,201,139,0.3); color: var(--color-gold); }
+    .badge-success { background: rgba(76,225,173,0.12); border: 1px solid rgba(76,225,173,0.3); color: var(--color-success); }
+    .badge-error { background: rgba(246,124,124,0.12); border: 1px solid rgba(246,124,124,0.3); color: var(--color-error); }
+    .badge-info { background: rgba(106,167,255,0.12); border: 1px solid rgba(106,167,255,0.3); color: var(--color-info); }
+    .badge-muted { background: rgba(255,255,255,0.06); border: 1px solid var(--color-border); color: var(--color-text-muted); }
+
+    /* ── Separator ───────────────────────────────────────── */
+    .sep { border: none; border-top: 1px solid var(--color-border); margin: var(--space-md) 0; }
+
+    /* ── Staff card ──────────────────────────────────────── */
+    .staff-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--space-md); }
+    .staff-card { background: rgba(255,255,255,0.035); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--space-md); transition: border-color var(--transition-base); cursor: pointer; }
+    .staff-card:hover { border-color: rgba(243,201,139,0.3); }
+    .staff-card.selected { border-color: rgba(243,201,139,0.6); background: rgba(243,201,139,0.06); }
+    .staff-card__name { font-weight: 600; font-size: 1rem; margin-bottom: 0.2rem; }
+    .staff-card__role { font-size: 0.8rem; color: var(--color-text-muted); margin-bottom: var(--space-sm); }
+    .staff-card__meta { font-size: 0.75rem; color: var(--color-text-muted); display: flex; gap: 0.75rem; flex-wrap: wrap; }
+
+    /* ── Checklist ───────────────────────────────────────── */
+    .checklist { display: flex; flex-direction: column; gap: 0.5rem; }
+    .check-item { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.65rem var(--space-sm); background: rgba(255,255,255,0.03); border: 1px solid var(--color-border); border-radius: var(--radius-md); transition: all var(--transition-fast); }
+    .check-item.done { opacity: 0.55; }
+    .check-item.done .check-label { text-decoration: line-through; }
+    .check-item__cb { width: 18px; height: 18px; border-radius: 4px; border: 1.5px solid rgba(255,255,255,0.25); background: rgba(255,255,255,0.05); cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all var(--transition-fast); margin-top: 2px; }
+    .check-item__cb.checked { background: var(--color-gold); border-color: var(--color-gold); }
+    .check-item__cb.checked::after { content: '✓'; font-size: 11px; color: #0d0d12; font-weight: 700; }
+    .check-label { font-size: 0.88rem; flex: 1; }
+    .check-category { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-muted); }
+    .checklist-section { margin-bottom: var(--space-md); }
+    .checklist-section h4 { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-gold); margin: 0 0 0.5rem; padding-bottom: 0.4rem; border-bottom: 1px solid rgba(243,201,139,0.2); }
+
+    /* ── Menu KB ─────────────────────────────────────────── */
+    .search-bar { position: relative; margin-bottom: var(--space-md); }
+    .search-bar input { padding-left: 2.5rem; }
+    .search-bar .search-icon { position: absolute; left: 0.85rem; top: 50%; transform: translateY(-50%); color: var(--color-text-muted); font-size: 0.9rem; pointer-events: none; }
+    .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--space-md); }
+    .menu-item-card { background: rgba(255,255,255,0.035); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--space-md); transition: border-color var(--transition-base); }
+    .menu-item-card:hover { border-color: rgba(243,201,139,0.3); }
+    .menu-item-card__name { font-weight: 600; font-size: 0.95rem; margin-bottom: 0.2rem; }
+    .menu-item-card__type { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-muted); margin-bottom: var(--space-sm); }
+    .menu-item-card__desc { font-size: 0.82rem; color: var(--color-text-soft); margin-bottom: var(--space-sm); line-height: 1.5; }
+    .menu-detail-row { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--color-text-muted); margin-bottom: 0.25rem; }
+    .menu-detail-row strong { color: var(--color-text-soft); }
+    .allergen-chips { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.5rem; }
+    .allergen-chip { display: inline-block; padding: 0.15rem 0.5rem; border-radius: var(--radius-pill); font-size: 0.67rem; font-weight: 600; background: rgba(246,174,91,0.12); border: 1px solid rgba(246,174,91,0.25); color: var(--color-warning); }
+    .sell-point { display: flex; gap: 0.4rem; align-items: flex-start; font-size: 0.78rem; color: var(--color-text-muted); margin-top: 0.35rem; }
+    .sell-point::before { content: '→'; color: var(--color-gold); flex-shrink: 0; }
+    .filter-tabs { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: var(--space-md); }
+    .filter-btn { padding: 0.4rem 0.9rem; border-radius: var(--radius-pill); font-size: 0.78rem; font-weight: 500; cursor: pointer; border: 1px solid var(--color-border); background: rgba(255,255,255,0.04); color: var(--color-text-muted); transition: all var(--transition-fast); }
+    .filter-btn:hover, .filter-btn.active { border-color: rgba(243,201,139,0.5); background: rgba(243,201,139,0.08); color: var(--color-gold); }
+
+    /* ── Quiz / Assessment ───────────────────────────────── */
+    .quiz-card { background: rgba(255,255,255,0.04); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--space-md); margin-bottom: var(--space-md); }
+    .quiz-card__title { font-weight: 600; font-size: 0.95rem; margin-bottom: 0.25rem; }
+    .quiz-card__meta { font-size: 0.78rem; color: var(--color-text-muted); margin-bottom: var(--space-sm); }
+    .question-card { background: rgba(255,255,255,0.03); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-sm); margin-bottom: 0.5rem; }
+    .question-card__q { font-size: 0.9rem; font-weight: 500; margin-bottom: 0.5rem; }
+    .options-list { display: flex; flex-direction: column; gap: 0.4rem; }
+    .option-btn { display: flex; align-items: center; gap: 0.6rem; padding: 0.6rem 0.9rem; border-radius: var(--radius-sm); border: 1px solid var(--color-border); background: rgba(255,255,255,0.04); color: var(--color-text); font-size: 0.85rem; cursor: pointer; text-align: left; width: 100%; transition: all var(--transition-fast); font-family: var(--font-sans); }
+    .option-btn:hover { border-color: rgba(243,201,139,0.4); background: rgba(243,201,139,0.06); }
+    .option-btn.correct { border-color: rgba(76,225,173,0.5); background: rgba(76,225,173,0.1); color: var(--color-success); }
+    .option-btn.wrong { border-color: rgba(246,124,124,0.5); background: rgba(246,124,124,0.1); color: var(--color-error); }
+    .option-btn.reveal-correct { border-color: rgba(76,225,173,0.3); background: rgba(76,225,173,0.06); color: var(--color-success); }
+    .option-btn:disabled { cursor: default; }
+    .score-banner { text-align: center; padding: var(--space-lg); border-radius: var(--radius-lg); border: 1px solid var(--color-border); margin-top: var(--space-md); }
+    .score-banner.pass { border-color: rgba(76,225,173,0.4); background: rgba(76,225,173,0.07); }
+    .score-banner.fail { border-color: rgba(246,124,124,0.4); background: rgba(246,124,124,0.07); }
+    .score-num { font-family: var(--font-mono); font-size: 3rem; font-weight: 700; line-height: 1; }
+    .score-num.pass { color: var(--color-success); }
+    .score-num.fail { color: var(--color-error); }
+
+    /* ── Certificate ─────────────────────────────────────── */
+    #cert-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 1000; align-items: center; justify-content: center; padding: var(--space-md); }
+    #cert-modal.open { display: flex; }
+    .cert-box { background: var(--color-panel-solid); border: 1px solid rgba(243,201,139,0.4); border-radius: var(--radius-lg); padding: var(--space-lg); max-width: 480px; width: 100%; text-align: center; position: relative; }
+    .cert-box::before { content: ''; position: absolute; inset: 0; border-radius: var(--radius-lg); background: radial-gradient(ellipse at 50% 0%, rgba(243,201,139,0.12), transparent 60%); pointer-events: none; }
+    .cert-logo { font-family: var(--font-serif); font-size: 1.1rem; color: var(--color-gold); margin-bottom: var(--space-md); letter-spacing: 0.05em; }
+    .cert-title { font-family: var(--font-serif); font-size: 1.6rem; margin: 0 0 0.5rem; }
+    .cert-sub { font-size: 0.82rem; color: var(--color-text-muted); margin-bottom: var(--space-md); }
+    .cert-name { font-size: 1.3rem; font-weight: 700; color: var(--color-gold); margin-bottom: var(--space-sm); }
+    .cert-detail { font-size: 0.85rem; color: var(--color-text-muted); line-height: 1.6; }
+    .cert-score { font-family: var(--font-mono); font-size: 2rem; font-weight: 700; color: var(--color-success); margin: var(--space-sm) 0; }
+    .cert-divider { border: none; border-top: 1px solid rgba(243,201,139,0.2); margin: var(--space-md) 0; }
+
+    /* ── Dashboard ───────────────────────────────────────── */
+    .dash-row { display: flex; gap: var(--space-sm); align-items: center; padding: 0.7rem var(--space-sm); border-radius: var(--radius-md); border: 1px solid var(--color-border); background: rgba(255,255,255,0.025); margin-bottom: 0.4rem; transition: border-color var(--transition-fast); }
+    .dash-row:hover { border-color: rgba(255,255,255,0.15); }
+    .dash-name { font-weight: 600; font-size: 0.88rem; min-width: 120px; flex-shrink: 0; }
+    .dash-role { font-size: 0.75rem; color: var(--color-text-muted); min-width: 100px; flex-shrink: 0; }
+    .dash-progress { flex: 1; }
+    .dash-actions { display: flex; gap: 0.3rem; flex-shrink: 0; }
+    @media (max-width: 500px) { .dash-role { display: none; } .dash-name { min-width: 90px; } }
+
+    /* ── Add form modal ──────────────────────────────────── */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.65); z-index: 900; align-items: center; justify-content: center; padding: var(--space-md); }
+    .modal-overlay.open { display: flex; }
+    .modal-box { background: var(--color-panel-solid); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--space-lg); max-width: 520px; width: 100%; max-height: 90vh; overflow-y: auto; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-md); }
+    .modal-header h3 { margin: 0; font-family: var(--font-serif); font-size: 1.2rem; }
+    .modal-close { background: none; border: none; color: var(--color-text-muted); font-size: 1.3rem; cursor: pointer; padding: 0.2rem; line-height: 1; transition: color var(--transition-fast); }
+    .modal-close:hover { color: var(--color-text); }
+
+    /* ── Tags input ──────────────────────────────────────── */
+    .tags-input-wrap { display: flex; flex-wrap: wrap; gap: 0.3rem; padding: 0.55rem 0.9rem; background: rgba(255,255,255,0.06); border: 1px solid var(--color-border); border-radius: var(--radius-sm); transition: border-color var(--transition-fast); }
+    .tags-input-wrap:focus-within { border-color: rgba(243,201,139,0.5); }
+    .tag-chip { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.15rem 0.5rem; background: rgba(243,201,139,0.12); border: 1px solid rgba(243,201,139,0.25); border-radius: var(--radius-pill); font-size: 0.73rem; color: var(--color-gold); }
+    .tag-chip button { background: none; border: none; cursor: pointer; color: var(--color-gold); font-size: 0.8rem; padding: 0; line-height: 1; opacity: 0.7; }
+    .tag-chip button:hover { opacity: 1; }
+    .tags-input-wrap input { border: none; background: none; color: var(--color-text); font-family: var(--font-sans); font-size: 0.85rem; padding: 0; flex: 1; min-width: 80px; }
+    .tags-input-wrap input:focus { outline: none; }
+
+    /* ── Inline actions row ──────────────────────────────── */
+    .action-row { display: flex; gap: var(--space-sm); flex-wrap: wrap; align-items: center; margin-bottom: var(--space-md); }
+
+    /* ── Empty state ─────────────────────────────────────── */
+    .empty-state { text-align: center; padding: var(--space-xl) var(--space-md); color: var(--color-text-muted); }
+    .empty-state .icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+    .empty-state p { font-size: 0.88rem; margin: 0; }
+    .empty-state strong { color: var(--color-text-soft); }
+
+    /* ── Misc ────────────────────────────────────────────── */
+    .inline-form { display: flex; gap: var(--space-sm); flex-wrap: wrap; }
+    .inline-form input { flex: 1; min-width: 160px; }
+    .hint { font-size: 0.75rem; color: var(--color-text-muted); margin-top: 0.25rem; }
+    .text-success { color: var(--color-success); }
+    .text-error { color: var(--color-error); }
+    .text-gold { color: var(--color-gold); }
+    .mt-sm { margin-top: var(--space-sm); }
+    .mt-md { margin-top: var(--space-md); }
+    .flex-between { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; }
+    .stack-sm { display: flex; flex-direction: column; gap: var(--space-sm); }
+    .select-hint { font-size: 0.78rem; color: var(--color-text-muted); margin-top: 0.5rem; }
+
+    /* ── Staff Mode Banner ───────────────────────────────── */
+    .mode-banner { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem var(--space-sm); border-radius: var(--radius-md); margin-bottom: var(--space-md); font-size: 0.82rem; }
+    .mode-banner.manager { background: rgba(243,201,139,0.07); border: 1px solid rgba(243,201,139,0.2); }
+    .mode-banner.staff { background: rgba(106,167,255,0.07); border: 1px solid rgba(106,167,255,0.2); }
+    .mode-banner .mode-icon { font-size: 1.1rem; }
+    .mode-banner .mode-label { font-weight: 600; color: var(--color-gold); }
+    .mode-banner.staff .mode-label { color: var(--color-info); }
+    .mode-toggle { margin-left: auto; }
+
+    /* ── Info accordion ──────────────────────────────────── */
+    .accordion-item { border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden; margin-bottom: 0.4rem; }
+    .accordion-trigger { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0.75rem var(--space-sm); background: rgba(255,255,255,0.03); border: none; cursor: pointer; color: var(--color-text); font-family: var(--font-sans); font-size: 0.88rem; font-weight: 500; text-align: left; transition: background var(--transition-fast); }
+    .accordion-trigger:hover { background: rgba(255,255,255,0.06); }
+    .accordion-trigger .acc-icon { font-size: 0.7rem; transition: transform var(--transition-fast); }
+    .accordion-trigger.open .acc-icon { transform: rotate(180deg); }
+    .accordion-body { display: none; padding: var(--space-sm) var(--space-sm) var(--space-md); font-size: 0.85rem; color: var(--color-text-soft); line-height: 1.6; background: rgba(255,255,255,0.02); }
+    .accordion-body.open { display: block; }
+
+    /* ── Responsive nav ──────────────────────────────────── */
+    @media (max-width: 600px) {
+      .kpi-strip { grid-template-columns: repeat(2, 1fr); }
+      .staff-cards { grid-template-columns: 1fr; }
+      .menu-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+
+  <a class="back-link" href="/">← Back to Hospitality Pro</a>
+
+  <div class="page-header">
+    <p class="eyebrow">Hospitality Pro · Staff</p>
+    <h1>Staff Training & Onboarding Hub</h1>
+    <p>Onboarding checklists · Menu knowledge base · Assessments · Progress tracking</p>
+  </div>
+
+  <!-- Mode Banner -->
+  <div id="modeBanner" class="mode-banner manager">
+    <span class="mode-icon">🎓</span>
+    <div>
+      <span class="mode-label" id="modeLabelText">Manager Mode</span>
+      <span style="color:var(--color-text-muted);font-size:0.78rem;margin-left:0.5rem;">Full access — create, assign, review</span>
+    </div>
+    <button class="btn btn-ghost btn-sm mode-toggle" onclick="toggleMode()">Switch to Staff Mode</button>
+  </div>
+
+  <!-- Tabs -->
+  <nav class="tabs" id="mainTabs">
+    <button class="tab-btn active" onclick="switchTab('dashboard')">📊 Dashboard</button>
+    <button class="tab-btn" onclick="switchTab('onboarding')">✅ Onboarding</button>
+    <button class="tab-btn" onclick="switchTab('menu-kb')">📖 Menu KB</button>
+    <button class="tab-btn" onclick="switchTab('assessments')">🎯 Assessments</button>
+    <button class="tab-btn" onclick="switchTab('certificates')">🏆 Certificates</button>
+  </nav>
+
+  <!-- ═══════════════════════════════════════════════════════ DASHBOARD TAB ═══ -->
+  <div id="tab-dashboard" class="tab-panel active">
+    <div class="kpi-strip" id="dashKpis">
+      <div class="kpi-card gold"><div class="kpi-label">Staff</div><div class="kpi-value" id="kpiStaff">0</div><div class="kpi-sub">registered</div></div>
+      <div class="kpi-card success"><div class="kpi-label">Inducted</div><div class="kpi-value" id="kpiInducted">0</div><div class="kpi-sub">100% checklist</div></div>
+      <div class="kpi-card info"><div class="kpi-label">Assessments</div><div class="kpi-value" id="kpiAssessments">0</div><div class="kpi-sub">taken</div></div>
+      <div class="kpi-card warn"><div class="kpi-label">Outstanding</div><div class="kpi-value" id="kpiOutstanding">0</div><div class="kpi-sub">actions</div></div>
+    </div>
+
+    <div class="glass-card">
+      <div class="flex-between" style="margin-bottom:var(--space-md)">
+        <p class="section-label" style="margin:0">All Staff Progress</p>
+        <button class="btn btn-primary btn-sm" onclick="openModal('staffModal')">+ Add Staff Member</button>
+      </div>
+      <div id="dashboardList">
+        <div class="empty-state"><div class="icon">👥</div><p><strong>No staff added yet.</strong><br>Add your first team member to begin tracking progress.</p></div>
+      </div>
+    </div>
+
+    <div id="staffDetailPanel" style="display:none" class="glass-card mt-md">
+      <div class="flex-between" style="margin-bottom:var(--space-md)">
+        <div>
+          <p class="section-label" style="margin:0">Staff Detail</p>
+          <h3 id="detailName" style="margin:0.3rem 0 0;font-family:var(--font-serif)"></h3>
+          <p id="detailRole" style="margin:0;font-size:0.82rem;color:var(--color-text-muted)"></p>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="closeDetail()">Close ✕</button>
+      </div>
+      <div class="grid-2" id="detailStats"></div>
+      <hr class="sep">
+      <div id="detailChecklist"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════ ONBOARDING TAB ═══ -->
+  <div id="tab-onboarding" class="tab-panel">
+    <div id="mgr-onboarding-view">
+      <div class="action-row">
+        <select id="staffSelect" style="max-width:220px" onchange="loadStaffChecklist()">
+          <option value="">— Select staff member —</option>
+        </select>
+        <button class="btn btn-ghost btn-sm" onclick="openModal('checklistTemplateModal')">⚙ Edit Template</button>
+        <button class="btn btn-primary btn-sm" onclick="openModal('staffModal')">+ Add Staff</button>
+      </div>
+
+      <div id="onboardingContent">
+        <div class="empty-state"><div class="icon">✅</div><p><strong>Select a staff member</strong> to view or manage their onboarding checklist.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════ MENU KB TAB ═══ -->
+  <div id="tab-menu-kb" class="tab-panel">
+    <div class="action-row">
+      <div class="search-bar" style="flex:1;margin-bottom:0">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="menuSearch" placeholder="Search cocktails, dishes, spirits…" oninput="renderMenuKB()">
+      </div>
+      <button class="btn btn-primary btn-sm" onclick="openModal('menuItemModal')">+ Add Item</button>
+    </div>
+    <div class="filter-tabs" id="menuFilters">
+      <button class="filter-btn active" onclick="setMenuFilter('all',this)">All</button>
+      <button class="filter-btn" onclick="setMenuFilter('cocktail',this)">🍸 Cocktails</button>
+      <button class="filter-btn" onclick="setMenuFilter('dish',this)">🍽 Dishes</button>
+      <button class="filter-btn" onclick="setMenuFilter('spirit',this)">🥃 Spirits</button>
+      <button class="filter-btn" onclick="setMenuFilter('wine',this)">🍷 Wine</button>
+      <button class="filter-btn" onclick="setMenuFilter('beer',this)">🍺 Beer</button>
+      <button class="filter-btn" onclick="setMenuFilter('mocktail',this)">🧃 Mocktails</button>
+    </div>
+    <div id="menuGrid" class="menu-grid">
+      <div class="empty-state" style="grid-column:1/-1"><div class="icon">📖</div><p><strong>No menu items yet.</strong><br>Add cocktails, dishes, and spirits to build the knowledge base your team can study.</p></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════ ASSESSMENTS TAB ═══ -->
+  <div id="tab-assessments" class="tab-panel">
+    <div id="quiz-list-view">
+      <div class="action-row">
+        <button class="btn btn-primary btn-sm" onclick="openModal('quizBuilderModal')">+ Create Assessment</button>
+      </div>
+      <div id="quizList">
+        <div class="empty-state"><div class="icon">🎯</div><p><strong>No assessments created yet.</strong><br>Build a quiz to test your team's knowledge of the menu, allergens, or procedures.</p></div>
+      </div>
+    </div>
+
+    <div id="quiz-take-view" style="display:none">
+      <div class="flex-between" style="margin-bottom:var(--space-md)">
+        <div>
+          <p class="section-label" style="margin:0">Assessment</p>
+          <h3 id="quizTitle" style="margin:0.3rem 0 0;font-family:var(--font-serif)"></h3>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="exitQuiz()">← Back to assessments</button>
+      </div>
+      <div class="field-group" style="margin-bottom:var(--space-md)">
+        <label class="field-label">Your name</label>
+        <input type="text" id="quizTakerName" placeholder="Enter your name to record the result…">
+      </div>
+      <div id="quizQuestions"></div>
+      <button class="btn btn-primary" id="submitQuizBtn" onclick="submitQuiz()" style="margin-top:var(--space-md)">Submit Assessment →</button>
+      <div id="quizResult" style="display:none"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════ CERTIFICATES TAB ═══ -->
+  <div id="tab-certificates" class="tab-panel">
+    <div class="glass-card">
+      <p class="section-label">Completion Records</p>
+      <p class="hint" style="margin-bottom:var(--space-md)">All assessment passes are logged here. Staff can screenshot these as proof of completion.</p>
+      <div id="certList">
+        <div class="empty-state"><div class="icon">🏆</div><p><strong>No completions yet.</strong><br>Once a staff member passes an assessment, their certificate appears here.</p></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /app-shell -->
+
+<!-- ══════════════════════════════════════════════════ MODALS ══════════════════ -->
+
+<!-- Add Staff Modal -->
+<div class="modal-overlay" id="staffModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>Add Staff Member</h3>
+      <button class="modal-close" onclick="closeModal('staffModal')">✕</button>
+    </div>
+    <div class="grid-2">
+      <div class="field-group"><label class="field-label">First name *</label><input type="text" id="sf-first" placeholder="e.g. Jordan"></div>
+      <div class="field-group"><label class="field-label">Last name *</label><input type="text" id="sf-last" placeholder="e.g. Pitts"></div>
+    </div>
+    <div class="grid-2">
+      <div class="field-group">
+        <label class="field-label">Role *</label>
+        <select id="sf-role">
+          <option value="">Select role…</option>
+          <option>Bartender</option>
+          <option>Front of House</option>
+          <option>Kitchen</option>
+          <option>Supervisor</option>
+          <option>Manager</option>
+          <option>Bar Back</option>
+          <option>Host</option>
+          <option>Events Staff</option>
+        </select>
+      </div>
+      <div class="field-group"><label class="field-label">Start date</label><input type="date" id="sf-start"></div>
+    </div>
+    <div class="field-group"><label class="field-label">Notes</label><textarea id="sf-notes" placeholder="Any relevant context…" rows="2"></textarea></div>
+    <div class="mt-md" style="display:flex;gap:var(--space-sm)">
+      <button class="btn btn-primary" onclick="addStaff()">Add to roster</button>
+      <button class="btn btn-ghost" onclick="closeModal('staffModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Checklist Template Modal -->
+<div class="modal-overlay" id="checklistTemplateModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>Onboarding Checklist Template</h3>
+      <button class="modal-close" onclick="closeModal('checklistTemplateModal')">✕</button>
+    </div>
+    <p class="hint" style="margin-bottom:var(--space-md)">Edit the default induction checklist. Changes apply to new checklists going forward. Existing staff keep their current progress.</p>
+    <div id="templateChecklistEditor"></div>
+    <div class="inline-form mt-sm">
+      <select id="newItemCategory" style="max-width:160px">
+        <option value="HR & Admin">HR & Admin</option>
+        <option value="Uniform & Appearance">Uniform & Appearance</option>
+        <option value="Health & Safety">Health & Safety</option>
+        <option value="Systems & Access">Systems & Access</option>
+        <option value="Training">Training</option>
+        <option value="Operations">Operations</option>
+      </select>
+      <input type="text" id="newItemLabel" placeholder="New checklist item…">
+      <button class="btn btn-primary btn-sm" onclick="addTemplateItem()">Add</button>
+    </div>
+    <div class="mt-md" style="display:flex;gap:var(--space-sm)">
+      <button class="btn btn-primary" onclick="saveTemplate()">Save template</button>
+      <button class="btn btn-ghost" onclick="closeModal('checklistTemplateModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Menu Item Modal -->
+<div class="modal-overlay" id="menuItemModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3 id="menuItemModalTitle">Add Menu Item</h3>
+      <button class="modal-close" onclick="closeModal('menuItemModal')">✕</button>
+    </div>
+    <div class="grid-2">
+      <div class="field-group"><label class="field-label">Name *</label><input type="text" id="mi-name" placeholder="e.g. Espresso Martini"></div>
+      <div class="field-group">
+        <label class="field-label">Type *</label>
+        <select id="mi-type">
+          <option value="cocktail">🍸 Cocktail</option>
+          <option value="dish">🍽 Dish</option>
+          <option value="spirit">🥃 Spirit</option>
+          <option value="wine">🍷 Wine</option>
+          <option value="beer">🍺 Beer</option>
+          <option value="mocktail">🧃 Mocktail</option>
+        </select>
+      </div>
+    </div>
+    <div class="field-group"><label class="field-label">Description *</label><textarea id="mi-desc" placeholder="Flavour profile, technique, history…" rows="3"></textarea></div>
+    <div class="field-group"><label class="field-label">Key selling points (one per line)</label><textarea id="mi-sell" placeholder="Perfect after dinner&#10;Best-selling cocktail&#10;Award-winning recipe" rows="3"></textarea></div>
+    <div class="grid-3">
+      <div class="field-group"><label class="field-label">ABV %</label><input type="number" id="mi-abv" step="0.1" min="0" max="100" placeholder="12.5"></div>
+      <div class="field-group"><label class="field-label">Price (£)</label><input type="number" id="mi-price" step="0.01" min="0" placeholder="9.50"></div>
+      <div class="field-group"><label class="field-label">GP %</label><input type="number" id="mi-gp" step="1" min="0" max="100" placeholder="72"></div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Allergens <span style="color:var(--color-warning)">⚠</span></label>
+      <div class="tags-input-wrap" id="allergenTagsWrap" onclick="document.getElementById('allergenInput').focus()">
+        <input type="text" id="allergenInput" placeholder="Type allergen and press Enter…" onkeydown="handleAllergenKey(event)">
+      </div>
+      <p class="hint">14 major EU/UK allergens: celery, cereals containing gluten, crustaceans, eggs, fish, lupin, milk, molluscs, mustard, nuts, peanuts, sesame, soya, sulphites</p>
+    </div>
+    <div class="field-group"><label class="field-label">Pairing / Serving notes</label><textarea id="mi-pairing" placeholder="Serve with… / Pairs well with… / Best at temperature…" rows="2"></textarea></div>
+    <input type="hidden" id="mi-edit-id">
+    <div class="mt-md" style="display:flex;gap:var(--space-sm)">
+      <button class="btn btn-primary" onclick="saveMenuItem()">Save item</button>
+      <button class="btn btn-ghost" onclick="closeModal('menuItemModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Quiz Builder Modal -->
+<div class="modal-overlay" id="quizBuilderModal">
+  <div class="modal-box" style="max-width:580px">
+    <div class="modal-header">
+      <h3>Create Assessment</h3>
+      <button class="modal-close" onclick="closeModal('quizBuilderModal')">✕</button>
+    </div>
+    <div class="field-group"><label class="field-label">Assessment title *</label><input type="text" id="qb-title" placeholder="e.g. Cocktail Menu Knowledge · Week 1"></div>
+    <div class="grid-2">
+      <div class="field-group">
+        <label class="field-label">Pass mark (%)</label>
+        <input type="number" id="qb-passmark" value="80" min="1" max="100">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Category</label>
+        <select id="qb-category">
+          <option>Menu Knowledge</option>
+          <option>Allergen Awareness</option>
+          <option>Health & Safety</option>
+          <option>Service Standards</option>
+          <option>Operations</option>
+          <option>General</option>
+        </select>
+      </div>
+    </div>
+    <hr class="sep">
+    <p class="section-label">Questions</p>
+    <div id="qbQuestions" class="stack-sm"></div>
+    <button class="btn btn-ghost btn-sm mt-sm" onclick="addQuestion()">+ Add Question</button>
+    <div class="mt-md" style="display:flex;gap:var(--space-sm)">
+      <button class="btn btn-primary" onclick="saveQuiz()">Save Assessment</button>
+      <button class="btn btn-ghost" onclick="closeModal('quizBuilderModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Certificate Modal -->
+<div id="cert-modal">
+  <div class="cert-box" id="certBox">
+    <p class="cert-logo">✦ Hospitality Pro ✦</p>
+    <p class="cert-title">Certificate of Completion</p>
+    <p class="cert-sub">This certifies that</p>
+    <p class="cert-name" id="certStaffName"></p>
+    <p class="cert-detail">has successfully completed the assessment</p>
+    <p style="font-weight:600;color:var(--color-text);margin:0.4rem 0" id="certAssessTitle"></p>
+    <hr class="cert-divider">
+    <p class="cert-score" id="certScoreText"></p>
+    <p class="cert-detail" id="certDateText"></p>
+    <hr class="cert-divider" style="margin-bottom:var(--space-md)">
+    <p style="font-size:0.72rem;color:var(--color-text-muted);margin:0 0 var(--space-md)">Screenshot this screen to save your certificate</p>
+    <div style="display:flex;gap:0.75rem;justify-content:center">
+      <button class="btn btn-primary" onclick="closeCertModal()">Done</button>
+      <button class="btn btn-ghost" onclick="printCert()">🖨 Print</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════════════════════════════════
+   DATA LAYER — all persisted in localStorage
+══════════════════════════════════════════════════════════════════════════════ */
+const KEY_STAFF    = 'hpro_training_staff';
+const KEY_TEMPLATE = 'hpro_training_template';
+const KEY_MENU     = 'hpro_training_menu';
+const KEY_QUIZZES  = 'hpro_training_quizzes';
+const KEY_RESULTS  = 'hpro_training_results';
+const KEY_MODE     = 'hpro_training_mode';
+
+function load(key, def) { try { return JSON.parse(localStorage.getItem(key)) || def; } catch { return def; } }
+function save(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
+
+let staffList   = load(KEY_STAFF, []);
+let template    = load(KEY_TEMPLATE, defaultTemplate());
+let menuItems   = load(KEY_MENU, defaultMenuItems());
+let quizzes     = load(KEY_QUIZZES, []);
+let results     = load(KEY_RESULTS, []);
+let isManager   = load(KEY_MODE, true);
+let menuFilter  = 'all';
+let currentQuizId = null;
+let allergenTags  = [];
+let editingMenuId = null;
+let quizQuestions = [];  // builder state
+
+/* ── Default template ────────────────────────────────────────────────────── */
+function defaultTemplate() {
+  return [
+    { id: uid(), category: 'HR & Admin', label: 'Contract signed & returned' },
+    { id: uid(), category: 'HR & Admin', label: 'Photo ID verified & copied' },
+    { id: uid(), category: 'HR & Admin', label: 'Right to work check completed' },
+    { id: uid(), category: 'HR & Admin', label: 'Bank details & payroll setup' },
+    { id: uid(), category: 'HR & Admin', label: 'Emergency contact form completed' },
+    { id: uid(), category: 'Uniform & Appearance', label: 'Uniform issued & signed for' },
+    { id: uid(), category: 'Uniform & Appearance', label: 'Appearance policy explained' },
+    { id: uid(), category: 'Uniform & Appearance', label: 'Footwear standards confirmed' },
+    { id: uid(), category: 'Health & Safety', label: 'Health & Safety induction completed' },
+    { id: uid(), category: 'Health & Safety', label: 'Fire exits & assembly points shown' },
+    { id: uid(), category: 'Health & Safety', label: 'First aid kit locations explained' },
+    { id: uid(), category: 'Health & Safety', label: 'Manual handling guidance given' },
+    { id: uid(), category: 'Health & Safety', label: 'COSHH products overview' },
+    { id: uid(), category: 'Systems & Access', label: 'Till system training completed' },
+    { id: uid(), category: 'Systems & Access', label: 'Rota & scheduling app access granted' },
+    { id: uid(), category: 'Systems & Access', label: 'Key or access card issued' },
+    { id: uid(), category: 'Systems & Access', label: 'Locker / personal storage allocated' },
+    { id: uid(), category: 'Training', label: 'Allergen training completed (allergen matrix reviewed)' },
+    { id: uid(), category: 'Training', label: 'Menu tasting / shadow shift completed' },
+    { id: uid(), category: 'Training', label: 'Service standards walkthrough' },
+    { id: uid(), category: 'Training', label: 'Licensing Act & Challenge 25 policy explained' },
+    { id: uid(), category: 'Operations', label: 'Opening procedure demonstrated' },
+    { id: uid(), category: 'Operations', label: 'Closing procedure demonstrated' },
+    { id: uid(), category: 'Operations', label: 'Complaint handling procedure explained' },
+    { id: uid(), category: 'Operations', label: '30-day review meeting scheduled' },
+  ];
+}
+
+/* ── Default menu items (seed data) ─────────────────────────────────────── */
+function defaultMenuItems() {
+  return [
+    {
+      id: uid(), type: 'cocktail', name: 'Espresso Martini',
+      desc: 'Vodka, Kahlúa, and a freshly pulled espresso shot, dry-shaken and double-strained into a chilled coupe. The three coffee beans represent health, wealth, and happiness.',
+      sell: ['Best-selling cocktail on the menu', 'Perfect after-dinner serve', 'Guests often order a second — always upsell'],
+      abv: 18, price: 10.5, gp: 74,
+      allergens: [],
+      pairing: 'Serve in a chilled coupe. No ice in the glass. Float three coffee beans as garnish.'
+    },
+    {
+      id: uid(), type: 'cocktail', name: 'Penicillin',
+      desc: 'Blended Scotch, lemon juice, honey-ginger syrup, finished with a float of Islay single malt. Named after the antibiotic — this drink will cure what ails you.',
+      sell: ['Approachable introduction to whisky cocktails', 'Strong margin at £11', 'Conversation starter — great for whisky curious guests'],
+      abv: 15, price: 11, gp: 71,
+      allergens: ['sulphites'],
+      pairing: 'Rocks glass over a large ice cube. Islay float on top — don\'t stir after service.'
+    },
+    {
+      id: uid(), type: 'spirit', name: 'Hendrick\'s Gin',
+      desc: 'Small batch Scottish gin distilled with Bulgarian Rosa Damascena rose petals and cucumber, producing a distinctly floral, refreshing character. A curiosity of the highest order.',
+      sell: ['Premium positioning — £1.50 more than house gin', 'Pairs exceptionally with elderflower tonic', 'The cucumber garnish is iconic — always mention it'],
+      abv: 41.4, price: 9, gp: 68,
+      allergens: [],
+      pairing: 'Balloon glass, large ice, premium tonic, cucumber wheel (not lime).'
+    },
+    {
+      id: uid(), type: 'dish', name: 'Burrata & Heritage Tomato',
+      desc: 'Hand-torn burrata from Puglia, heritage tomatoes, basil oil, aged balsamic, sea salt. Simple, seasonal, exceptional quality.',
+      sell: ['High margin — food cost under 20%', 'Instagram-worthy presentation', 'Excellent pre-dinner share plate'],
+      abv: 0, price: 9, gp: 78,
+      allergens: ['milk'],
+      pairing: 'Serve at room temperature. Suggest a glass of Vermentino as a pairing.'
+    },
+  ];
+}
+
+/* ── UID generator ───────────────────────────────────────────────────────── */
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   MODE TOGGLE
+══════════════════════════════════════════════════════════════════════════ */
+function toggleMode() {
+  isManager = !isManager;
+  save(KEY_MODE, isManager);
+  const banner = document.getElementById('modeBanner');
+  const label  = document.getElementById('modeLabelText');
+  const btn    = banner.querySelector('.mode-toggle');
+  if (isManager) {
+    banner.className = 'mode-banner manager';
+    label.textContent = 'Manager Mode';
+    banner.querySelector('span:nth-child(3)').textContent = 'Full access — create, assign, review';
+    btn.textContent = 'Switch to Staff Mode';
+  } else {
+    banner.className = 'mode-banner staff';
+    label.textContent = 'Staff Mode';
+    banner.querySelector('span:nth-child(3)').textContent = 'Checklist & study view — your progress only';
+    btn.textContent = 'Switch to Manager Mode';
+  }
+  renderAll();
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   TABS
+══════════════════════════════════════════════════════════════════════════ */
+function switchTab(name) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  const btns = document.querySelectorAll('.tab-btn');
+  const map = { dashboard:0, onboarding:1, 'menu-kb':2, assessments:3, certificates:4 };
+  if (btns[map[name]]) btns[map[name]].classList.add('active');
+  if (name === 'dashboard')   renderDashboard();
+  if (name === 'onboarding')  renderOnboarding();
+  if (name === 'menu-kb')     renderMenuKB();
+  if (name === 'assessments') renderQuizList();
+  if (name === 'certificates') renderCertificates();
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   MODALS
+══════════════════════════════════════════════════════════════════════════ */
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
+});
+
+/* ══════════════════════════════════════════════════════════════════════════
+   STAFF MANAGEMENT
+══════════════════════════════════════════════════════════════════════════ */
+function addStaff() {
+  const first = document.getElementById('sf-first').value.trim();
+  const last  = document.getElementById('sf-last').value.trim();
+  const role  = document.getElementById('sf-role').value;
+  if (!first || !last || !role) { alert('Please fill in name and role.'); return; }
+  const member = {
+    id: uid(),
+    name: `${first} ${last}`,
+    role,
+    start: document.getElementById('sf-start').value || new Date().toISOString().split('T')[0],
+    notes: document.getElementById('sf-notes').value.trim(),
+    checklist: template.map(t => ({ id: t.id, done: false })),
+  };
+  staffList.push(member);
+  save(KEY_STAFF, staffList);
+  closeModal('staffModal');
+  ['sf-first','sf-last','sf-notes'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('sf-role').value = '';
+  renderAll();
+}
+
+function deleteStaff(id) {
+  if (!confirm('Remove this staff member and all their progress?')) return;
+  staffList = staffList.filter(s => s.id !== id);
+  save(KEY_STAFF, staffList);
+  document.getElementById('staffDetailPanel').style.display = 'none';
+  renderAll();
+}
+
+function getProgress(member) {
+  const total = template.length;
+  if (!total) return 0;
+  const done = (member.checklist || []).filter(c => c.done).length;
+  return Math.round((done / total) * 100);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   DASHBOARD
+══════════════════════════════════════════════════════════════════════════ */
+function renderDashboard() {
+  const inducted = staffList.filter(s => getProgress(s) === 100).length;
+  const totalAssess = results.length;
+  const outstanding = staffList.length > 0 ? staffList.filter(s => getProgress(s) < 100).length : 0;
+
+  document.getElementById('kpiStaff').textContent = staffList.length;
+  document.getElementById('kpiInducted').textContent = inducted;
+  document.getElementById('kpiAssessments').textContent = totalAssess;
+  document.getElementById('kpiOutstanding').textContent = outstanding;
+
+  const list = document.getElementById('dashboardList');
+  if (!staffList.length) {
+    list.innerHTML = `<div class="empty-state"><div class="icon">👥</div><p><strong>No staff added yet.</strong><br>Add your first team member to begin tracking progress.</p></div>`;
+    return;
+  }
+
+  list.innerHTML = staffList.map(s => {
+    const pct = getProgress(s);
+    const memberResults = results.filter(r => r.staffId === s.id);
+    const passCount = memberResults.filter(r => r.passed).length;
+    return `
+    <div class="dash-row">
+      <span class="dash-name">${esc(s.name)}</span>
+      <span class="dash-role">${esc(s.role)}</span>
+      <div class="dash-progress">
+        <div class="progress-wrap">
+          <div class="progress-fill${pct===100?' success':''}" style="width:${pct}%"></div>
+        </div>
+        <div class="progress-label"><span>Induction</span><span>${pct}%</span></div>
+      </div>
+      <div class="dash-actions">
+        <span class="badge ${passCount>0?'badge-success':'badge-muted'}" style="align-self:center">${passCount} pass${passCount!==1?'es':''}</span>
+        <button class="btn btn-ghost btn-xs" onclick="openStaffDetail('${s.id}')">View</button>
+        ${isManager ? `<button class="btn btn-danger btn-xs" onclick="deleteStaff('${s.id}')">✕</button>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+
+  // Refresh select
+  renderStaffSelect();
+}
+
+function openStaffDetail(id) {
+  const s = staffList.find(x => x.id === id);
+  if (!s) return;
+  document.getElementById('detailName').textContent = s.name;
+  document.getElementById('detailRole').textContent = s.role + (s.start ? ` · Started ${s.start}` : '');
+  document.getElementById('staffDetailPanel').style.display = 'block';
+
+  const pct = getProgress(s);
+  const memberResults = results.filter(r => r.staffId === s.id);
+  const passes = memberResults.filter(r => r.passed).length;
+  document.getElementById('detailStats').innerHTML = `
+    <div class="kpi-card ${pct===100?'success':'gold'}">
+      <div class="kpi-label">Induction</div>
+      <div class="kpi-value">${pct}%</div>
+      <div class="kpi-sub">${pct===100?'Complete':'In progress'}</div>
+    </div>
+    <div class="kpi-card info">
+      <div class="kpi-label">Assessments passed</div>
+      <div class="kpi-value">${passes}</div>
+      <div class="kpi-sub">of ${quizzes.length} available</div>
+    </div>`;
+
+  const grouped = groupBy(template, 'category');
+  let html = '';
+  for (const [cat, items] of Object.entries(grouped)) {
+    html += `<div class="checklist-section"><h4>${esc(cat)}</h4><div class="checklist">`;
+    html += items.map(item => {
+      const entry = (s.checklist || []).find(c => c.id === item.id);
+      const done = entry ? entry.done : false;
+      return `<div class="check-item ${done?'done':''}">
+        <div class="check-item__cb ${done?'checked':''}" onclick="${isManager?`toggleCheckItem('${s.id}','${item.id}',this)`:''}" style="${isManager?'cursor:pointer':'cursor:default'}"></div>
+        <span class="check-label">${esc(item.label)}</span>
+      </div>`;
+    }).join('');
+    html += `</div></div>`;
+  }
+  document.getElementById('detailChecklist').innerHTML = html;
+
+  document.getElementById('staffDetailPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function closeDetail() { document.getElementById('staffDetailPanel').style.display = 'none'; }
+
+function toggleCheckItem(staffId, itemId, el) {
+  const s = staffList.find(x => x.id === staffId);
+  if (!s) return;
+  if (!s.checklist) s.checklist = [];
+  let entry = s.checklist.find(c => c.id === itemId);
+  if (!entry) { entry = { id: itemId, done: false }; s.checklist.push(entry); }
+  entry.done = !entry.done;
+  save(KEY_STAFF, staffList);
+  openStaffDetail(staffId); // re-render detail
+  renderDashboard();
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   ONBOARDING TAB
+══════════════════════════════════════════════════════════════════════════ */
+function renderOnboarding() {
+  renderStaffSelect();
+  const sel = document.getElementById('staffSelect');
+  if (sel.value) loadStaffChecklist();
+  renderTemplateEditor();
+}
+
+function renderStaffSelect() {
+  const sel = document.getElementById('staffSelect');
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">— Select staff member —</option>' +
+    staffList.map(s => `<option value="${s.id}" ${s.id===cur?'selected':''}>${esc(s.name)} — ${esc(s.role)}</option>`).join('');
+}
+
+function loadStaffChecklist() {
+  const id = document.getElementById('staffSelect').value;
+  const el = document.getElementById('onboardingContent');
+  if (!id) {
+    el.innerHTML = `<div class="empty-state"><div class="icon">✅</div><p><strong>Select a staff member</strong> to view or manage their onboarding checklist.</p></div>`;
+    return;
+  }
+  const s = staffList.find(x => x.id === id);
+  if (!s) return;
+
+  const pct = getProgress(s);
+  const grouped = groupBy(template, 'category');
+  let html = `
+  <div class="glass-card">
+    <div class="flex-between" style="margin-bottom:var(--space-sm)">
+      <div>
+        <p class="section-label" style="margin:0">${esc(s.name)} · ${esc(s.role)}</p>
+        <p style="font-size:0.8rem;color:var(--color-text-muted);margin:0.2rem 0 0">Started ${s.start || 'unknown'}</p>
+      </div>
+      <span class="badge ${pct===100?'badge-success':'badge-gold'}">${pct}% complete</span>
+    </div>
+    <div class="progress-wrap" style="height:8px;margin-bottom:var(--space-md)">
+      <div class="progress-fill${pct===100?' success':''}" style="width:${pct}%"></div>
+    </div>`;
+
+  for (const [cat, items] of Object.entries(grouped)) {
+    const doneCount = items.filter(item => {
+      const entry = (s.checklist||[]).find(c => c.id === item.id);
+      return entry && entry.done;
+    }).length;
+    html += `<div class="checklist-section"><h4>${esc(cat)} <span style="float:right;color:var(--color-text-muted);font-size:0.72rem">${doneCount}/${items.length}</span></h4><div class="checklist">`;
+    html += items.map(item => {
+      const entry = (s.checklist||[]).find(c => c.id === item.id);
+      const done = entry ? entry.done : false;
+      return `<div class="check-item ${done?'done':''}">
+        <div class="check-item__cb ${done?'checked':''}" onclick="toggleCheckItemOnboard('${s.id}','${item.id}',this)" style="cursor:pointer"></div>
+        <span class="check-label">${esc(item.label)}</span>
+      </div>`;
+    }).join('');
+    html += `</div></div>`;
+  }
+  html += `</div>`;
+  el.innerHTML = html;
+}
+
+function toggleCheckItemOnboard(staffId, itemId) {
+  const s = staffList.find(x => x.id === staffId);
+  if (!s) return;
+  if (!s.checklist) s.checklist = [];
+  let entry = s.checklist.find(c => c.id === itemId);
+  if (!entry) { entry = { id: itemId, done: false }; s.checklist.push(entry); }
+  entry.done = !entry.done;
+  save(KEY_STAFF, staffList);
+  loadStaffChecklist();
+  renderDashboard();
+}
+
+/* ── Template Editor ─────────────────────────────────────────────────────── */
+function renderTemplateEditor() {
+  const el = document.getElementById('templateChecklistEditor');
+  if (!el) return;
+  const grouped = groupBy(template, 'category');
+  let html = '';
+  for (const [cat, items] of Object.entries(grouped)) {
+    html += `<div style="margin-bottom:0.75rem"><p style="font-size:0.75rem;font-weight:600;color:var(--color-gold);text-transform:uppercase;letter-spacing:0.08em;margin:0 0 0.35rem">${esc(cat)}</p>`;
+    html += items.map(item => `
+      <div style="display:flex;align-items:center;gap:0.5rem;padding:0.4rem 0;border-bottom:1px solid var(--color-border)">
+        <span style="flex:1;font-size:0.85rem">${esc(item.label)}</span>
+        <button class="btn btn-danger btn-xs" onclick="removeTemplateItem('${item.id}')">✕</button>
+      </div>`).join('');
+    html += '</div>';
+  }
+  el.innerHTML = html || '<p class="hint">No items in template yet.</p>';
+}
+
+function addTemplateItem() {
+  const label = document.getElementById('newItemLabel').value.trim();
+  const category = document.getElementById('newItemCategory').value;
+  if (!label) return;
+  template.push({ id: uid(), category, label });
+  document.getElementById('newItemLabel').value = '';
+  save(KEY_TEMPLATE, template);
+  renderTemplateEditor();
+}
+
+function removeTemplateItem(id) {
+  template = template.filter(t => t.id !== id);
+  save(KEY_TEMPLATE, template);
+  renderTemplateEditor();
+}
+
+function saveTemplate() {
+  save(KEY_TEMPLATE, template);
+  closeModal('checklistTemplateModal');
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   MENU KNOWLEDGE BASE
+══════════════════════════════════════════════════════════════════════════ */
+const typeEmoji = { cocktail:'🍸', dish:'🍽', spirit:'🥃', wine:'🍷', beer:'🍺', mocktail:'🧃' };
+
+function setMenuFilter(f, btn) {
+  menuFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderMenuKB();
+}
+
+function renderMenuKB() {
+  const query = document.getElementById('menuSearch').value.toLowerCase();
+  const el = document.getElementById('menuGrid');
+  let items = menuItems;
+  if (menuFilter !== 'all') items = items.filter(i => i.type === menuFilter);
+  if (query) items = items.filter(i =>
+    i.name.toLowerCase().includes(query) ||
+    i.desc.toLowerCase().includes(query) ||
+    (i.allergens||[]).join(' ').toLowerCase().includes(query)
+  );
+
+  if (!items.length) {
+    el.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="icon">🔍</div><p>No items match. <button class="btn btn-ghost btn-sm" onclick="document.getElementById('menuSearch').value='';renderMenuKB()">Clear search</button></p></div>`;
+    return;
+  }
+
+  el.innerHTML = items.map(item => `
+    <div class="menu-item-card">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:0.5rem;margin-bottom:0.25rem">
+        <p class="menu-item-card__name">${esc(item.name)}</p>
+        ${isManager ? `<div style="display:flex;gap:0.3rem"><button class="btn btn-ghost btn-xs" onclick="editMenuItem('${item.id}')">✎</button><button class="btn btn-danger btn-xs" onclick="deleteMenuItem('${item.id}')">✕</button></div>` : ''}
+      </div>
+      <p class="menu-item-card__type">${typeEmoji[item.type]||''} ${item.type}</p>
+      <p class="menu-item-card__desc">${esc(item.desc)}</p>
+      ${item.abv>0 ? `<div class="menu-detail-row"><span>ABV</span><strong>${item.abv}%</strong></div>`:''}
+      ${item.price ? `<div class="menu-detail-row"><span>Price</span><strong>£${Number(item.price).toFixed(2)}</strong></div>`:''}
+      ${item.gp ? `<div class="menu-detail-row"><span>GP</span><strong>${item.gp}%</strong></div>`:''}
+      ${item.pairing ? `<div class="menu-detail-row" style="flex-direction:column;gap:0.15rem"><span>Serving notes</span><span style="color:var(--color-text-soft);font-size:0.78rem">${esc(item.pairing)}</span></div>`:''}
+      ${(item.sell||[]).length ? `<div style="margin-top:0.5rem">${item.sell.map(s=>`<p class="sell-point">${esc(s)}</p>`).join('')}</div>` : ''}
+      ${(item.allergens||[]).length ? `<div class="allergen-chips">${item.allergens.map(a=>`<span class="allergen-chip">⚠ ${esc(a)}</span>`).join('')}</div>` : '<p style="font-size:0.72rem;color:var(--color-success);margin-top:0.4rem">✓ No allergens declared</p>'}
+    </div>`).join('');
+}
+
+function saveMenuItem() {
+  const name = document.getElementById('mi-name').value.trim();
+  const type = document.getElementById('mi-type').value;
+  const desc = document.getElementById('mi-desc').value.trim();
+  if (!name || !desc) { alert('Name and description are required.'); return; }
+  const sell = document.getElementById('mi-sell').value.trim().split('\n').filter(Boolean);
+  const item = {
+    id: editingMenuId || uid(),
+    type, name, desc, sell,
+    abv:   parseFloat(document.getElementById('mi-abv').value)||0,
+    price: parseFloat(document.getElementById('mi-price').value)||0,
+    gp:    parseInt(document.getElementById('mi-gp').value)||0,
+    allergens: [...allergenTags],
+    pairing: document.getElementById('mi-pairing').value.trim(),
+  };
+  if (editingMenuId) {
+    menuItems = menuItems.map(m => m.id === editingMenuId ? item : m);
+  } else {
+    menuItems.push(item);
+  }
+  save(KEY_MENU, menuItems);
+  closeModal('menuItemModal');
+  resetMenuForm();
+  renderMenuKB();
+}
+
+function editMenuItem(id) {
+  const item = menuItems.find(m => m.id === id);
+  if (!item) return;
+  editingMenuId = id;
+  document.getElementById('menuItemModalTitle').textContent = 'Edit Menu Item';
+  document.getElementById('mi-name').value = item.name;
+  document.getElementById('mi-type').value = item.type;
+  document.getElementById('mi-desc').value = item.desc;
+  document.getElementById('mi-sell').value = (item.sell||[]).join('\n');
+  document.getElementById('mi-abv').value = item.abv||'';
+  document.getElementById('mi-price').value = item.price||'';
+  document.getElementById('mi-gp').value = item.gp||'';
+  document.getElementById('mi-pairing').value = item.pairing||'';
+  allergenTags = [...(item.allergens||[])];
+  renderAllergenTags();
+  openModal('menuItemModal');
+}
+
+function deleteMenuItem(id) {
+  if (!confirm('Remove this menu item?')) return;
+  menuItems = menuItems.filter(m => m.id !== id);
+  save(KEY_MENU, menuItems);
+  renderMenuKB();
+}
+
+function resetMenuForm() {
+  ['mi-name','mi-desc','mi-sell','mi-abv','mi-price','mi-gp','mi-pairing'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('mi-type').value = 'cocktail';
+  allergenTags = [];
+  editingMenuId = null;
+  document.getElementById('menuItemModalTitle').textContent = 'Add Menu Item';
+  renderAllergenTags();
+}
+
+/* ── Allergen tag input ─────────────────────────────────────────────────── */
+function handleAllergenKey(e) {
+  if (e.key === 'Enter' || e.key === ',') {
+    e.preventDefault();
+    const val = e.target.value.trim().toLowerCase();
+    if (val && !allergenTags.includes(val)) { allergenTags.push(val); renderAllergenTags(); }
+    e.target.value = '';
+  } else if (e.key === 'Backspace' && !e.target.value && allergenTags.length) {
+    allergenTags.pop(); renderAllergenTags();
+  }
+}
+
+function removeAllergenTag(tag) {
+  allergenTags = allergenTags.filter(t => t !== tag);
+  renderAllergenTags();
+}
+
+function renderAllergenTags() {
+  const wrap = document.getElementById('allergenTagsWrap');
+  const input = document.getElementById('allergenInput');
+  wrap.innerHTML = '';
+  allergenTags.forEach(tag => {
+    const chip = document.createElement('span');
+    chip.className = 'tag-chip';
+    chip.innerHTML = `${esc(tag)} <button onclick="removeAllergenTag('${tag}')" type="button">×</button>`;
+    wrap.appendChild(chip);
+  });
+  wrap.appendChild(input);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   QUIZ / ASSESSMENTS
+══════════════════════════════════════════════════════════════════════════ */
+function addQuestion() {
+  quizQuestions.push({ id: uid(), q: '', options: ['','','',''], correct: 0 });
+  renderQuizBuilder();
+}
+
+function renderQuizBuilder() {
+  const el = document.getElementById('qbQuestions');
+  if (!quizQuestions.length) {
+    el.innerHTML = '<p class="hint">No questions yet. Add one below.</p>';
+    return;
+  }
+  el.innerHTML = quizQuestions.map((q, qi) => `
+    <div class="question-card">
+      <div class="flex-between" style="margin-bottom:0.4rem">
+        <span style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--color-text-muted)">Question ${qi+1}</span>
+        <button class="btn btn-danger btn-xs" onclick="removeQuestion('${q.id}')">✕</button>
+      </div>
+      <div class="field-group" style="margin-bottom:0.5rem">
+        <input type="text" placeholder="Enter your question…" value="${esc(q.q)}" onchange="updateQ('${q.id}','q',this.value)">
+      </div>
+      <div class="stack-sm">
+        ${q.options.map((opt, oi) => `
+          <div style="display:flex;gap:0.4rem;align-items:center">
+            <input type="radio" name="correct_${q.id}" value="${oi}" ${q.correct===oi?'checked':''} onchange="updateQ('${q.id}','correct',${oi})" style="width:auto;accent-color:var(--color-gold)">
+            <input type="text" placeholder="Option ${oi+1}…" value="${esc(opt)}" onchange="updateQOption('${q.id}',${oi},this.value)" style="flex:1">
+          </div>`).join('')}
+      </div>
+      <p class="hint" style="margin-top:0.3rem">Select the radio button next to the correct answer.</p>
+    </div>`).join('');
+}
+
+function updateQ(id, field, val) {
+  const q = quizQuestions.find(x => x.id === id);
+  if (!q) return;
+  if (field === 'correct') q.correct = parseInt(val);
+  else q[field] = val;
+}
+
+function updateQOption(id, idx, val) {
+  const q = quizQuestions.find(x => x.id === id);
+  if (q) q.options[idx] = val;
+}
+
+function removeQuestion(id) {
+  quizQuestions = quizQuestions.filter(x => x.id !== id);
+  renderQuizBuilder();
+}
+
+function saveQuiz() {
+  const title = document.getElementById('qb-title').value.trim();
+  if (!title) { alert('Please enter an assessment title.'); return; }
+  if (quizQuestions.length < 1) { alert('Add at least one question.'); return; }
+  const hasBlank = quizQuestions.some(q => !q.q.trim() || q.options.some(o => !o.trim()));
+  if (hasBlank) { alert('Please fill in all question fields and options.'); return; }
+
+  const quiz = {
+    id: uid(),
+    title,
+    passmark: parseInt(document.getElementById('qb-passmark').value)||80,
+    category: document.getElementById('qb-category').value,
+    created: new Date().toISOString().split('T')[0],
+    questions: JSON.parse(JSON.stringify(quizQuestions)),
+  };
+  quizzes.push(quiz);
+  save(KEY_QUIZZES, quizzes);
+  closeModal('quizBuilderModal');
+  quizQuestions = [];
+  document.getElementById('qb-title').value = '';
+  document.getElementById('qbQuestions').innerHTML = '';
+  renderQuizList();
+}
+
+function renderQuizList() {
+  const el = document.getElementById('quizList');
+  if (!quizzes.length) {
+    el.innerHTML = `<div class="empty-state"><div class="icon">🎯</div><p><strong>No assessments created yet.</strong><br>Build a quiz to test your team's knowledge of the menu, allergens, or procedures.</p></div>`;
+    return;
+  }
+  el.innerHTML = quizzes.map(quiz => {
+    const quizResults = results.filter(r => r.quizId === quiz.id);
+    const passCount = quizResults.filter(r => r.passed).length;
+    return `
+    <div class="quiz-card">
+      <div class="flex-between">
+        <div>
+          <p class="quiz-card__title">${esc(quiz.title)}</p>
+          <p class="quiz-card__meta">${esc(quiz.category)} · ${quiz.questions.length} question${quiz.questions.length!==1?'s':''} · Pass: ${quiz.passmark}%</p>
+        </div>
+        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;justify-content:flex-end">
+          <span class="badge badge-info">${passCount} pass${passCount!==1?'es':''}</span>
+          <button class="btn btn-primary btn-sm" onclick="startQuiz('${quiz.id}')">Take Assessment →</button>
+          ${isManager ? `<button class="btn btn-danger btn-xs" onclick="deleteQuiz('${quiz.id}')">✕</button>` : ''}
+        </div>
+      </div>
+      ${quizResults.length ? `
+        <hr class="sep" style="margin:var(--space-sm) 0">
+        <p class="section-label" style="margin:0 0 0.4rem">Recent results</p>
+        <div style="display:flex;flex-wrap:wrap;gap:0.3rem">
+          ${quizResults.slice(-8).map(r => `
+            <span class="badge ${r.passed?'badge-success':'badge-error'}">
+              ${esc(r.staffName)} ${r.score}%
+            </span>`).join('')}
+        </div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+function deleteQuiz(id) {
+  if (!confirm('Delete this assessment? Results will be preserved.')) return;
+  quizzes = quizzes.filter(q => q.id !== id);
+  save(KEY_QUIZZES, quizzes);
+  renderQuizList();
+}
+
+/* ── Taking a quiz ─────────────────────────────────────────────────────── */
+function startQuiz(id) {
+  const quiz = quizzes.find(q => q.id === id);
+  if (!quiz) return;
+  currentQuizId = id;
+  document.getElementById('quizTitle').textContent = quiz.title;
+  document.getElementById('quizTakerName').value = '';
+  document.getElementById('quizResult').style.display = 'none';
+  document.getElementById('submitQuizBtn').style.display = 'inline-flex';
+
+  document.getElementById('quizQuestions').innerHTML = quiz.questions.map((q, qi) => `
+    <div class="question-card" id="qq_${q.id}">
+      <p class="question-card__q"><strong>Q${qi+1}.</strong> ${esc(q.q)}</p>
+      <div class="options-list">
+        ${q.options.map((opt, oi) => `
+          <button class="option-btn" onclick="selectOption('${q.id}',${oi},this)" id="opt_${q.id}_${oi}">
+            <span style="font-family:var(--font-mono);font-size:0.78rem;color:var(--color-text-muted);flex-shrink:0">${String.fromCharCode(65+oi)}.</span>
+            ${esc(opt)}
+          </button>`).join('')}
+      </div>
+    </div>`).join('');
+
+  document.getElementById('quiz-list-view').style.display = 'none';
+  document.getElementById('quiz-take-view').style.display = 'block';
+}
+
+const quizAnswers = {};
+function selectOption(qId, oi, btn) {
+  // Deselect siblings
+  const parent = btn.closest('.options-list');
+  parent.querySelectorAll('.option-btn').forEach(b => { b.classList.remove('active-sel'); b.style.borderColor = ''; b.style.background = ''; });
+  btn.style.borderColor = 'rgba(243,201,139,0.6)';
+  btn.style.background = 'rgba(243,201,139,0.1)';
+  btn.classList.add('active-sel');
+  quizAnswers[qId] = oi;
+}
+
+function submitQuiz() {
+  const taker = document.getElementById('quizTakerName').value.trim();
+  if (!taker) { alert('Please enter your name before submitting.'); return; }
+  const quiz = quizzes.find(q => q.id === currentQuizId);
+  if (!quiz) return;
+
+  let correct = 0;
+  quiz.questions.forEach(q => {
+    const selected = quizAnswers[q.id];
+    const btn = document.getElementById(`opt_${q.id}_${selected}`);
+    const correctBtn = document.getElementById(`opt_${q.id}_${q.correct}`);
+    if (selected === q.correct) {
+      correct++;
+      if (btn) { btn.classList.remove('active-sel'); btn.classList.add('correct'); }
+    } else {
+      if (btn) { btn.classList.remove('active-sel'); btn.classList.add('wrong'); }
+      if (correctBtn) correctBtn.classList.add('reveal-correct');
+    }
+    // Disable all
+    document.querySelectorAll(`#qq_${q.id} .option-btn`).forEach(b => { b.disabled = true; b.style.borderColor=''; b.style.background=''; });
+  });
+
+  const score = Math.round((correct / quiz.questions.length) * 100);
+  const passed = score >= quiz.passmark;
+  document.getElementById('submitQuizBtn').style.display = 'none';
+
+  const resultEl = document.getElementById('quizResult');
+  resultEl.style.display = 'block';
+  resultEl.innerHTML = `
+    <div class="score-banner ${passed?'pass':'fail'}">
+      <p class="score-num ${passed?'pass':'fail'}">${score}%</p>
+      <p style="font-size:1rem;font-weight:600;margin:0.5rem 0">${passed?'✅ Passed!':'❌ Not quite — review and try again'}</p>
+      <p style="font-size:0.85rem;color:var(--color-text-muted);margin:0">${correct} of ${quiz.questions.length} correct · Pass mark: ${quiz.passmark}%</p>
+      ${passed ? `<button class="btn btn-primary mt-md" onclick="showCertificate('${taker}','${quiz.id}',${score})">🏆 View Certificate</button>` : ''}
+    </div>`;
+
+  // Store result
+  const staff = staffList.find(s => s.name.toLowerCase() === taker.toLowerCase());
+  const resultRecord = {
+    id: uid(),
+    quizId: quiz.id,
+    quizTitle: quiz.title,
+    staffId: staff ? staff.id : null,
+    staffName: taker,
+    score,
+    passed,
+    date: new Date().toISOString().split('T')[0],
+    timestamp: Date.now(),
+  };
+  results.push(resultRecord);
+  save(KEY_RESULTS, results);
+  renderDashboard();
+}
+
+function exitQuiz() {
+  document.getElementById('quiz-list-view').style.display = 'block';
+  document.getElementById('quiz-take-view').style.display = 'none';
+  Object.keys(quizAnswers).forEach(k => delete quizAnswers[k]);
+  renderQuizList();
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   CERTIFICATES
+══════════════════════════════════════════════════════════════════════════ */
+function showCertificate(staffName, quizId, score) {
+  const quiz = quizzes.find(q => q.id === quizId);
+  document.getElementById('certStaffName').textContent = staffName;
+  document.getElementById('certAssessTitle').textContent = quiz ? quiz.title : 'Assessment';
+  document.getElementById('certScoreText').textContent = `${score}% — PASS`;
+  document.getElementById('certDateText').textContent = `Completed: ${new Date().toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' })}`;
+  document.getElementById('cert-modal').classList.add('open');
+}
+
+function closeCertModal() { document.getElementById('cert-modal').classList.remove('open'); }
+function printCert() { window.print(); }
+
+function renderCertificates() {
+  const el = document.getElementById('certList');
+  const passes = results.filter(r => r.passed).sort((a,b) => b.timestamp - a.timestamp);
+  if (!passes.length) {
+    el.innerHTML = `<div class="empty-state"><div class="icon">🏆</div><p><strong>No completions yet.</strong><br>Once a staff member passes an assessment, their certificate appears here.</p></div>`;
+    return;
+  }
+  el.innerHTML = passes.map(r => `
+    <div class="dash-row">
+      <div style="flex:1">
+        <p style="font-weight:600;font-size:0.88rem;margin:0">${esc(r.staffName)}</p>
+        <p style="font-size:0.75rem;color:var(--color-text-muted);margin:0">${esc(r.quizTitle)}</p>
+      </div>
+      <span class="badge badge-success">${r.score}%</span>
+      <span style="font-size:0.75rem;color:var(--color-text-muted)">${r.date}</span>
+      <button class="btn btn-ghost btn-xs" onclick="showCertificate('${esc(r.staffName)}','${r.quizId}',${r.score})">View cert</button>
+    </div>`).join('');
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   UTILS
+══════════════════════════════════════════════════════════════════════════ */
+function esc(str) {
+  if (str == null) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+function groupBy(arr, key) {
+  return arr.reduce((acc, item) => {
+    const k = item[key];
+    if (!acc[k]) acc[k] = [];
+    acc[k].push(item);
+    return acc;
+  }, {});
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   RENDER ALL
+══════════════════════════════════════════════════════════════════════════ */
+function renderAll() {
+  renderDashboard();
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   INIT
+══════════════════════════════════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  renderAll();
+  renderMenuKB();
+  renderQuizList();
+  renderCertificates();
+  renderTemplateEditor();
+  renderStaffSelect();
+  // Init mode UI
+  if (!isManager) {
+    const banner = document.getElementById('modeBanner');
+    banner.className = 'mode-banner staff';
+    document.getElementById('modeLabelText').textContent = 'Staff Mode';
+    banner.querySelector('span:nth-child(3)').textContent = 'Checklist & study view — your progress only';
+    banner.querySelector('.mode-toggle').textContent = 'Switch to Manager Mode';
+  }
+  // Default quiz builder empty
+  quizQuestions = [];
+  renderQuizBuilder();
+});
+</script>
+</body>
+</html>
