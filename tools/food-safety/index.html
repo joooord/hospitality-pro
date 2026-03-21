@@ -1,0 +1,1555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Food Safety & HACCP Compliance Logger · Hospitality Pro</title>
+  <link rel="stylesheet" href="/assets/styles/system.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Base Layout ──────────────────────────────────────── */
+    .page-header { text-align: center; padding: var(--space-lg) 0 var(--space-md); }
+    .page-header .eyebrow { color: var(--color-text-muted); font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem; }
+    .page-header h1 { font-family: var(--font-serif); font-size: clamp(1.6rem, 4.5vw, 2.4rem); margin: 0 0 0.5rem; }
+    .page-header p { color: var(--color-text-muted); margin: 0; font-size: 0.9rem; }
+    .legal-badge { display: inline-flex; align-items: center; gap: 0.4rem; background: rgba(246,124,124,0.1); border: 1px solid rgba(246,124,124,0.25); border-radius: 20px; padding: 0.25rem 0.75rem; font-size: 0.72rem; font-weight: 600; color: #f67c7c; letter-spacing: 0.05em; text-transform: uppercase; margin-top: 0.75rem; }
+
+    .back-link { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--color-text-muted); font-size: 0.82rem; text-decoration: none; transition: color var(--transition-fast); margin-bottom: var(--space-md); }
+    .back-link:hover { color: var(--color-gold); }
+
+    /* ── Tabs ─────────────────────────────────────────────── */
+    .tabs { display: flex; border-bottom: 1px solid var(--color-border); margin-bottom: var(--space-lg); overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab-btn { flex: 1; min-width: 80px; padding: 0.75rem 0.85rem; background: none; border: none; cursor: pointer; color: var(--color-text-muted); font-size: 0.82rem; font-family: var(--font-sans); font-weight: 500; border-bottom: 2px solid transparent; transition: all var(--transition-base); white-space: nowrap; }
+    .tab-btn:hover { color: var(--color-text); }
+    .tab-btn.active { color: var(--color-gold); border-bottom-color: var(--color-gold); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── Glass Cards ──────────────────────────────────────── */
+    .glass-card { background: rgba(255,255,255,0.035); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--space-md); backdrop-filter: blur(var(--glass-blur)); -webkit-backdrop-filter: blur(var(--glass-blur)); }
+    .section-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-text-muted); margin: 0 0 var(--space-sm); }
+    .stack { display: flex; flex-direction: column; gap: var(--space-md); }
+
+    /* ── Dashboard Status Strip ───────────────────────────── */
+    .status-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: var(--space-sm); margin-bottom: var(--space-md); }
+    .status-card { background: rgba(255,255,255,0.04); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-sm); text-align: center; position: relative; overflow: hidden; }
+    .status-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+    .status-card.green::before { background: #4caf50; }
+    .status-card.amber::before { background: #f0a832; }
+    .status-card.red::before { background: #f67c7c; }
+    .status-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-muted); margin-bottom: 0.3rem; }
+    .status-value { font-size: 1.6rem; font-weight: 700; font-family: var(--font-mono); line-height: 1; }
+    .status-card.green .status-value { color: #4caf50; }
+    .status-card.amber .status-value { color: #f0a832; }
+    .status-card.red .status-value { color: #f67c7c; }
+    .status-sub { font-size: 0.67rem; color: var(--color-text-muted); margin-top: 0.25rem; }
+
+    /* ── Alert Banner ─────────────────────────────────────── */
+    .alert-banner { display: none; align-items: flex-start; gap: 0.75rem; background: rgba(246,124,124,0.08); border: 1px solid rgba(246,124,124,0.25); border-radius: var(--radius-md); padding: var(--space-sm) var(--space-md); margin-bottom: var(--space-md); }
+    .alert-banner.visible { display: flex; }
+    .alert-banner .alert-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .alert-banner .alert-body { flex: 1; }
+    .alert-banner .alert-title { font-size: 0.82rem; font-weight: 700; color: #f67c7c; margin-bottom: 0.2rem; letter-spacing: 0.02em; }
+    .alert-banner .alert-list { font-size: 0.8rem; color: var(--color-text-muted); margin: 0; padding-left: 1rem; }
+
+    /* ── Temperature Zones ────────────────────────────────── */
+    .zone-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--space-sm); margin-bottom: var(--space-md); }
+    .zone-card { background: rgba(255,255,255,0.04); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-sm) var(--space-md); position: relative; overflow: hidden; }
+    .zone-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; }
+    .zone-card.ok::before { background: #4caf50; }
+    .zone-card.warning::before { background: #f0a832; }
+    .zone-card.danger::before { background: #f67c7c; }
+    .zone-card.unset::before { background: var(--color-border); }
+    .zone-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem; }
+    .zone-name { font-weight: 600; font-size: 0.95rem; }
+    .zone-type-badge { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.07em; padding: 0.15rem 0.5rem; border-radius: 20px; font-weight: 600; }
+    .zone-type-badge.fridge { background: rgba(3,169,244,0.12); color: #81d4fa; border: 1px solid rgba(3,169,244,0.2); }
+    .zone-type-badge.freezer { background: rgba(147,112,219,0.12); color: #ce93d8; border: 1px solid rgba(147,112,219,0.2); }
+    .zone-type-badge.hot { background: rgba(246,124,124,0.12); color: #f67c7c; border: 1px solid rgba(246,124,124,0.2); }
+    .zone-type-badge.probe { background: rgba(76,175,80,0.12); color: #a5d6a7; border: 1px solid rgba(76,175,80,0.2); }
+    .zone-temp-big { font-family: var(--font-mono); font-size: 2rem; font-weight: 700; line-height: 1; }
+    .zone-card.ok .zone-temp-big { color: #4caf50; }
+    .zone-card.warning .zone-temp-big { color: #f0a832; }
+    .zone-card.danger .zone-temp-big { color: #f67c7c; }
+    .zone-card.unset .zone-temp-big { color: var(--color-text-muted); }
+    .zone-range-label { font-size: 0.7rem; color: var(--color-text-muted); margin-top: 0.15rem; }
+    .zone-last-check { font-size: 0.72rem; color: var(--color-text-muted); margin-top: 0.4rem; }
+    .zone-actions { display: flex; gap: 0.5rem; margin-top: 0.75rem; }
+    .btn-log-temp { flex: 1; background: var(--color-gold); color: #0a0a0a; border: none; padding: 0.55rem; border-radius: var(--radius-sm); font-weight: 700; font-size: 0.82rem; cursor: pointer; transition: filter var(--transition-fast); }
+    .btn-log-temp:hover { filter: brightness(1.1); }
+
+    /* ── Forms ────────────────────────────────────────────── */
+    .field-group { display: flex; flex-direction: column; gap: 0.3rem; }
+    .field-label { font-size: 0.79rem; color: var(--color-text-muted); font-weight: 500; }
+    input[type="text"], input[type="number"], input[type="date"], input[type="time"], select, textarea {
+      width: 100%; padding: 0.65rem 0.85rem;
+      background: rgba(255,255,255,0.06); border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm); color: var(--color-text); font-family: var(--font-sans); font-size: 0.95rem;
+      transition: border-color var(--transition-fast);
+    }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: rgba(243,201,139,0.45); }
+    input::placeholder, textarea::placeholder { color: var(--color-text-muted); opacity: 0.55; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-sm); }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--space-sm); }
+    @media (max-width: 520px) { .grid-3 { grid-template-columns: 1fr 1fr; } .grid-2 { grid-template-columns: 1fr; } }
+
+    /* ── Buttons ──────────────────────────────────────────── */
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; padding: 0.7rem 1.2rem; border-radius: var(--radius-sm); font-family: var(--font-sans); font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: all var(--transition-fast); border: none; }
+    .btn-primary { background: var(--color-gold); color: #0a0a0a; }
+    .btn-primary:hover { filter: brightness(1.1); }
+    .btn-ghost { background: rgba(255,255,255,0.06); border: 1px solid var(--color-border); color: var(--color-text); }
+    .btn-ghost:hover { background: rgba(255,255,255,0.1); }
+    .btn-danger { background: rgba(246,124,124,0.12); border: 1px solid rgba(246,124,124,0.25); color: #f67c7c; }
+    .btn-danger:hover { background: rgba(246,124,124,0.2); }
+    .btn-success { background: rgba(76,175,80,0.15); border: 1px solid rgba(76,175,80,0.3); color: #81c784; }
+    .btn-success:hover { background: rgba(76,175,80,0.25); }
+    .btn-full { width: 100%; }
+    .btn-sm { padding: 0.35rem 0.65rem; font-size: 0.76rem; }
+
+    /* ── Temperature Log Table ────────────────────────────── */
+    .log-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .log-table { width: 100%; border-collapse: collapse; font-size: 0.84rem; min-width: 500px; }
+    .log-table th { font-size: 0.63rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-muted); padding: 0.5rem 0.6rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+    .log-table td { padding: 0.6rem 0.6rem; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: middle; }
+    .log-table tr:last-child td { border-bottom: none; }
+    .log-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .temp-cell { font-family: var(--font-mono); font-weight: 700; }
+    .temp-cell.ok { color: #4caf50; }
+    .temp-cell.danger { color: #f67c7c; }
+    .status-pill { display: inline-block; padding: 0.12rem 0.5rem; border-radius: 20px; font-size: 0.67rem; font-weight: 700; letter-spacing: 0.04em; }
+    .status-pill.ok { background: rgba(76,175,80,0.12); color: #81c784; border: 1px solid rgba(76,175,80,0.25); }
+    .status-pill.fail { background: rgba(246,124,124,0.12); color: #f67c7c; border: 1px solid rgba(246,124,124,0.25); }
+    .empty-state { text-align: center; padding: var(--space-lg); color: var(--color-text-muted); font-size: 0.9rem; }
+
+    /* ── Cleaning Schedule ────────────────────────────────── */
+    .task-list { display: flex; flex-direction: column; gap: 0.5rem; }
+    .task-item { display: flex; align-items: center; gap: 0.75rem; background: rgba(255,255,255,0.03); border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 0.7rem; }
+    .task-item.done { opacity: 0.65; }
+    .task-check { width: 20px; height: 20px; border-radius: 4px; border: 1.5px solid var(--color-border); background: transparent; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; transition: all var(--transition-fast); }
+    .task-check.checked { background: #4caf50; border-color: #4caf50; color: white; }
+    .task-check.overdue { border-color: #f67c7c; }
+    .task-info { flex: 1; min-width: 0; }
+    .task-name { font-size: 0.9rem; font-weight: 500; }
+    .task-meta { font-size: 0.72rem; color: var(--color-text-muted); margin-top: 0.15rem; }
+    .task-freq-badge { font-size: 0.65rem; padding: 0.1rem 0.45rem; border-radius: 20px; font-weight: 600; letter-spacing: 0.04em; flex-shrink: 0; }
+    .task-freq-badge.daily { background: rgba(3,169,244,0.12); color: #81d4fa; border: 1px solid rgba(3,169,244,0.2); }
+    .task-freq-badge.weekly { background: rgba(243,201,139,0.12); color: var(--color-gold); border: 1px solid rgba(243,201,139,0.2); }
+    .task-freq-badge.monthly { background: rgba(147,112,219,0.12); color: #ce93d8; border: 1px solid rgba(147,112,219,0.2); }
+    .task-overdue { color: #f67c7c; font-size: 0.7rem; font-weight: 600; margin-top: 0.15rem; }
+
+    /* ── Corrective Actions ───────────────────────────────── */
+    .ca-card { background: rgba(255,255,255,0.035); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-sm) var(--space-md); border-left: 3px solid; }
+    .ca-card.open { border-left-color: #f67c7c; }
+    .ca-card.resolved { border-left-color: #4caf50; opacity: 0.7; }
+    .ca-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem; margin-bottom: 0.4rem; }
+    .ca-title { font-weight: 600; font-size: 0.9rem; }
+    .ca-status-badge { font-size: 0.65rem; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.05em; flex-shrink: 0; }
+    .ca-status-badge.open { background: rgba(246,124,124,0.12); color: #f67c7c; border: 1px solid rgba(246,124,124,0.25); }
+    .ca-status-badge.resolved { background: rgba(76,175,80,0.12); color: #81c784; border: 1px solid rgba(76,175,80,0.25); }
+    .ca-detail { font-size: 0.82rem; color: var(--color-text-muted); line-height: 1.5; }
+    .ca-meta { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.5rem; font-size: 0.72rem; color: var(--color-text-muted); }
+    .ca-meta span { display: flex; align-items: center; gap: 0.25rem; }
+
+    /* ── Allergen Section ─────────────────────────────────── */
+    .allergen-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: var(--space-sm); }
+    .allergen-tile { background: rgba(255,255,255,0.04); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 0.75rem; position: relative; }
+    .allergen-tile.flagged { border-color: rgba(246,124,124,0.35); background: rgba(246,124,124,0.06); }
+    .allergen-icon { font-size: 1.3rem; margin-bottom: 0.3rem; display: block; }
+    .allergen-name { font-size: 0.85rem; font-weight: 600; margin-bottom: 0.25rem; }
+    .allergen-note { font-size: 0.73rem; color: var(--color-text-muted); line-height: 1.4; }
+    .allergen-tile.flagged .allergen-note { color: #f67c7c; }
+    .allergen-flag-dot { width: 7px; height: 7px; border-radius: 50%; background: #f67c7c; position: absolute; top: 0.6rem; right: 0.6rem; }
+    .allergen-edit-note { font-size: 0.75rem; margin-top: 0.3rem; padding: 0.4rem 0.5rem; background: rgba(255,255,255,0.05); border: 1px solid var(--color-border); border-radius: 4px; color: var(--color-text); width: 100%; resize: none; font-family: var(--font-sans); }
+    .allergen-edit-note:focus { outline: none; border-color: rgba(243,201,139,0.4); }
+
+    /* ── Export / Print ───────────────────────────────────── */
+    .export-section { display: flex; gap: var(--space-sm); flex-wrap: wrap; }
+    .report-preview { background: rgba(255,255,255,0.025); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-md); font-size: 0.84rem; line-height: 1.7; color: var(--color-text-muted); white-space: pre-wrap; font-family: var(--font-mono); max-height: 400px; overflow-y: auto; }
+
+    /* ── Modal ────────────────────────────────────────────── */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center; padding: var(--space-md); }
+    .modal-overlay.open { display: flex; }
+    .modal { background: #141414; border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--space-lg); width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto; }
+    .modal-title { font-family: var(--font-serif); font-size: 1.25rem; margin: 0 0 var(--space-md); }
+    .modal-actions { display: flex; gap: var(--space-sm); margin-top: var(--space-md); }
+
+    /* ── Section Headers ──────────────────────────────────── */
+    .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-md); flex-wrap: wrap; gap: var(--space-sm); }
+    .section-title { font-family: var(--font-serif); font-size: 1.2rem; margin: 0; }
+    .section-desc { font-size: 0.82rem; color: var(--color-text-muted); margin: 0.25rem 0 0; }
+
+    /* ── Quick Log Strip ──────────────────────────────────── */
+    .quick-log-strip { display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: var(--space-sm); align-items: end; }
+    @media (max-width: 560px) { .quick-log-strip { grid-template-columns: 1fr 1fr; } .quick-log-strip .span-full { grid-column: 1/-1; } }
+
+    /* ── Frequency Tabs ───────────────────────────────────── */
+    .freq-tabs { display: flex; gap: 0.4rem; margin-bottom: var(--space-md); }
+    .freq-tab { padding: 0.4rem 0.9rem; border-radius: 20px; font-size: 0.78rem; font-weight: 600; cursor: pointer; border: 1px solid var(--color-border); background: transparent; color: var(--color-text-muted); transition: all var(--transition-fast); }
+    .freq-tab.active { background: var(--color-gold); color: #0a0a0a; border-color: var(--color-gold); }
+
+    /* ── Print Styles ─────────────────────────────────────── */
+    @media print {
+      body { background: white; color: #0a0a0a; }
+      .tabs, .back-link, .btn, .modal-overlay, .page-header .eyebrow { display: none !important; }
+      .tab-panel { display: block !important; }
+      .glass-card { border: 1px solid #ddd; background: white; }
+    }
+
+    /* ── Utility ──────────────────────────────────────────── */
+    .mt-sm { margin-top: var(--space-sm); }
+    .mt-md { margin-top: var(--space-md); }
+    .flex-between { display: flex; justify-content: space-between; align-items: center; gap: var(--space-sm); flex-wrap: wrap; }
+    .muted { color: var(--color-text-muted); }
+    .divider { border: none; border-top: 1px solid var(--color-border); margin: var(--space-md) 0; }
+    .ca-list { display: flex; flex-direction: column; gap: var(--space-sm); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a class="back-link" href="/">← Back to Suite</a>
+
+    <div class="page-header">
+      <p class="eyebrow">Compliance · HACCP · UK Food Law</p>
+      <h1>Food Safety & Compliance Logger</h1>
+      <p>Temperature records, cleaning schedules, and corrective actions — EHO-ready at all times.</p>
+      <div class="legal-badge">⚖ UK Legal Requirement — Food Safety Act 1990 / EU 852/2004</div>
+    </div>
+
+    <nav class="tabs" role="tablist">
+      <button class="tab-btn active" data-tab="dashboard" role="tab">Dashboard</button>
+      <button class="tab-btn" data-tab="temperature" role="tab">Temperature</button>
+      <button class="tab-btn" data-tab="cleaning" role="tab">Cleaning</button>
+      <button class="tab-btn" data-tab="corrective" role="tab">Corrective</button>
+      <button class="tab-btn" data-tab="allergens" role="tab">Allergens</button>
+      <button class="tab-btn" data-tab="export" role="tab">EHO Export</button>
+    </nav>
+
+    <!-- ── DASHBOARD ────────────────────────────────────── -->
+    <div class="tab-panel active" id="tab-dashboard">
+      <div id="dashAlertBanner" class="alert-banner">
+        <span class="alert-icon">🚨</span>
+        <div class="alert-body">
+          <div class="alert-title">Compliance Issues Require Immediate Attention</div>
+          <ul class="alert-list" id="dashAlertList"></ul>
+        </div>
+      </div>
+
+      <div class="status-strip" id="dashStatusStrip">
+        <div class="status-card unset" id="dashTempCard">
+          <div class="status-label">Temperature Units</div>
+          <div class="status-value" id="dashTempVal">—</div>
+          <div class="status-sub" id="dashTempSub">No logs yet</div>
+        </div>
+        <div class="status-card green" id="dashCleanCard">
+          <div class="status-label">Cleaning Tasks</div>
+          <div class="status-value" id="dashCleanVal">—</div>
+          <div class="status-sub" id="dashCleanSub">Loading…</div>
+        </div>
+        <div class="status-card green" id="dashCaCard">
+          <div class="status-label">Corrective Actions</div>
+          <div class="status-value" id="dashCaVal">0</div>
+          <div class="status-sub" id="dashCaSub">Open items</div>
+        </div>
+        <div class="status-card green" id="dashLastExport">
+          <div class="status-label">Last EHO Report</div>
+          <div class="status-value" id="dashExportVal">—</div>
+          <div class="status-sub">Generated</div>
+        </div>
+      </div>
+
+      <div class="glass-card mt-md">
+        <p class="section-label">Active Temperature Units</p>
+        <div class="zone-grid" id="dashZoneGrid">
+          <p class="empty-state">No temperature units configured. Go to the <strong>Temperature</strong> tab to add units.</p>
+        </div>
+      </div>
+
+      <div class="glass-card mt-md" id="dashCleanOverdue" style="display:none">
+        <p class="section-label">Overdue Cleaning Tasks</p>
+        <div class="task-list" id="dashOverdueList"></div>
+      </div>
+
+      <div class="glass-card mt-md" id="dashCaOpenPanel" style="display:none">
+        <p class="section-label">Open Corrective Actions</p>
+        <div class="ca-list" id="dashOpenCaList"></div>
+      </div>
+    </div>
+
+    <!-- ── TEMPERATURE LOGS ──────────────────────────────── -->
+    <div class="tab-panel" id="tab-temperature">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Temperature Monitoring</h2>
+          <p class="section-desc">Log all fridge, freezer, and hot-hold readings. Out-of-range readings are flagged automatically.</p>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="openAddUnitModal()">+ Add Unit</button>
+      </div>
+
+      <div class="zone-grid" id="tempZoneGrid">
+        <p class="empty-state" id="tempZoneEmpty">No temperature units yet. Add your first unit above.</p>
+      </div>
+
+      <div class="glass-card mt-md">
+        <div class="flex-between" style="margin-bottom:var(--space-sm)">
+          <p class="section-label" style="margin:0">Quick Log Temperature</p>
+          <span class="muted" style="font-size:0.78rem">Select unit then enter reading</span>
+        </div>
+        <div class="quick-log-strip">
+          <div class="field-group span-full">
+            <label class="field-label">Unit</label>
+            <select id="logUnit"></select>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Temperature (°C)</label>
+            <input type="number" id="logTemp" step="0.1" placeholder="e.g. 3.2" />
+          </div>
+          <div class="field-group">
+            <label class="field-label">Checked by</label>
+            <input type="text" id="logCheckedBy" placeholder="Name" />
+          </div>
+          <button class="btn btn-primary" onclick="logTemperature()" style="margin-top:auto">Log →</button>
+        </div>
+      </div>
+
+      <div class="glass-card mt-md">
+        <div class="flex-between" style="margin-bottom:var(--space-sm)">
+          <p class="section-label" style="margin:0">Temperature Log History</p>
+          <div style="display:flex;gap:0.5rem;align-items:center">
+            <select id="logFilterUnit" style="font-size:0.78rem;padding:0.3rem 0.5rem" onchange="renderTempLog()">
+              <option value="">All units</option>
+            </select>
+            <select id="logFilterStatus" style="font-size:0.78rem;padding:0.3rem 0.5rem" onchange="renderTempLog()">
+              <option value="">All readings</option>
+              <option value="ok">In range</option>
+              <option value="fail">Out of range</option>
+            </select>
+          </div>
+        </div>
+        <div class="log-wrap">
+          <table class="log-table">
+            <thead>
+              <tr>
+                <th>Date / Time</th>
+                <th>Unit</th>
+                <th>Type</th>
+                <th>Temp</th>
+                <th>Range</th>
+                <th>Status</th>
+                <th>Checked by</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="tempLogBody">
+              <tr><td colspan="8" class="empty-state">No readings logged yet.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CLEANING SCHEDULE ──────────────────────────────── -->
+    <div class="tab-panel" id="tab-cleaning">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Cleaning Schedule</h2>
+          <p class="section-desc">Daily, weekly, and monthly tasks. Staff sign off with name and timestamp.</p>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="openAddTaskModal()">+ Add Task</button>
+      </div>
+
+      <div class="freq-tabs" id="freqTabsBar">
+        <button class="freq-tab active" data-freq="daily" onclick="switchFreq('daily')">Daily</button>
+        <button class="freq-tab" data-freq="weekly" onclick="switchFreq('weekly')">Weekly</button>
+        <button class="freq-tab" data-freq="monthly" onclick="switchFreq('monthly')">Monthly</button>
+        <button class="freq-tab" data-freq="all" onclick="switchFreq('all')">All</button>
+      </div>
+
+      <div class="glass-card">
+        <div class="task-list" id="cleanTaskList">
+          <p class="empty-state">No cleaning tasks configured. Add tasks to get started.</p>
+        </div>
+      </div>
+
+      <div class="glass-card mt-md">
+        <p class="section-label">Sign-off History (Last 30 completions)</p>
+        <div class="log-wrap">
+          <table class="log-table">
+            <thead>
+              <tr>
+                <th>Date / Time</th>
+                <th>Task</th>
+                <th>Frequency</th>
+                <th>Signed off by</th>
+              </tr>
+            </thead>
+            <tbody id="cleanLogBody">
+              <tr><td colspan="4" class="empty-state">No sign-offs recorded.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CORRECTIVE ACTIONS ─────────────────────────────── -->
+    <div class="tab-panel" id="tab-corrective">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Corrective Action Records</h2>
+          <p class="section-desc">When a control point fails, record what action was taken. EHOs inspect these records.</p>
+        </div>
+        <button class="btn btn-danger btn-sm" onclick="openCaModal()">+ Record Action</button>
+      </div>
+
+      <div class="glass-card" style="background:rgba(246,124,124,0.04);border-color:rgba(246,124,124,0.15);margin-bottom:var(--space-md)">
+        <p style="font-size:0.82rem;color:var(--color-text-muted);margin:0;line-height:1.6">
+          <strong style="color:var(--color-text)">Legal requirement:</strong> Under UK food law (HACCP Regulation EC 852/2004), you must document corrective actions taken whenever a critical control point is breached. This record demonstrates due diligence to an EHO and protects your business licence.
+        </p>
+      </div>
+
+      <div id="caFilterBar" class="flex-between" style="margin-bottom:var(--space-md)">
+        <div style="display:flex;gap:0.4rem">
+          <button class="freq-tab active" data-cafilter="all" onclick="filterCa('all')">All</button>
+          <button class="freq-tab" data-cafilter="open" onclick="filterCa('open')">Open</button>
+          <button class="freq-tab" data-cafilter="resolved" onclick="filterCa('resolved')">Resolved</button>
+        </div>
+        <span class="muted" style="font-size:0.78rem" id="caCount">0 records</span>
+      </div>
+
+      <div class="ca-list" id="caList">
+        <p class="empty-state glass-card">No corrective actions recorded. Raise an action whenever a control point fails.</p>
+      </div>
+    </div>
+
+    <!-- ── ALLERGENS ──────────────────────────────────────── -->
+    <div class="tab-panel" id="tab-allergens">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Allergen Awareness</h2>
+          <p class="section-desc">All 14 major allergens under UK/EU food law. Add venue-specific notes for each.</p>
+        </div>
+        <button class="btn btn-ghost btn-sm" id="allergenEditToggle" onclick="toggleAllergenEdit()">Edit Notes</button>
+      </div>
+
+      <div class="glass-card" style="background:rgba(243,201,139,0.04);border-color:rgba(243,201,139,0.15);margin-bottom:var(--space-md)">
+        <p style="font-size:0.82rem;color:var(--color-text-muted);margin:0;line-height:1.6">
+          <strong style="color:var(--color-gold)">Natasha's Law (Oct 2021):</strong> All food businesses must provide clear allergen information. Staff must know which dishes contain or may contain each allergen. Add specific notes below — for example, which dishes, sauces, or garnishes contain each allergen at your venue.
+        </p>
+      </div>
+
+      <div class="allergen-grid" id="allergenGrid"></div>
+    </div>
+
+    <!-- ── EHO EXPORT ─────────────────────────────────────── -->
+    <div class="tab-panel" id="tab-export">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">EHO-Ready Export</h2>
+          <p class="section-desc">Generate a complete compliance report suitable for printing during a Food Safety Officer inspection.</p>
+        </div>
+      </div>
+
+      <div class="glass-card" style="margin-bottom:var(--space-md)">
+        <p class="section-label">Report Options</p>
+        <div class="grid-2">
+          <div class="field-group">
+            <label class="field-label">Business Name</label>
+            <input type="text" id="exportBizName" placeholder="e.g. Hidden Café Bar" />
+          </div>
+          <div class="field-group">
+            <label class="field-label">Manager / Proprietor</label>
+            <input type="text" id="exportManager" placeholder="e.g. Beth Thompson" />
+          </div>
+          <div class="field-group">
+            <label class="field-label">From Date</label>
+            <input type="date" id="exportFrom" />
+          </div>
+          <div class="field-group">
+            <label class="field-label">To Date</label>
+            <input type="date" id="exportTo" />
+          </div>
+        </div>
+        <div class="export-section mt-sm">
+          <button class="btn btn-primary" onclick="generateReport()">Generate Report</button>
+          <button class="btn btn-ghost" onclick="printReport()">🖨 Print</button>
+          <button class="btn btn-ghost" onclick="copyReport()">📋 Copy</button>
+        </div>
+      </div>
+
+      <div id="reportOutput" style="display:none">
+        <p class="section-label">Report Preview</p>
+        <div class="report-preview" id="reportPreviewText"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Add Unit Modal ─────────────────────────────────── -->
+  <div class="modal-overlay" id="addUnitModal">
+    <div class="modal">
+      <h3 class="modal-title">Add Temperature Unit</h3>
+      <div class="stack">
+        <div class="field-group">
+          <label class="field-label">Unit Name</label>
+          <input type="text" id="unitName" placeholder="e.g. Walk-in Fridge, Back Freezer" />
+        </div>
+        <div class="field-group">
+          <label class="field-label">Type</label>
+          <select id="unitType">
+            <option value="fridge">Fridge (target: 1–4°C)</option>
+            <option value="freezer">Freezer (target: ≤ −18°C)</option>
+            <option value="hot">Hot Hold (target: ≥ 63°C)</option>
+            <option value="probe">Probe / Other (custom range)</option>
+          </select>
+        </div>
+        <div id="customRangeFields" style="display:none">
+          <div class="grid-2">
+            <div class="field-group">
+              <label class="field-label">Min °C</label>
+              <input type="number" id="unitMin" step="0.1" />
+            </div>
+            <div class="field-group">
+              <label class="field-label">Max °C</label>
+              <input type="number" id="unitMax" step="0.1" />
+            </div>
+          </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Location / Notes</label>
+          <input type="text" id="unitLocation" placeholder="e.g. Kitchen, behind the prep station" />
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-primary btn-full" onclick="saveUnit()">Add Unit</button>
+        <button class="btn btn-ghost" onclick="closeModal('addUnitModal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Add Task Modal ─────────────────────────────────── -->
+  <div class="modal-overlay" id="addTaskModal">
+    <div class="modal">
+      <h3 class="modal-title">Add Cleaning Task</h3>
+      <div class="stack">
+        <div class="field-group">
+          <label class="field-label">Task Name</label>
+          <input type="text" id="taskName" placeholder="e.g. Clean and sanitise prep surfaces" />
+        </div>
+        <div class="field-group">
+          <label class="field-label">Frequency</label>
+          <select id="taskFreq">
+            <option value="daily">Daily</option>
+            <option value="weekly">Weekly</option>
+            <option value="monthly">Monthly</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Area / Details</label>
+          <input type="text" id="taskArea" placeholder="e.g. Kitchen prep area, all surfaces" />
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-primary btn-full" onclick="saveTask()">Add Task</button>
+        <button class="btn btn-ghost" onclick="closeModal('addTaskModal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Sign Off Modal ─────────────────────────────────── -->
+  <div class="modal-overlay" id="signOffModal">
+    <div class="modal">
+      <h3 class="modal-title">Sign Off Task</h3>
+      <p id="signOffTaskName" style="color:var(--color-text-muted);font-size:0.9rem;margin-bottom:var(--space-md)"></p>
+      <div class="field-group">
+        <label class="field-label">Your Name</label>
+        <input type="text" id="signOffName" placeholder="Staff member name" />
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-success btn-full" onclick="confirmSignOff()">✓ Sign Off</button>
+        <button class="btn btn-ghost" onclick="closeModal('signOffModal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Corrective Action Modal ────────────────────────── -->
+  <div class="modal-overlay" id="caModal">
+    <div class="modal">
+      <h3 class="modal-title">Record Corrective Action</h3>
+      <div class="stack">
+        <div class="field-group">
+          <label class="field-label">Issue / Failure</label>
+          <input type="text" id="caIssue" placeholder="e.g. Walk-in fridge at 8°C — above safe limit" />
+        </div>
+        <div class="field-group">
+          <label class="field-label">Corrective Action Taken</label>
+          <textarea id="caAction" rows="3" placeholder="e.g. Contacted engineer immediately. All high-risk stock moved to secondary fridge. Stock checked for fitness — 3 items discarded. Engineer booked for same-day repair."></textarea>
+        </div>
+        <div class="grid-2">
+          <div class="field-group">
+            <label class="field-label">Raised by</label>
+            <input type="text" id="caRaisedBy" placeholder="Name" />
+          </div>
+          <div class="field-group">
+            <label class="field-label">Related Unit (optional)</label>
+            <select id="caUnit">
+              <option value="">— General —</option>
+            </select>
+          </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Status</label>
+          <select id="caStatus">
+            <option value="open">Open — awaiting resolution</option>
+            <option value="resolved">Resolved</option>
+          </select>
+        </div>
+        <div class="field-group" id="caResolvedByField" style="display:none">
+          <label class="field-label">Resolved by</label>
+          <input type="text" id="caResolvedBy" placeholder="Name" />
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-primary btn-full" onclick="saveCa()">Save Record</button>
+        <button class="btn btn-ghost" onclick="closeModal('caModal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Log Temp Modal ─────────────────────────────────── -->
+  <div class="modal-overlay" id="logTempModal">
+    <div class="modal">
+      <h3 class="modal-title" id="logTempModalTitle">Log Temperature</h3>
+      <p id="logTempModalRange" style="font-size:0.82rem;color:var(--color-text-muted);margin-bottom:var(--space-md)"></p>
+      <input type="hidden" id="logTempUnitId" />
+      <div class="stack">
+        <div class="field-group">
+          <label class="field-label">Temperature (°C)</label>
+          <input type="number" id="logTempValue" step="0.1" placeholder="e.g. 3.2" style="font-size:1.4rem;font-family:var(--font-mono);text-align:center;padding:1rem" />
+        </div>
+        <div class="field-group">
+          <label class="field-label">Checked by</label>
+          <input type="text" id="logTempCheckedBy" placeholder="Staff member name" />
+        </div>
+        <div class="field-group">
+          <label class="field-label">Notes (optional)</label>
+          <input type="text" id="logTempNotes" placeholder="Any observations" />
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-primary btn-full" onclick="confirmLogTemp()">Log Reading →</button>
+        <button class="btn btn-ghost" onclick="closeModal('logTempModal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// FOOD SAFETY & HACCP COMPLIANCE LOGGER
+// ═══════════════════════════════════════════════════════════════
+
+// ── Storage Keys ─────────────────────────────────────────────
+const KEYS = {
+  units:       'fs_units',
+  tempLogs:    'fs_temp_logs',
+  tasks:       'fs_tasks',
+  cleanLogs:   'fs_clean_logs',
+  cas:         'fs_corrective_actions',
+  allergens:   'fs_allergen_notes',
+  exportBiz:   'fs_export_biz',
+  exportMgr:   'fs_export_mgr',
+  lastReport:  'fs_last_report',
+};
+
+// ── Range Definitions ─────────────────────────────────────────
+const TYPE_RANGES = {
+  fridge:  { min: 1,  max: 4,    label: '1–4°C (fridge safe)' },
+  freezer: { min: -999, max: -18, label: '≤ −18°C (frozen safe)' },
+  hot:     { min: 63, max: 999,  label: '≥ 63°C (hot hold safe)' },
+  probe:   { min: null, max: null, label: 'Custom range' },
+};
+
+// ── 14 Allergens ──────────────────────────────────────────────
+const ALLERGENS = [
+  { id: 'celery',      name: 'Celery',         icon: '🌿' },
+  { id: 'cereals',     name: 'Cereals / Gluten',icon: '🌾' },
+  { id: 'crustaceans', name: 'Crustaceans',     icon: '🦐' },
+  { id: 'eggs',        name: 'Eggs',            icon: '🥚' },
+  { id: 'fish',        name: 'Fish',            icon: '🐟' },
+  { id: 'lupin',       name: 'Lupin',           icon: '🌸' },
+  { id: 'milk',        name: 'Milk / Dairy',    icon: '🥛' },
+  { id: 'molluscs',    name: 'Molluscs',        icon: '🦪' },
+  { id: 'mustard',     name: 'Mustard',         icon: '🌭' },
+  { id: 'nuts',        name: 'Tree Nuts',       icon: '🌰' },
+  { id: 'peanuts',     name: 'Peanuts',         icon: '🥜' },
+  { id: 'sesame',      name: 'Sesame',          icon: '🫙' },
+  { id: 'soya',        name: 'Soya',            icon: '🫘' },
+  { id: 'sulphites',   name: 'Sulphites/Sulphur',icon: '🍷' },
+];
+
+// ── Data Helpers ──────────────────────────────────────────────
+const load  = (k, def) => { try { return JSON.parse(localStorage.getItem(k)) ?? def; } catch { return def; } };
+const save  = (k, v)   => localStorage.setItem(k, JSON.stringify(v));
+const uid   = ()       => Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+const fmtDt = (iso)    => { const d = new Date(iso); return d.toLocaleDateString('en-GB', {day:'2-digit',month:'short',year:'numeric'}) + ' ' + d.toLocaleTimeString('en-GB', {hour:'2-digit',minute:'2-digit'}); };
+const today = ()       => new Date().toISOString().split('T')[0];
+
+// ── Temp Status ───────────────────────────────────────────────
+function getTempStatus(unit, temp) {
+  const r = unit.type === 'probe'
+    ? { min: unit.customMin, max: unit.customMax }
+    : TYPE_RANGES[unit.type];
+  if (temp === null || temp === undefined || isNaN(temp)) return 'unset';
+  if (unit.type === 'freezer') return temp <= -18 ? 'ok' : 'danger';
+  if (unit.type === 'hot')     return temp >= 63  ? 'ok' : 'danger';
+  return (temp >= r.min && temp <= r.max) ? 'ok' : 'danger';
+}
+
+function getRangeLabel(unit) {
+  if (unit.type === 'probe') return `${unit.customMin}–${unit.customMax}°C`;
+  return TYPE_RANGES[unit.type].label;
+}
+
+// ── Tab Switching ─────────────────────────────────────────────
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(`tab-${btn.dataset.tab}`).classList.add('active');
+    if (btn.dataset.tab === 'dashboard') renderDashboard();
+  });
+});
+
+// ─────────────────────────────────────────────────────────────
+// TEMPERATURE UNITS
+// ─────────────────────────────────────────────────────────────
+function openAddUnitModal() {
+  document.getElementById('unitName').value = '';
+  document.getElementById('unitType').value = 'fridge';
+  document.getElementById('unitLocation').value = '';
+  document.getElementById('customRangeFields').style.display = 'none';
+  openModal('addUnitModal');
+}
+
+document.getElementById('unitType').addEventListener('change', function() {
+  document.getElementById('customRangeFields').style.display = this.value === 'probe' ? 'block' : 'none';
+});
+
+function saveUnit() {
+  const name = document.getElementById('unitName').value.trim();
+  const type = document.getElementById('unitType').value;
+  const loc  = document.getElementById('unitLocation').value.trim();
+  if (!name) { alert('Please enter a unit name.'); return; }
+  const unit = { id: uid(), name, type, location: loc };
+  if (type === 'probe') {
+    unit.customMin = parseFloat(document.getElementById('unitMin').value) || 0;
+    unit.customMax = parseFloat(document.getElementById('unitMax').value) || 10;
+  }
+  const units = load(KEYS.units, []);
+  units.push(unit);
+  save(KEYS.units, units);
+  closeModal('addUnitModal');
+  renderTempUnits();
+  populateUnitSelects();
+}
+
+function renderTempUnits() {
+  const units = load(KEYS.units, []);
+  const logs  = load(KEYS.tempLogs, []);
+  const grid  = document.getElementById('tempZoneGrid');
+  const emptyEl = document.getElementById('tempZoneEmpty');
+  if (!units.length) {
+    grid.innerHTML = '<p class="empty-state" id="tempZoneEmpty">No temperature units yet. Add your first unit above.</p>';
+    return;
+  }
+  grid.innerHTML = units.map(u => {
+    const unitLogs = logs.filter(l => l.unitId === u.id).sort((a,b) => new Date(b.ts) - new Date(a.ts));
+    const latest   = unitLogs[0];
+    const temp     = latest ? latest.temp : null;
+    const status   = latest ? (latest.pass ? 'ok' : 'danger') : 'unset';
+    return `
+    <div class="zone-card ${status}" id="zone-${u.id}">
+      <div class="zone-header">
+        <span class="zone-name">${u.name}</span>
+        <span class="zone-type-badge ${u.type}">${u.type}</span>
+      </div>
+      <div class="zone-temp-big">${temp !== null ? temp.toFixed(1)+'°C' : '—'}</div>
+      <div class="zone-range-label">${getRangeLabel(u)}</div>
+      ${u.location ? `<div class="zone-last-check muted" style="font-size:0.7rem">📍 ${u.location}</div>` : ''}
+      ${latest ? `<div class="zone-last-check">Last check: ${fmtDt(latest.ts)} · ${latest.checkedBy}</div>` : '<div class="zone-last-check muted">No readings yet</div>'}
+      ${status === 'danger' ? `<div style="font-size:0.72rem;color:#f67c7c;font-weight:700;margin-top:0.3rem">⚠ OUT OF RANGE — Corrective action required</div>` : ''}
+      <div class="zone-actions">
+        <button class="btn-log-temp" onclick="openLogTempModal('${u.id}')">Log Temperature →</button>
+        <button class="btn btn-ghost btn-sm" onclick="deleteUnit('${u.id}')">✕</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function deleteUnit(id) {
+  if (!confirm('Remove this unit and all its readings?')) return;
+  const units = load(KEYS.units, []).filter(u => u.id !== id);
+  save(KEYS.units, units);
+  renderTempUnits();
+  populateUnitSelects();
+}
+
+// ── Quick Log (inline strip) ──────────────────────────────────
+function logTemperature() {
+  const unitId = document.getElementById('logUnit').value;
+  const temp   = parseFloat(document.getElementById('logTemp').value);
+  const by     = document.getElementById('logCheckedBy').value.trim();
+  if (!unitId) { alert('Select a unit.'); return; }
+  if (isNaN(temp)) { alert('Enter a valid temperature.'); return; }
+  if (!by) { alert('Enter the name of who checked this.'); return; }
+  const units = load(KEYS.units, []);
+  const unit  = units.find(u => u.id === unitId);
+  if (!unit) return;
+  const pass = getTempStatus(unit, temp) === 'ok';
+  const logs  = load(KEYS.tempLogs, []);
+  logs.unshift({ id: uid(), unitId, unitName: unit.name, unitType: unit.type, temp, checkedBy: by, pass, ts: new Date().toISOString(), notes: '' });
+  save(KEYS.tempLogs, logs);
+  document.getElementById('logTemp').value = '';
+  renderTempUnits();
+  renderTempLog();
+  if (!pass) {
+    if (confirm(`⚠ Temperature ${temp}°C is OUT OF RANGE for ${unit.name}.\n\nWould you like to record a corrective action now?`)) {
+      prefillCa(unit.name, temp);
+    }
+  }
+}
+
+function openLogTempModal(unitId) {
+  const units = load(KEYS.units, []);
+  const unit  = units.find(u => u.id === unitId);
+  if (!unit) return;
+  document.getElementById('logTempUnitId').value = unitId;
+  document.getElementById('logTempModalTitle').textContent = `Log: ${unit.name}`;
+  document.getElementById('logTempModalRange').textContent = `Safe range: ${getRangeLabel(unit)}`;
+  document.getElementById('logTempValue').value = '';
+  document.getElementById('logTempCheckedBy').value = '';
+  document.getElementById('logTempNotes').value = '';
+  openModal('logTempModal');
+}
+
+function confirmLogTemp() {
+  const unitId = document.getElementById('logTempUnitId').value;
+  const temp   = parseFloat(document.getElementById('logTempValue').value);
+  const by     = document.getElementById('logTempCheckedBy').value.trim();
+  const notes  = document.getElementById('logTempNotes').value.trim();
+  if (isNaN(temp)) { alert('Enter a valid temperature.'); return; }
+  if (!by) { alert('Enter the name of who checked this.'); return; }
+  const units  = load(KEYS.units, []);
+  const unit   = units.find(u => u.id === unitId);
+  if (!unit) return;
+  const pass   = getTempStatus(unit, temp) === 'ok';
+  const logs   = load(KEYS.tempLogs, []);
+  logs.unshift({ id: uid(), unitId, unitName: unit.name, unitType: unit.type, temp, checkedBy: by, pass, ts: new Date().toISOString(), notes });
+  save(KEYS.tempLogs, logs);
+  closeModal('logTempModal');
+  renderTempUnits();
+  renderTempLog();
+  if (!pass) {
+    if (confirm(`⚠ ${temp}°C is OUT OF RANGE for ${unit.name}.\n\nRecord a corrective action now?`)) {
+      prefillCa(unit.name, temp);
+    }
+  }
+}
+
+function prefillCa(unitName, temp) {
+  document.getElementById('caIssue').value = `${unitName} temperature out of range: ${temp}°C`;
+  document.getElementById('caAction').value = '';
+  document.getElementById('caRaisedBy').value = '';
+  document.getElementById('caStatus').value = 'open';
+  document.getElementById('caResolvedByField').style.display = 'none';
+  openModal('caModal');
+  populateCaUnitSelect();
+  switchTab('corrective');
+}
+
+function switchTab(tabName) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  const btn = document.querySelector(`.tab-btn[data-tab="${tabName}"]`);
+  if (btn) btn.classList.add('active');
+  const panel = document.getElementById(`tab-${tabName}`);
+  if (panel) panel.classList.add('active');
+}
+
+function renderTempLog() {
+  const logs     = load(KEYS.tempLogs, []);
+  const filterU  = document.getElementById('logFilterUnit').value;
+  const filterS  = document.getElementById('logFilterStatus').value;
+  const filtered = logs.filter(l => {
+    if (filterU && l.unitId !== filterU) return false;
+    if (filterS === 'ok' && !l.pass) return false;
+    if (filterS === 'fail' && l.pass) return false;
+    return true;
+  });
+  const tbody = document.getElementById('tempLogBody');
+  if (!filtered.length) { tbody.innerHTML = '<tr><td colspan="8" class="empty-state">No readings match filter.</td></tr>'; return; }
+  tbody.innerHTML = filtered.map(l => `
+    <tr>
+      <td>${fmtDt(l.ts)}</td>
+      <td>${l.unitName}</td>
+      <td><span class="zone-type-badge ${l.unitType}">${l.unitType}</span></td>
+      <td class="temp-cell ${l.pass ? 'ok' : 'danger'}">${l.temp.toFixed(1)}°C</td>
+      <td style="font-size:0.75rem;color:var(--color-text-muted)">—</td>
+      <td><span class="status-pill ${l.pass ? 'ok' : 'fail'}">${l.pass ? 'In Range' : 'OUT OF RANGE'}</span></td>
+      <td>${l.checkedBy}</td>
+      <td><button class="btn btn-danger btn-sm" onclick="deleteTempLog('${l.id}')">✕</button></td>
+    </tr>`).join('');
+}
+
+function deleteTempLog(id) {
+  if (!confirm('Delete this reading?')) return;
+  const logs = load(KEYS.tempLogs, []).filter(l => l.id !== id);
+  save(KEYS.tempLogs, logs);
+  renderTempLog();
+  renderTempUnits();
+}
+
+function populateUnitSelects() {
+  const units = load(KEYS.units, []);
+  const opts  = units.map(u => `<option value="${u.id}">${u.name}</option>`).join('');
+  const emptyOpt = '<option value="">— Select unit —</option>';
+  ['logUnit', 'logFilterUnit'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const prev = el.value;
+    el.innerHTML = (id === 'logFilterUnit' ? '<option value="">All units</option>' : emptyOpt) + opts;
+    if (prev) el.value = prev;
+  });
+  populateCaUnitSelect();
+}
+
+function populateCaUnitSelect() {
+  const units = load(KEYS.units, []);
+  const el    = document.getElementById('caUnit');
+  if (!el) return;
+  el.innerHTML = '<option value="">— General —</option>' + units.map(u => `<option value="${u.id}">${u.name}</option>`).join('');
+}
+
+// ─────────────────────────────────────────────────────────────
+// CLEANING SCHEDULE
+// ─────────────────────────────────────────────────────────────
+let currentFreq = 'daily';
+let pendingSignOffId = null;
+
+function openAddTaskModal() {
+  document.getElementById('taskName').value = '';
+  document.getElementById('taskFreq').value = 'daily';
+  document.getElementById('taskArea').value = '';
+  openModal('addTaskModal');
+}
+
+function saveTask() {
+  const name = document.getElementById('taskName').value.trim();
+  const freq = document.getElementById('taskFreq').value;
+  const area = document.getElementById('taskArea').value.trim();
+  if (!name) { alert('Please enter a task name.'); return; }
+  const tasks = load(KEYS.tasks, []);
+  tasks.push({ id: uid(), name, freq, area, lastSignOff: null, lastSignOffBy: null });
+  save(KEYS.tasks, tasks);
+  closeModal('addTaskModal');
+  renderCleanTasks();
+}
+
+function switchFreq(freq) {
+  currentFreq = freq;
+  document.querySelectorAll('.freq-tab').forEach(b => b.classList.toggle('active', b.dataset.freq === freq));
+  renderCleanTasks();
+}
+
+function isTaskOverdue(task) {
+  if (!task.lastSignOff) return true;
+  const last    = new Date(task.lastSignOff);
+  const now     = new Date();
+  const diffMs  = now - last;
+  const diffH   = diffMs / 3600000;
+  const diffD   = diffMs / 86400000;
+  if (task.freq === 'daily')   return diffH >= 26;
+  if (task.freq === 'weekly')  return diffD >= 8;
+  if (task.freq === 'monthly') return diffD >= 33;
+  return false;
+}
+
+function renderCleanTasks() {
+  const tasks  = load(KEYS.tasks, []);
+  const filter = currentFreq === 'all' ? tasks : tasks.filter(t => t.freq === currentFreq);
+  const list   = document.getElementById('cleanTaskList');
+  if (!filter.length) {
+    list.innerHTML = `<p class="empty-state">No ${currentFreq === 'all' ? '' : currentFreq + ' '}tasks yet. Add one above.</p>`;
+  } else {
+    list.innerHTML = filter.map(t => {
+      const overdue = isTaskOverdue(t);
+      const done    = t.lastSignOff && !overdue;
+      return `
+      <div class="task-item ${done ? 'done' : ''}">
+        <div class="task-check ${done ? 'checked' : (overdue ? 'overdue' : '')}" onclick="initiateSignOff('${t.id}')">
+          ${done ? '✓' : ''}
+        </div>
+        <div class="task-info">
+          <div class="task-name">${t.name}</div>
+          ${t.area ? `<div class="task-meta">📍 ${t.area}</div>` : ''}
+          ${t.lastSignOff ? `<div class="task-meta">Last: ${fmtDt(t.lastSignOff)} · ${t.lastSignOffBy}</div>` : '<div class="task-meta muted">Never signed off</div>'}
+          ${overdue ? '<div class="task-overdue">⚠ OVERDUE</div>' : ''}
+        </div>
+        <span class="task-freq-badge ${t.freq}">${t.freq}</span>
+        <button class="btn btn-danger btn-sm" onclick="deleteTask('${t.id}')">✕</button>
+      </div>`;
+    }).join('');
+  }
+  renderCleanLog();
+}
+
+function initiateSignOff(taskId) {
+  const tasks = load(KEYS.tasks, []);
+  const task  = tasks.find(t => t.id === taskId);
+  if (!task) return;
+  pendingSignOffId = taskId;
+  document.getElementById('signOffTaskName').textContent = task.name;
+  document.getElementById('signOffName').value = '';
+  openModal('signOffModal');
+}
+
+function confirmSignOff() {
+  const name  = document.getElementById('signOffName').value.trim();
+  if (!name) { alert('Please enter your name.'); return; }
+  const tasks = load(KEYS.tasks, []);
+  const task  = tasks.find(t => t.id === pendingSignOffId);
+  if (!task) return;
+  const ts    = new Date().toISOString();
+  task.lastSignOff   = ts;
+  task.lastSignOffBy = name;
+  save(KEYS.tasks, tasks);
+  const cleanLogs = load(KEYS.cleanLogs, []);
+  cleanLogs.unshift({ id: uid(), taskId: task.id, taskName: task.name, freq: task.freq, by: name, ts });
+  save(KEYS.cleanLogs, cleanLogs);
+  closeModal('signOffModal');
+  pendingSignOffId = null;
+  renderCleanTasks();
+}
+
+function deleteTask(id) {
+  if (!confirm('Remove this task?')) return;
+  const tasks = load(KEYS.tasks, []).filter(t => t.id !== id);
+  save(KEYS.tasks, tasks);
+  renderCleanTasks();
+}
+
+function renderCleanLog() {
+  const logs  = load(KEYS.cleanLogs, []).slice(0, 30);
+  const tbody = document.getElementById('cleanLogBody');
+  if (!logs.length) { tbody.innerHTML = '<tr><td colspan="4" class="empty-state">No sign-offs recorded.</td></tr>'; return; }
+  tbody.innerHTML = logs.map(l => `
+    <tr>
+      <td>${fmtDt(l.ts)}</td>
+      <td>${l.taskName}</td>
+      <td><span class="task-freq-badge ${l.freq}">${l.freq}</span></td>
+      <td>${l.by}</td>
+    </tr>`).join('');
+}
+
+// ─────────────────────────────────────────────────────────────
+// CORRECTIVE ACTIONS
+// ─────────────────────────────────────────────────────────────
+let caFilter = 'all';
+
+function openCaModal() {
+  document.getElementById('caIssue').value = '';
+  document.getElementById('caAction').value = '';
+  document.getElementById('caRaisedBy').value = '';
+  document.getElementById('caStatus').value = 'open';
+  document.getElementById('caResolvedByField').style.display = 'none';
+  populateCaUnitSelect();
+  openModal('caModal');
+}
+
+document.getElementById('caStatus').addEventListener('change', function() {
+  document.getElementById('caResolvedByField').style.display = this.value === 'resolved' ? 'block' : 'none';
+});
+
+function saveCa() {
+  const issue     = document.getElementById('caIssue').value.trim();
+  const action    = document.getElementById('caAction').value.trim();
+  const raisedBy  = document.getElementById('caRaisedBy').value.trim();
+  const status    = document.getElementById('caStatus').value;
+  const resolvedBy= document.getElementById('caResolvedBy').value.trim();
+  const unitId    = document.getElementById('caUnit').value;
+  if (!issue)   { alert('Describe the issue.'); return; }
+  if (!action)  { alert('Describe the corrective action taken.'); return; }
+  if (!raisedBy){ alert('Enter who raised this action.'); return; }
+  const units     = load(KEYS.units, []);
+  const unit      = units.find(u => u.id === unitId);
+  const cas       = load(KEYS.cas, []);
+  cas.unshift({ id: uid(), issue, action, raisedBy, status, resolvedBy: resolvedBy || null, unitName: unit ? unit.name : null, ts: new Date().toISOString() });
+  save(KEYS.cas, cas);
+  closeModal('caModal');
+  renderCas();
+}
+
+function filterCa(f) {
+  caFilter = f;
+  document.querySelectorAll('[data-cafilter]').forEach(b => b.classList.toggle('active', b.dataset.cafilter === f));
+  renderCas();
+}
+
+function resolveCa(id) {
+  const name = prompt('Who resolved this action?');
+  if (!name) return;
+  const cas = load(KEYS.cas, []);
+  const ca  = cas.find(c => c.id === id);
+  if (ca) { ca.status = 'resolved'; ca.resolvedBy = name; ca.resolvedTs = new Date().toISOString(); }
+  save(KEYS.cas, cas);
+  renderCas();
+}
+
+function deleteCa(id) {
+  if (!confirm('Delete this corrective action record?')) return;
+  const cas = load(KEYS.cas, []).filter(c => c.id !== id);
+  save(KEYS.cas, cas);
+  renderCas();
+}
+
+function renderCas() {
+  const cas      = load(KEYS.cas, []);
+  const filtered = cas.filter(c => caFilter === 'all' || c.status === caFilter);
+  const list     = document.getElementById('caList');
+  document.getElementById('caCount').textContent = `${filtered.length} record${filtered.length !== 1 ? 's' : ''}`;
+  if (!filtered.length) {
+    list.innerHTML = `<p class="empty-state glass-card">No ${caFilter === 'all' ? '' : caFilter + ' '}corrective actions recorded.</p>`;
+    return;
+  }
+  list.innerHTML = filtered.map(c => `
+    <div class="ca-card ${c.status}">
+      <div class="ca-header">
+        <div class="ca-title">${c.issue}</div>
+        <span class="ca-status-badge ${c.status}">${c.status}</span>
+      </div>
+      <div class="ca-detail">${c.action}</div>
+      <div class="ca-meta">
+        <span>📅 ${fmtDt(c.ts)}</span>
+        <span>👤 Raised by ${c.raisedBy}</span>
+        ${c.unitName ? `<span>🌡 ${c.unitName}</span>` : ''}
+        ${c.resolvedBy ? `<span>✓ Resolved by ${c.resolvedBy}</span>` : ''}
+      </div>
+      <div style="display:flex;gap:0.4rem;margin-top:0.6rem">
+        ${c.status === 'open' ? `<button class="btn btn-success btn-sm" onclick="resolveCa('${c.id}')">Mark Resolved</button>` : ''}
+        <button class="btn btn-danger btn-sm" onclick="deleteCa('${c.id}')">Delete</button>
+      </div>
+    </div>`).join('');
+}
+
+// ─────────────────────────────────────────────────────────────
+// ALLERGENS
+// ─────────────────────────────────────────────────────────────
+let allergenEditMode = false;
+
+function toggleAllergenEdit() {
+  allergenEditMode = !allergenEditMode;
+  document.getElementById('allergenEditToggle').textContent = allergenEditMode ? 'Save Notes' : 'Edit Notes';
+  if (!allergenEditMode) saveAllergenNotes();
+  renderAllergens();
+}
+
+function saveAllergenNotes() {
+  const notes = {};
+  ALLERGENS.forEach(a => {
+    const el = document.getElementById(`anote-${a.id}`);
+    if (el) notes[a.id] = el.value.trim();
+  });
+  save(KEYS.allergens, notes);
+}
+
+function renderAllergens() {
+  const notes = load(KEYS.allergens, {});
+  const grid  = document.getElementById('allergenGrid');
+  grid.innerHTML = ALLERGENS.map(a => {
+    const note    = notes[a.id] || '';
+    const flagged = note.length > 0;
+    if (allergenEditMode) {
+      return `
+      <div class="allergen-tile ${flagged ? 'flagged' : ''}">
+        <span class="allergen-icon">${a.icon}</span>
+        <div class="allergen-name">${a.name}</div>
+        <textarea class="allergen-edit-note" id="anote-${a.id}" rows="2" placeholder="Add venue-specific note…">${note}</textarea>
+      </div>`;
+    }
+    return `
+    <div class="allergen-tile ${flagged ? 'flagged' : ''}">
+      ${flagged ? '<div class="allergen-flag-dot"></div>' : ''}
+      <span class="allergen-icon">${a.icon}</span>
+      <div class="allergen-name">${a.name}</div>
+      <div class="allergen-note">${note || '<span style="opacity:0.4">No venue notes</span>'}</div>
+    </div>`;
+  }).join('');
+}
+
+// ─────────────────────────────────────────────────────────────
+// DASHBOARD
+// ─────────────────────────────────────────────────────────────
+function renderDashboard() {
+  const units    = load(KEYS.units, []);
+  const logs     = load(KEYS.tempLogs, []);
+  const tasks    = load(KEYS.tasks, []);
+  const cas      = load(KEYS.cas, []);
+  const alerts   = [];
+
+  // Temperature status
+  let tempDanger = 0;
+  if (units.length) {
+    units.forEach(u => {
+      const ul   = logs.filter(l => l.unitId === u.id).sort((a,b) => new Date(b.ts) - new Date(a.ts));
+      const last = ul[0];
+      if (!last) { alerts.push(`${u.name}: no temperature reading on record`); }
+      else if (!last.pass) { tempDanger++; alerts.push(`${u.name}: last reading ${last.temp}°C — OUT OF RANGE`); }
+    });
+    const tempCard = document.getElementById('dashTempCard');
+    tempCard.className = `status-card ${tempDanger ? 'red' : 'green'}`;
+    document.getElementById('dashTempVal').textContent = units.length;
+    document.getElementById('dashTempSub').textContent = tempDanger ? `${tempDanger} out of range` : 'All in range';
+  } else {
+    document.getElementById('dashTempCard').className = 'status-card unset';
+    document.getElementById('dashTempVal').textContent = '—';
+    document.getElementById('dashTempSub').textContent = 'No units added';
+  }
+
+  // Cleaning tasks
+  const overdueTasks = tasks.filter(t => isTaskOverdue(t));
+  const cleanCard    = document.getElementById('dashCleanCard');
+  cleanCard.className = `status-card ${overdueTasks.length ? 'red' : 'green'}`;
+  document.getElementById('dashCleanVal').textContent = tasks.length;
+  document.getElementById('dashCleanSub').textContent = overdueTasks.length ? `${overdueTasks.length} overdue` : 'All current';
+  if (overdueTasks.length) alerts.push(...overdueTasks.map(t => `Cleaning overdue: ${t.name}`));
+
+  // Corrective actions
+  const openCas  = cas.filter(c => c.status === 'open');
+  const caCard   = document.getElementById('dashCaCard');
+  caCard.className = `status-card ${openCas.length ? 'amber' : 'green'}`;
+  document.getElementById('dashCaVal').textContent = openCas.length;
+  document.getElementById('dashCaSub').textContent = openCas.length ? 'Require resolution' : 'None outstanding';
+
+  // Alert banner
+  const banner = document.getElementById('dashAlertBanner');
+  if (alerts.length) {
+    banner.classList.add('visible');
+    document.getElementById('dashAlertList').innerHTML = alerts.map(a => `<li>${a}</li>`).join('');
+  } else {
+    banner.classList.remove('visible');
+  }
+
+  // Zone grid
+  const dashGrid = document.getElementById('dashZoneGrid');
+  if (!units.length) {
+    dashGrid.innerHTML = '<p class="empty-state">No temperature units configured. Go to the <strong>Temperature</strong> tab to add units.</p>';
+  } else {
+    dashGrid.innerHTML = units.map(u => {
+      const ul   = logs.filter(l => l.unitId === u.id).sort((a,b) => new Date(b.ts) - new Date(a.ts));
+      const last = ul[0];
+      const temp = last ? last.temp : null;
+      const status = last ? (last.pass ? 'ok' : 'danger') : 'unset';
+      return `
+      <div class="zone-card ${status}">
+        <div class="zone-header">
+          <span class="zone-name">${u.name}</span>
+          <span class="zone-type-badge ${u.type}">${u.type}</span>
+        </div>
+        <div class="zone-temp-big">${temp !== null ? temp.toFixed(1)+'°C' : '—'}</div>
+        <div class="zone-range-label">${getRangeLabel(u)}</div>
+        ${last ? `<div class="zone-last-check">Last: ${fmtDt(last.ts)} · ${last.checkedBy}</div>` : '<div class="zone-last-check muted">No readings yet</div>'}
+        ${status === 'danger' ? `<div style="font-size:0.72rem;color:#f67c7c;font-weight:700;margin-top:0.3rem">⚠ OUT OF RANGE</div>` : ''}
+      </div>`;
+    }).join('');
+  }
+
+  // Overdue tasks panel
+  const overduePanel = document.getElementById('dashCleanOverdue');
+  if (overdueTasks.length) {
+    overduePanel.style.display = 'block';
+    document.getElementById('dashOverdueList').innerHTML = overdueTasks.map(t => `
+      <div class="task-item">
+        <div class="task-check overdue"></div>
+        <div class="task-info">
+          <div class="task-name">${t.name}</div>
+          ${t.lastSignOff ? `<div class="task-meta">Last: ${fmtDt(t.lastSignOff)}</div>` : '<div class="task-meta muted">Never signed off</div>'}
+          <div class="task-overdue">⚠ OVERDUE</div>
+        </div>
+        <span class="task-freq-badge ${t.freq}">${t.freq}</span>
+      </div>`).join('');
+  } else {
+    overduePanel.style.display = 'none';
+  }
+
+  // Open CAs panel
+  const caPanel = document.getElementById('dashCaOpenPanel');
+  if (openCas.length) {
+    caPanel.style.display = 'block';
+    document.getElementById('dashOpenCaList').innerHTML = openCas.map(c => `
+      <div class="ca-card open">
+        <div class="ca-header">
+          <div class="ca-title">${c.issue}</div>
+          <span class="ca-status-badge open">Open</span>
+        </div>
+        <div class="ca-detail">${c.action}</div>
+        <div class="ca-meta"><span>📅 ${fmtDt(c.ts)}</span><span>👤 ${c.raisedBy}</span></div>
+      </div>`).join('');
+  } else {
+    caPanel.style.display = 'none';
+  }
+
+  // Last report
+  const lastReport = load(KEYS.lastReport, null);
+  document.getElementById('dashExportVal').textContent = lastReport ? new Date(lastReport).toLocaleDateString('en-GB') : '—';
+  document.getElementById('dashLastExport').className = `status-card ${lastReport ? 'green' : 'unset'}`;
+}
+
+// ─────────────────────────────────────────────────────────────
+// EHO EXPORT
+// ─────────────────────────────────────────────────────────────
+function generateReport() {
+  const biz    = document.getElementById('exportBizName').value.trim() || 'Business Name';
+  const mgr    = document.getElementById('exportManager').value.trim() || 'Manager';
+  const from   = document.getElementById('exportFrom').value;
+  const to     = document.getElementById('exportTo').value;
+  save(KEYS.exportBiz, biz);
+  save(KEYS.exportMgr, mgr);
+
+  const units   = load(KEYS.units, []);
+  const logs    = load(KEYS.tempLogs, []).filter(l => {
+    if (!from && !to) return true;
+    const dt = l.ts.split('T')[0];
+    if (from && dt < from) return false;
+    if (to && dt > to) return false;
+    return true;
+  });
+  const tasks   = load(KEYS.tasks, []);
+  const clLogs  = load(KEYS.cleanLogs, []).filter(l => {
+    if (!from && !to) return true;
+    const dt = l.ts.split('T')[0];
+    if (from && dt < from) return false;
+    if (to && dt > to) return false;
+    return true;
+  });
+  const cas     = load(KEYS.cas, []).filter(c => {
+    if (!from && !to) return true;
+    const dt = c.ts.split('T')[0];
+    if (from && dt < from) return false;
+    if (to && dt > to) return false;
+    return true;
+  });
+  const notes   = load(KEYS.allergens, {});
+  const now     = new Date().toLocaleString('en-GB', {dateStyle:'full',timeStyle:'short'});
+  const period  = (from || to) ? `${from || 'all dates'} to ${to || 'present'}` : 'All dates on record';
+
+  let report = `FOOD SAFETY & HACCP COMPLIANCE REPORT
+${'═'.repeat(60)}
+Business: ${biz}
+Manager / Proprietor: ${mgr}
+Report generated: ${now}
+Period covered: ${period}
+${'─'.repeat(60)}
+
+This report has been generated in accordance with UK Food Safety
+regulations (Food Safety Act 1990, EU Regulation 852/2004) and
+satisfies HACCP documentation requirements for Environmental
+Health Officer (EHO) inspection.
+
+${'═'.repeat(60)}
+SECTION 1: TEMPERATURE MONITORING RECORDS
+${'═'.repeat(60)}
+Units monitored: ${units.length}
+Total readings in period: ${logs.length}
+Out-of-range readings: ${logs.filter(l=>!l.pass).length}
+
+`;
+
+  units.forEach(u => {
+    const uLogs    = logs.filter(l => l.unitId === u.id);
+    const failLogs = uLogs.filter(l => !l.pass);
+    report += `Unit: ${u.name.toUpperCase()} (${u.type})\n`;
+    report += `Safe range: ${getRangeLabel(u)}\n`;
+    if (u.location) report += `Location: ${u.location}\n`;
+    report += `Readings: ${uLogs.length} | Failures: ${failLogs.length}\n\n`;
+    if (uLogs.length) {
+      report += `  Date/Time              Temp     Status          Checked by\n`;
+      report += `  ${'─'.repeat(55)}\n`;
+      uLogs.forEach(l => {
+        const dt  = fmtDt(l.ts).padEnd(22);
+        const tmp = (l.temp.toFixed(1)+'°C').padEnd(8);
+        const st  = (l.pass ? 'IN RANGE' : 'OUT OF RANGE').padEnd(15);
+        report += `  ${dt} ${tmp}  ${st} ${l.checkedBy}\n`;
+        if (!l.pass && l.notes) report += `    Note: ${l.notes}\n`;
+      });
+    } else {
+      report += `  No readings in this period.\n`;
+    }
+    report += '\n';
+  });
+
+  report += `${'═'.repeat(60)}
+SECTION 2: CLEANING SCHEDULE & SIGN-OFF LOG
+${'═'.repeat(60)}
+Scheduled tasks: ${tasks.length}
+Sign-offs in period: ${clLogs.length}
+
+`;
+
+  ['daily','weekly','monthly'].forEach(freq => {
+    const ft = tasks.filter(t => t.freq === freq);
+    if (!ft.length) return;
+    report += `${freq.toUpperCase()} TASKS\n${'─'.repeat(40)}\n`;
+    ft.forEach(t => {
+      const tLogs = clLogs.filter(l => l.taskId === t.id);
+      report += `Task: ${t.name}\n`;
+      if (t.area) report += `Area: ${t.area}\n`;
+      report += `Sign-offs in period: ${tLogs.length}\n`;
+      if (tLogs.length) {
+        tLogs.slice(0,5).forEach(l => report += `  • ${fmtDt(l.ts)} — ${l.by}\n`);
+        if (tLogs.length > 5) report += `  … and ${tLogs.length-5} more\n`;
+      }
+      report += '\n';
+    });
+  });
+
+  report += `${'═'.repeat(60)}
+SECTION 3: CORRECTIVE ACTION RECORDS
+${'═'.repeat(60)}
+Total actions in period: ${cas.length}
+Open: ${cas.filter(c=>c.status==='open').length}
+Resolved: ${cas.filter(c=>c.status==='resolved').length}
+
+`;
+
+  if (cas.length) {
+    cas.forEach((c, i) => {
+      report += `[${i+1}] ${fmtDt(c.ts)}\n`;
+      report += `Issue: ${c.issue}\n`;
+      report += `Action taken: ${c.action}\n`;
+      report += `Raised by: ${c.raisedBy}`;
+      if (c.unitName) report += ` | Unit: ${c.unitName}`;
+      report += `\nStatus: ${c.status.toUpperCase()}`;
+      if (c.resolvedBy) report += ` (resolved by ${c.resolvedBy})`;
+      report += '\n\n';
+    });
+  } else {
+    report += 'No corrective actions recorded in this period.\n\n';
+  }
+
+  report += `${'═'.repeat(60)}
+SECTION 4: ALLERGEN AWARENESS
+${'═'.repeat(60)}
+The following 14 major allergens are monitored under
+Natasha's Law (October 2021).
+
+`;
+  ALLERGENS.forEach(a => {
+    const note = notes[a.id] || '';
+    report += `${a.name}: ${note || 'No venue-specific notes'}\n`;
+  });
+
+  report += `
+${'═'.repeat(60)}
+DECLARATION
+${'═'.repeat(60)}
+This record has been maintained in accordance with our Food Safety
+Management System (HACCP). All temperature checks, cleaning
+sign-offs, and corrective actions recorded herein are genuine
+entries made at the time of inspection.
+
+Manager signature: ________________________________
+
+Date: _________________ 
+
+${'═'.repeat(60)}
+END OF REPORT — Generated by Hospitality Pro · hospitality-pro.vercel.app
+${'═'.repeat(60)}`;
+
+  document.getElementById('reportOutput').style.display = 'block';
+  document.getElementById('reportPreviewText').textContent = report;
+  save(KEYS.lastReport, new Date().toISOString());
+  window._reportText = report;
+}
+
+function printReport() {
+  if (!window._reportText) { alert('Generate a report first.'); return; }
+  const w = window.open('', '_blank');
+  w.document.write(`<html><head><title>Food Safety Report</title>
+  <style>body{font-family:monospace;white-space:pre-wrap;padding:2cm;font-size:11pt;line-height:1.6}@media print{body{padding:1cm}}</style>
+  </head><body>${window._reportText.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</body></html>`);
+  w.document.close();
+  w.print();
+}
+
+function copyReport() {
+  if (!window._reportText) { alert('Generate a report first.'); return; }
+  navigator.clipboard.writeText(window._reportText).then(() => alert('Report copied to clipboard.'));
+}
+
+// ─────────────────────────────────────────────────────────────
+// MODAL HELPERS
+// ─────────────────────────────────────────────────────────────
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(o => {
+  o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); });
+});
+
+// ─────────────────────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────────────────────
+function init() {
+  // Seed default tasks if none exist
+  const tasks = load(KEYS.tasks, []);
+  if (!tasks.length) {
+    const defaults = [
+      { id: uid(), name: 'Wipe and sanitise all prep surfaces', freq: 'daily', area: 'Kitchen', lastSignOff: null, lastSignOffBy: null },
+      { id: uid(), name: 'Clean and sanitise all cutting boards', freq: 'daily', area: 'Kitchen', lastSignOff: null, lastSignOffBy: null },
+      { id: uid(), name: 'Sweep and mop kitchen floor', freq: 'daily', area: 'Kitchen', lastSignOff: null, lastSignOffBy: null },
+      { id: uid(), name: 'Check and record fridge/freezer temperatures', freq: 'daily', area: 'Kitchen', lastSignOff: null, lastSignOffBy: null },
+      { id: uid(), name: 'Empty and sanitise bins', freq: 'daily', area: 'All areas', lastSignOff: null, lastSignOffBy: null },
+      { id: uid(), name: 'Clean and descale coffee/hot drink equipment', freq: 'daily', area: 'Bar/service', lastSignOff: null, lastSignOffBy: null },
+      { id: uid(), name: 'Deep clean oven and grill', freq: 'weekly', area: 'Kitchen', lastSignOff: null, lastSignOffBy: null },
+      { id: uid(), name: 'Clean behind fridges and equipment', freq: 'weekly', area: 'Kitchen', lastSignOff: null, lastSignOffBy: null },
+      { id: uid(), name: 'Defrost and clean freezers', freq: 'monthly', area: 'Kitchen', lastSignOff: null, lastSignOffBy: null },
+      { id: uid(), name: 'Pest control inspection check', freq: 'monthly', area: 'All areas', lastSignOff: null, lastSignOffBy: null },
+    ];
+    save(KEYS.tasks, defaults);
+  }
+
+  // Seed default temperature units if none exist
+  const units = load(KEYS.units, []);
+  if (!units.length) {
+    const defaultUnits = [
+      { id: uid(), name: 'Main Fridge', type: 'fridge', location: 'Kitchen' },
+      { id: uid(), name: 'Walk-in Freezer', type: 'freezer', location: 'Kitchen' },
+    ];
+    save(KEYS.units, defaultUnits);
+  }
+
+  // Set export date defaults
+  const d = new Date();
+  document.getElementById('exportTo').value = d.toISOString().split('T')[0];
+  const monthAgo = new Date(d); monthAgo.setMonth(monthAgo.getMonth()-1);
+  document.getElementById('exportFrom').value = monthAgo.toISOString().split('T')[0];
+
+  // Restore export fields
+  const savedBiz = load(KEYS.exportBiz, '');
+  const savedMgr = load(KEYS.exportMgr, '');
+  if (savedBiz) document.getElementById('exportBizName').value = savedBiz;
+  if (savedMgr) document.getElementById('exportManager').value = savedMgr;
+
+  populateUnitSelects();
+  renderTempUnits();
+  renderTempLog();
+  renderCleanTasks();
+  renderCas();
+  renderAllergens();
+  renderDashboard();
+}
+
+init();
+</script>
+</body>
+</html>
