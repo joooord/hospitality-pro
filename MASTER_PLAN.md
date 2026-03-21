@@ -68,6 +68,15 @@ Premium, dark, editorial, restrained. Clean typography. Liquid-glass UI elements
 - EHO-ready export: full dated compliance report, print-ready.
 - Dashboard: at-a-glance status for all zones, overdue tasks, open CAs.
 - 100% localStorage, mobile-first, Liquid Glass dark aesthetic.
+### 13. Martyn's Law & Venue Safety Compliance Hub ✅ SHIPPED
+- Counter-terrorism risk assessment builder covering venue profile, entry/exit mapping, vulnerable areas, and 20-point security measures checklist.
+- Emergency procedure cards (suspicious package, evacuation, lockdown, hostile individual, bomb threat, hostile vehicle) with venue-specific annotations and print-ready format.
+- Staff counter-terrorism training tracker with 3-year expiry automation (ACT Awareness, Run Hide Tell, ProtectUK, CTSA briefings).
+- Compliance dashboard with Standard vs Enhanced tier logic, outstanding action list, and progress bands.
+- Security incident log with severity banding, follow-up tracker, and police reference capture.
+- EHO / authority-ready export compiling the entire compliance package plus JSON backup/restore.
+- 100% localStorage, Liquid Glass dark premium UI, mobile-first, serious/official tone to match Martyn's Law legal stakes (Royal Assent April 2025).
+
 
 ### 10. Guest Micro-CRM ✅ SHIPPED
 - "Little black book" for premium venues — remember your regulars.
@@ -88,28 +97,26 @@ Premium, dark, editorial, restrained. Clean typography. Liquid-glass UI elements
 - Pairs with Rota Optimizer, EOD Reconciliation, and Financial Narrative.
 
 ## Infinite Loop · Immediate Next Build
-**Martyn's Law & Venue Safety Compliance Hub**
-- `tools/venue-safety/index.html`
-- **Why now:** Martyn's Law (Terrorism (Protection of Premises) Act) received Royal Assent in April 2025. All UK venues must now conduct formal counter-terrorism risk assessments and train staff. Non-compliance = criminal liability. Independent venues have NO tools for this.
+**Employment Rights Act Compliance Console**
+- `tools/employment-rights/index.html`
+- **Why now:** The Employment Rights Act 2025 received Royal Assent in December 2025 with day-one sick pay/paternity entitlement, Fair Work Agency oversight, and zero-hour reforms rolling in from April 2026, plus Phase 2 of the Employment (Allocation of Tips) Act landing October 2026 (Morning Advertiser, Moore Kingston Smith, TroncMaster Solutions). Operators must evidence compliance before inspections start.
 - **Core modules:**
-  - Martyn's Law compliance checklist — step-by-step assessment aligned to government guidance for Standard and Enhanced tier venues
-  - Staff counter-terrorism training tracker — who's been trained, when, renewal reminders
-  - Emergency procedures builder — venue-specific action cards (bomb threat, suspicious package, hostile vehicle, knife attack protocols)
-  - Incident log — confidential record of security incidents and management responses
-  - Risk assessment export — printable/PDF report for licensing authority or police liaison
-  - Fire safety integration — fire risk assessment checklist and review log
-  - Capacity & crowd management log — venue capacity records, peak time tracking
-- **Legal context:** Martyn's Law (named after Manchester Arena bombing victim Martyn Hett) is now UK law. Venues with 200+ capacity face Enhanced tier requirements; all others face Standard tier. Failure to comply = criminal prosecution of the premises owner.
-- **Competitive gap:** Zero dedicated affordable tools exist for independent operators. Enterprise solutions cost £500+/year. This is free.
-- 100% localStorage, no logins, mobile-first
-- Liquid Glass dark premium aesthetic with red/amber/green compliance banding
-- Pairs naturally with Food Safety Logger — the full compliance suite for any UK venue
+  - Day-One Rights register — capture SSP eligibility, paternity requests, and onboarding attestations the moment a staff member starts.
+  - Sick pay & leave cost forecaster — model SSP / paternity cost exposure as staffing levels shift.
+  - Shift notice & cancellation log — record rota publication dates, short-notice changes, and calculate compensation owed under the upcoming zero-hour fairness rules.
+  - Tip policy consultation tracker — document worker consultations, distribute anonymised summaries, and store signed policies ahead of Phase 2 audits.
+  - Fair Work Agency audit export — one-click dossier covering contracts issued, notice logs, tip distribution evidence, and grievance resolutions.
+  - Worker status board — flag agency/zero-hour staff needing guaranteed hours offers, track exclusivity clauses and deadlines.
+- **Legal context:** Employment Rights Act 2025 staggers obligations through 2026–27: day-one rights + Fair Work Agency (Apr 2026), stricter zero-hour protections and "fire & rehire" limits (late 2026), plus tipping consultations (Oct 2026). Documentation failures risk tribunal losses and civil penalties.
+- **Competitive gap:** HR SaaS suites charge £3k+/yr and ignore independent venues. No lightweight, local-first console exists that translates the legislation into actionable checklists + evidence logs.
+- 100% localStorage, mobile-first, Liquid Glass aesthetic — but with audit-grade seriousness.
+- Direct upsell path: Employment law readiness retainer for Jordan's clients.
 
 ### Why This Wins
-- **New law, zero existing tools**: Martyn's Law is brand new — operators are scrambling
-- **Criminal liability**: the stakes are even higher than food safety — venue owners personally liable
-- **Consulting gold**: Jordan can walk into any venue and offer Martyn's Law readiness as a service
-- **PR angle**: "The only free Martyn's Law compliance tool for independent venues" — media-worthy
+- **Unavoidable mandate**: employment-law reforms hit *every* venue regardless of size — unlike Martyn's Law tiering.
+- **Paper trail pain**: rota emails, tip WhatsApps, and ad-hoc spreadsheets will not satisfy the Fair Work Agency; we give them a structured log instantly.
+- **Future-proofing**: building now means Hidden is inspection-ready before April 2026 while competitors scramble.
+- **Consulting leverage**: deliver day-one rights + tip compliance reviews as a paid service using the console.
 
 ## Execution Strategy
 - **Autonomy**: Jim and the agents will continually build, test, refine, and deploy this app without asking for permission.
@@ -143,7 +150,7 @@ Premium, dark, editorial, restrained. Clean typography. Liquid-glass UI elements
 | Food Waste Audit Tracker | /tools/food-waste/ | ✅ Live |
 | Staff Training & Onboarding Hub | /tools/staff-training/ | ✅ Live |
 | Food Safety & HACCP Compliance Logger | /tools/food-safety/ | ✅ Live |
-| Martyn's Law & Venue Safety Hub | /tools/venue-safety/ | 🔨 Next |
+| Martyn's Law & Venue Safety Hub | /tools/venue-safety/ | ✅ Live |
 
 ## The Infinite Loop Protocol
 At the end of every task list, the system MUST execute the following sequence indefinitely:
