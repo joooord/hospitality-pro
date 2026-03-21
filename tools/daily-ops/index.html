@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daily Ops & Prep · Hospitality Pro</title>
+  <link rel="stylesheet" href="/assets/styles/system.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    .hero-panel { gap: var(--space-lg); align-items: stretch; }
+    .hero-panel .glass-card { min-width: 260px; }
+    .hero-progress { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: var(--space-sm); }
+    .progress-card { padding: var(--space-sm); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius-md); background: rgba(0,0,0,0.25); }
+    .progress-card h3 { margin: 0; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-muted); }
+    .progress-value { font-size: 1.5rem; font-weight: 600; margin-top: 4px; }
+    .progress-bar { background: rgba(255,255,255,0.08); border-radius: var(--radius-pill); height: 6px; overflow: hidden; margin-top: 6px; }
+    .progress-bar span { display: block; height: 100%; background: linear-gradient(90deg, #8b75ff, #f2c265); border-radius: inherit; width: 0%; transition: width 0.3s ease; }
+
+    .checklist { display: flex; flex-direction: column; gap: var(--space-sm); }
+    .check-row { display: flex; gap: var(--space-sm); padding: var(--space-sm); border: 1px solid rgba(255,255,255,0.09); border-radius: var(--radius-md); align-items: flex-start; background: rgba(255,255,255,0.02); }
+    .check-row.completed { border-color: rgba(132, 255, 210, 0.4); background: rgba(64, 132, 103, 0.12); }
+    .check-row input[type="checkbox"] { width: 20px; height: 20px; margin-top: 2px; accent-color: var(--color-gold); }
+    .check-body { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+    .check-title { font-weight: 500; }
+    .check-note { color: var(--color-text-muted); font-size: 0.9rem; margin: 0; }
+    .check-actions { display: flex; gap: 6px; align-items: center; }
+
+    .inline-form { display: flex; flex-wrap: wrap; gap: var(--space-sm); margin-top: var(--space-sm); }
+    .inline-form input, .inline-form textarea { flex: 1; min-width: 180px; }
+
+    .prep-layout { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--space-lg); }
+    .driver-card { border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius-md); padding: var(--space-sm); display: flex; flex-direction: column; gap: var(--space-sm); background: rgba(255,255,255,0.02); }
+    .driver-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: var(--space-sm); }
+    .driver-card select, .driver-card input { width: 100%; }
+
+    .requirement-list { display: flex; flex-direction: column; gap: var(--space-sm); }
+    .requirement { border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius-md); padding: var(--space-sm); display: flex; gap: var(--space-sm); align-items: center; background: rgba(255,255,255,0.02); flex-wrap: wrap; }
+    .requirement.main { border-color: rgba(242,194,101,0.6); background: rgba(242,194,101,0.08); }
+    .requirement__meta { flex: 1; }
+    .requirement__title { font-weight: 600; margin: 0; }
+    .requirement__note { margin: 2px 0 0; font-size: 0.9rem; color: var(--color-text-muted); }
+    .requirement__amount { font-size: 1.2rem; font-weight: 600; }
+
+    .badge-soft { border-radius: var(--radius-pill); padding: 0.2rem 0.6rem; background: rgba(255,255,255,0.08); font-size: 0.8rem; }
+    .status-toast { position: fixed; bottom: 24px; right: 24px; padding: var(--space-sm); border-radius: var(--radius-md); background: rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.1); opacity: 0; pointer-events: none; transition: opacity 0.3s ease, transform 0.3s ease; transform: translateY(12px); z-index: 10; }
+    .status-toast.visible { opacity: 1; transform: translateY(0); }
+
+    .hint { font-size: 0.9rem; color: var(--color-text-muted); }
+    .inventory-pill { display: inline-flex; align-items: center; gap: 6px; border-radius: var(--radius-pill); border: 1px solid rgba(255,255,255,0.1); padding: 0.3rem 0.7rem; font-size: 0.85rem; }
+
+    .empty-state { padding: var(--space-sm); border: 1px dashed rgba(255,255,255,0.2); border-radius: var(--radius-md); text-align: center; font-size: 0.95rem; color: var(--color-text-muted); }
+    .prep-toolbar { display: flex; flex-wrap: wrap; gap: var(--space-sm); align-items: center; }
+
+    @media (max-width: 720px) {
+      .hero-panel { flex-direction: column; }
+      .check-row { flex-direction: column; }
+      .check-row input[type="checkbox"] { margin-bottom: 4px; }
+      .requirement { flex-direction: column; align-items: flex-start; }
+      .status-toast { left: 16px; right: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="site-nav">
+    <a class="nav-brand" href="/">Hospitality <span>Pro</span></a>
+    <div class="nav-links">
+      <a href="/#tools">Tools</a>
+      <a href="/#playbook">Playbook</a>
+      <a href="/#about">About</a>
+      <a class="nav-cta" href="/#tools">Get Started →</a>
+    </div>
+  </nav>
+
+  <main class="app-shell">
+    <a class="back-link" href="/#tools">Back to all tools</a>
+    <header class="glass-panel hero-panel">
+      <div class="stack">
+        <p class="eyebrow">Daily Rhythm</p>
+        <h1>Daily Ops & Prep Console</h1>
+        <p class="muted">Opening, closing, and prep intelligence built for bar managers who run the room from their phone. Liquid glass UI, inventory awareness, and automatic daily resets.</p>
+        <div class="cluster">
+          <span class="badge">Mobile-first</span>
+          <span class="badge">Inventory aware</span>
+          <span class="badge badge-warning">Auto reset</span>
+        </div>
+      </div>
+      <div class="glass-card glass-card--dense stack">
+        <div class="stack" style="gap: 4px;">
+          <span class="eyebrow">Inventory link</span>
+          <p class="muted" id="inventoryStatus">Scanning local storage…</p>
+        </div>
+        <div class="hero-progress" id="progressGrid">
+          <div class="progress-card">
+            <h3>Opening</h3>
+            <div class="progress-value" data-progress-value="opening">0%</div>
+            <div class="progress-bar"><span data-progress-bar="opening"></span></div>
+          </div>
+          <div class="progress-card">
+            <h3>Prep</h3>
+            <div class="progress-value" data-progress-value="prep">0%</div>
+            <div class="progress-bar"><span data-progress-bar="prep"></span></div>
+          </div>
+          <div class="progress-card">
+            <h3>Closing</h3>
+            <div class="progress-value" data-progress-value="closing">0%</div>
+            <div class="progress-bar"><span data-progress-bar="closing"></span></div>
+          </div>
+        </div>
+        <div class="prep-toolbar">
+          <button class="btn btn-ghost" type="button" id="forceResetBtn">Force new service reset</button>
+          <span class="hint" id="resetHint">Resets automatically every day at first load.</span>
+        </div>
+      </div>
+    </header>
+
+    <section class="grid-2 align-start" style="gap: var(--space-lg);">
+      <section class="glass-card stack" id="openingCard">
+        <div>
+          <h2 class="section-title">Opening Rituals</h2>
+          <p class="muted">Purpose-built steps for lighting, sound, mise en place, and briefing the floor.</p>
+        </div>
+        <div class="checklist" id="openingList"></div>
+        <form class="inline-form" data-list-form="opening">
+          <input type="text" name="title" placeholder="Add opening task" required />
+          <input type="text" name="note" placeholder="Optional detail" />
+          <button class="btn btn-ghost" type="submit">Add</button>
+        </form>
+      </section>
+
+      <section class="glass-card stack" id="closingCard">
+        <div>
+          <h2 class="section-title">Closing Protocol</h2>
+          <p class="muted">Lighting down, tills, breakages, and maintenance tickets before lockup.</p>
+        </div>
+        <div class="checklist" id="closingList"></div>
+        <form class="inline-form" data-list-form="closing">
+          <input type="text" name="title" placeholder="Add closing task" required />
+          <input type="text" name="note" placeholder="Optional detail" />
+          <button class="btn btn-ghost" type="submit">Add</button>
+        </form>
+      </section>
+    </section>
+
+    <section class="glass-card stack" id="prepStudio">
+      <div>
+        <h2 class="section-title">Daily Prep Lab</h2>
+        <p class="muted">Batching, garnish, citrus, and ice — tied to the inventory records already living in Hospitality Pro.</p>
+      </div>
+      <div class="prep-layout">
+        <div class="stack">
+          <div class="header-row" style="display:flex;align-items:center;justify-content:space-between;gap: var(--space-sm);">
+            <div>
+              <h3 class="section-title">Forecast Inputs</h3>
+              <p class="muted">Tell the console what you expect to sell. It returns prep volumes.</p>
+            </div>
+            <button class="btn btn-ghost" type="button" id="addDriverBtn">+ Add Prep Driver</button>
+          </div>
+          <div class="stack" id="driverList"></div>
+        </div>
+        <div class="stack">
+          <div>
+            <h3 class="section-title">Calculated Requirements</h3>
+            <p class="muted">Auto maths from the drivers + linked inventory.</p>
+          </div>
+          <div id="requirementsList" class="requirement-list"></div>
+        </div>
+      </div>
+      <div>
+        <div class="stack" style="gap: 0.4rem;">
+          <h3 class="section-title">Prep Checklist</h3>
+          <p class="muted">Ticks reset daily. Push requirements straight into this list.</p>
+        </div>
+        <div class="checklist" id="prepList"></div>
+        <form class="inline-form" data-list-form="prep">
+          <input type="text" name="title" placeholder="Add prep task" required />
+          <input type="text" name="note" placeholder="Optional detail or quantity" />
+          <button class="btn btn-ghost" type="submit">Add</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <div id="statusToast" class="status-toast" role="status" aria-live="polite"></div>
+
+  <script src="/assets/scripts/venue-profile.js" defer></script>
+  <script>
+    (() => {
+      const STORAGE_KEY = 'hp_daily_ops_v1';
+      const INVENTORY_KEY = 'liquidGlassInventory';
+      const today = () => new Date().toISOString().slice(0, 10);
+
+      const defaultChecklists = {
+        opening: [
+          { id: 'opening-brief', title: 'Unlock, lights, HVAC, and scent', note: 'House lights to 65%, candles & diffusers lit before briefing', done: false },
+          { id: 'opening-sound', title: 'Sound + playlist dialled', note: 'Walk the room, balance FOH + bar speakers, first hour playlist', done: false },
+          { id: 'opening-stock', title: 'Fast inventory spot-check', note: 'Key spirits, syrups, ice, garnish, CO2. Flag shortages.', done: false },
+          { id: 'opening-briefing', title: 'Shift briefing & numbers', note: 'Covers, reservations, VIP notes, 86 list, staff allocations.', done: false }
+        ],
+        closing: [
+          { id: 'closing-cash', title: 'Tills, PDQ, and cash drop', note: 'Export Z reports, upload shots to finance folder.', done: false },
+          { id: 'closing-waste', title: 'Waste & breakages logged', note: 'Record in inventory board so procurement sees it next morning.', done: false },
+          { id: 'closing-line', title: 'Line check + CO2/beer', note: 'Bleed lines if scheduled, log keg levels.', done: false },
+          { id: 'closing-maintenance', title: 'Maintenance & cleaning notes', note: 'Log anything urgent for Ops — fridge temps, ice machine alarms.', done: false }
+        ],
+        prep: [
+          { id: 'prep-ice', title: 'Block & clear ice pulled', note: 'Crystal clear blocks tempering, crushed prepped for first wave.', done: false },
+          { id: 'prep-garnish', title: 'Garnish trays built', note: 'Citrus wheels, dehydrated fruit, herbs washed and labelled.', done: false },
+          { id: 'prep-batches', title: 'House batches checked', note: 'Signal Room Martini, Negroni, Espresso Martini base topped up.', done: false }
+        ]
+      };
+
+      const defaultDrivers = [
+        { id: 'driver-whisky-sour', cocktail: 'Whisky Sour', expected: 50, usagePerServe: 25, unit: 'ml', inventoryId: 'inv-lemon-juice' },
+        { id: 'driver-negroni', cocktail: 'Hidden Negroni Batch', expected: 40, usagePerServe: 90, unit: 'ml', inventoryId: 'inv-campari' }
+      ];
+
+      const deepClone = (value) => {
+        if (typeof deepClone === 'function') {
+          return deepClone(value);
+        }
+        return JSON.parse(JSON.stringify(value));
+      };
+
+      const canStore = (() => {
+        try {
+          localStorage.setItem('__daily_ops_test__', 'yes');
+          localStorage.removeItem('__daily_ops_test__');
+          return true;
+        } catch (error) {
+          console.warn('Storage disabled', error);
+          return false;
+        }
+      })();
+
+      const state = loadState();
+      const elements = initElements();
+      const inventory = loadInventory();
+
+      ensureDailyReset();
+      renderAll();
+      bindEvents();
+
+      function initElements() {
+        return {
+          openingList: document.getElementById('openingList'),
+          closingList: document.getElementById('closingList'),
+          prepList: document.getElementById('prepList'),
+          driverList: document.getElementById('driverList'),
+          requirementsList: document.getElementById('requirementsList'),
+          inventoryStatus: document.getElementById('inventoryStatus'),
+          resetHint: document.getElementById('resetHint'),
+          toast: document.getElementById('statusToast'),
+          progressValues: {
+            opening: document.querySelector('[data-progress-value="opening"]'),
+            prep: document.querySelector('[data-progress-value="prep"]'),
+            closing: document.querySelector('[data-progress-value="closing"]')
+          },
+          progressBars: {
+            opening: document.querySelector('[data-progress-bar="opening"]'),
+            prep: document.querySelector('[data-progress-bar="prep"]'),
+            closing: document.querySelector('[data-progress-bar="closing"]')
+          },
+          forceResetBtn: document.getElementById('forceResetBtn'),
+          addDriverBtn: document.getElementById('addDriverBtn'),
+          listForms: document.querySelectorAll('[data-list-form]')
+        };
+      }
+
+      function showToast(message) {
+        if (!elements.toast) return;
+        elements.toast.textContent = message;
+        elements.toast.classList.add('visible');
+        setTimeout(() => elements.toast.classList.remove('visible'), 2600);
+      }
+
+      function bindEvents() {
+        elements.forceResetBtn?.addEventListener('click', () => {
+          state.lastServiceDate = null;
+          ensureDailyReset(true);
+          persistState();
+          renderAll();
+          showToast('Checklist reset for a new service.');
+        });
+
+        elements.listForms.forEach(form => {
+          form.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const formData = new FormData(form);
+            const title = (formData.get('title') || '').trim();
+            const note = (formData.get('note') || '').trim();
+            if (!title) return;
+            const listKey = form.dataset.listForm;
+            const newTask = {
+              id: generateId(`${listKey}-task`),
+              title,
+              note,
+              done: false
+            };
+            state.checklists[listKey] = [...state.checklists[listKey], newTask];
+            persistState();
+            renderChecklist(listKey);
+            updateProgress();
+            form.reset();
+            showToast('Task added.');
+          });
+        });
+
+        elements.openingList?.addEventListener('click', handleChecklistInteraction('opening'));
+        elements.closingList?.addEventListener('click', handleChecklistInteraction('closing'));
+        elements.prepList?.addEventListener('click', handleChecklistInteraction('prep'));
+
+        elements.driverList?.addEventListener('input', handleDriverChange);
+        elements.driverList?.addEventListener('change', handleDriverChange);
+        elements.driverList?.addEventListener('click', handleDriverActions);
+        elements.requirementsList?.addEventListener('click', handleRequirementActions);
+        elements.addDriverBtn?.addEventListener('click', () => {
+          state.prepDrivers.push({ id: generateId('driver'), cocktail: 'New Prep Item', expected: 20, usagePerServe: 50, unit: 'ml', inventoryId: inventory[0]?.id || '' });
+          persistState();
+          renderPrepDrivers();
+          renderRequirements();
+          showToast('Prep driver added.');
+        });
+      }
+
+      function handleChecklistInteraction(listKey) {
+        return (event) => {
+          const checkbox = event.target.closest('input[type="checkbox"]');
+          const removeBtn = event.target.closest('[data-remove-task]');
+          const row = event.target.closest('[data-task-id]');
+          if (!row) return;
+          const taskId = row.dataset.taskId;
+          if (checkbox) {
+            const task = state.checklists[listKey].find(t => t.id === taskId);
+            if (!task) return;
+            task.done = checkbox.checked;
+            persistState();
+            renderChecklist(listKey);
+            updateProgress();
+          } else if (removeBtn) {
+            state.checklists[listKey] = state.checklists[listKey].filter(t => t.id !== taskId);
+            persistState();
+            renderChecklist(listKey);
+            updateProgress();
+          }
+        };
+      }
+
+      function handleDriverChange(event) {
+        const field = event.target.dataset.field;
+        if (!field) return;
+        const wrapper = event.target.closest('[data-driver-id]');
+        if (!wrapper) return;
+        const driver = state.prepDrivers.find(d => d.id === wrapper.dataset.driverId);
+        if (!driver) return;
+        if (field === 'cocktail') {
+          driver.cocktail = event.target.value.trim();
+        } else if (field === 'expected') {
+          driver.expected = Number(event.target.value) || 0;
+        } else if (field === 'usage') {
+          driver.usagePerServe = Number(event.target.value) || 0;
+        } else if (field === 'unit') {
+          driver.unit = event.target.value;
+        } else if (field === 'inventory') {
+          driver.inventoryId = event.target.value;
+        }
+        persistState();
+        renderRequirements();
+      }
+
+      function handleDriverActions(event) {
+        if (event.target.matches('[data-remove-driver]')) {
+          const wrapper = event.target.closest('[data-driver-id]');
+          if (!wrapper) return;
+          state.prepDrivers = state.prepDrivers.filter(d => d.id !== wrapper.dataset.driverId);
+          persistState();
+          renderPrepDrivers();
+          renderRequirements();
+          showToast('Prep driver removed.');
+        }
+      }
+
+      function handleRequirementActions(event) {
+        const pushBtn = event.target.closest('[data-push-prep]');
+        if (!pushBtn) return;
+        const requirementId = pushBtn.dataset.pushPrep;
+        const requirement = computeRequirements(state.prepDrivers).find(req => req.id === requirementId);
+        if (!requirement) return;
+        const note = requirement.sources.map(src => `${src.cocktail} × ${src.expected}`).join(' · ');
+        state.checklists.prep.push({
+          id: generateId('prep'),
+          title: `Prep ${requirement.label}`,
+          note: `${requirement.prettyAmount} (${note})`,
+          done: false
+        });
+        persistState();
+        renderChecklist('prep');
+        updateProgress();
+        showToast('Requirement pushed to prep list.');
+      }
+
+      function ensureDailyReset(force = false) {
+        const serviceDate = today();
+        if (!state.lastServiceDate || state.lastServiceDate !== serviceDate || force) {
+          Object.keys(state.checklists).forEach(key => {
+            state.checklists[key] = state.checklists[key].map(task => ({ ...task, done: false }));
+          });
+          state.lastServiceDate = serviceDate;
+          persistState();
+          elements.resetHint.textContent = `Auto-reset completed for ${serviceDate}.`;
+        }
+      }
+
+      function loadState() {
+        const base = {
+          version: 1,
+          lastServiceDate: today(),
+          checklists: {
+            opening: deepClone(defaultChecklists.opening),
+            closing: deepClone(defaultChecklists.closing),
+            prep: deepClone(defaultChecklists.prep)
+          },
+          prepDrivers: deepClone(defaultDrivers)
+        };
+        if (!canStore) return base;
+        try {
+          const stored = JSON.parse(localStorage.getItem(STORAGE_KEY));
+          if (stored) {
+            const mergedChecklists = mergeChecklists(base.checklists, stored.checklists);
+            return {
+              ...base,
+              ...stored,
+              checklists: mergedChecklists,
+              prepDrivers: Array.isArray(stored.prepDrivers) && stored.prepDrivers.length ? stored.prepDrivers : base.prepDrivers,
+              lastServiceDate: stored.lastServiceDate || base.lastServiceDate
+            };
+          }
+        } catch (error) {
+          console.warn('Failed to load state', error);
+        }
+        return base;
+      }
+
+      function mergeChecklists(defaults, stored = {}) {
+        return {
+          opening: Array.isArray(stored.opening) && stored.opening.length ? stored.opening : deepClone(defaults.opening),
+          closing: Array.isArray(stored.closing) && stored.closing.length ? stored.closing : deepClone(defaults.closing),
+          prep: Array.isArray(stored.prep) && stored.prep.length ? stored.prep : deepClone(defaults.prep)
+        };
+      }
+
+      function loadInventory() {
+        try {
+          const stored = JSON.parse(localStorage.getItem(INVENTORY_KEY));
+          if (Array.isArray(stored) && stored.length) {
+            updateInventoryStatus(stored.length, false);
+            return stored;
+          }
+        } catch (error) {
+          console.warn('Inventory parse failed', error);
+        }
+        const fallback = getDefaultInventory();
+        updateInventoryStatus(fallback.length, true);
+        return fallback;
+      }
+
+      function updateInventoryStatus(count, fallback) {
+        if (!elements.inventoryStatus) return;
+        elements.inventoryStatus.textContent = fallback
+          ? `Loaded ${count} sample items (save your own in Cocktail Engine to override).`
+          : `Synced with ${count} inventory items.`;
+      }
+
+      function getDefaultInventory() {
+        return [
+          { id: 'inv-henley-gin', name: 'Henley Small Batch Gin', domain: 'bar', category: 'spirits' },
+          { id: 'inv-italicus', name: 'Italicus Rosolio', domain: 'bar', category: 'liqueurs' },
+          { id: 'inv-dry-vermouth', name: 'Dry Vermouth', domain: 'bar', category: 'fortified' },
+          { id: 'inv-bergamot', name: 'Bergamot hydrosol', domain: 'bar', category: 'house' },
+          { id: 'inv-campari', name: 'Campari', domain: 'bar', category: 'aperitifs' },
+          { id: 'inv-lemon-juice', name: 'Pressed lemon juice', domain: 'kitchen', category: 'citrus' }
+        ];
+      }
+
+      function persistState() {
+        if (!canStore) return;
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        } catch (error) {
+          console.warn('Failed to persist state', error);
+        }
+      }
+
+      function renderAll() {
+        ['opening', 'closing', 'prep'].forEach(renderChecklist);
+        renderPrepDrivers();
+        renderRequirements();
+        updateProgress();
+      }
+
+      function renderChecklist(listKey) {
+        const container = elements[`${listKey}List`];
+        if (!container) return;
+        const tasks = state.checklists[listKey];
+        if (!tasks?.length) {
+          container.innerHTML = '<div class="empty-state">No tasks yet. Add one above.</div>';
+          return;
+        }
+        container.innerHTML = tasks.map(task => {
+          const note = task.note ? `<p class="check-note">${escapeHtml(task.note)}</p>` : '';
+          return `
+            <div class="check-row ${task.done ? 'completed' : ''}" data-task-id="${task.id}">
+              <input type="checkbox" ${task.done ? 'checked' : ''} aria-label="${escapeHtml(task.title)}" />
+              <div class="check-body">
+                <span class="check-title">${escapeHtml(task.title)}</span>
+                ${note}
+              </div>
+              <div class="check-actions">
+                <button class="ghost-btn" type="button" data-remove-task>Remove</button>
+              </div>
+            </div>`;
+        }).join('');
+      }
+
+      function renderPrepDrivers() {
+        if (!elements.driverList) return;
+        if (!state.prepDrivers.length) {
+          elements.driverList.innerHTML = '<div class="empty-state">Add prep drivers to unlock auto requirements.</div>';
+          return;
+        }
+        elements.driverList.innerHTML = state.prepDrivers.map(driver => {
+          return `
+            <div class="driver-card" data-driver-id="${driver.id}">
+              <input type="text" value="${escapeHtml(driver.cocktail)}" data-field="cocktail" />
+              <div class="driver-grid">
+                <label>Expected orders<input type="number" min="0" value="${driver.expected}" data-field="expected" /></label>
+                <label>Per serve usage<input type="number" min="0" value="${driver.usagePerServe}" data-field="usage" /></label>
+                <label>Unit
+                  <select data-field="unit">
+                    ${['ml', 'g', 'batches'].map(unit => `<option value="${unit}" ${driver.unit === unit ? 'selected' : ''}>${unit}</option>`).join('')}
+                  </select>
+                </label>
+              </div>
+              <label>Linked inventory
+                <select data-field="inventory">
+                  <option value="">-- Manual item --</option>
+                  ${inventory.map(item => `<option value="${item.id}" ${driver.inventoryId === item.id ? 'selected' : ''}>${escapeHtml(item.name)}</option>`).join('')}
+                </select>
+              </label>
+              <button class="ghost-btn" type="button" data-remove-driver>Remove driver</button>
+            </div>`;
+        }).join('');
+      }
+
+      function renderRequirements() {
+        if (!elements.requirementsList) return;
+        const requirements = computeRequirements(state.prepDrivers);
+        if (!requirements.length) {
+          elements.requirementsList.innerHTML = '<div class="empty-state">Enter forecast inputs to generate prep volumes.</div>';
+          return;
+        }
+        elements.requirementsList.innerHTML = requirements.map((req, index) => `
+          <div class="requirement ${index === 0 ? 'main' : ''}" data-requirement-id="${req.id}">
+            <div class="requirement__meta">
+              <p class="requirement__title">${escapeHtml(req.label)}</p>
+              <p class="requirement__note">${req.sources.map(src => `${escapeHtml(src.cocktail)} × ${src.expected}`).join(' · ')}</p>
+            </div>
+            <div class="requirement__amount">${req.prettyAmount}</div>
+            <button class="btn btn-ghost" type="button" data-push-prep="${req.id}">Push to prep list</button>
+          </div>`).join('');
+      }
+
+      function computeRequirements(drivers) {
+        const totals = new Map();
+        drivers.forEach(driver => {
+          if (!driver.expected || !driver.usagePerServe) return;
+          const unit = driver.unit || 'ml';
+          const aggregateKey = driver.inventoryId ? `${driver.inventoryId}-${unit}` : `${driver.cocktail}-${unit}`;
+          const key = totals.get(aggregateKey) || {
+            id: aggregateKey,
+            inventoryId: driver.inventoryId,
+            label: driver.inventoryId ? getInventoryLabel(driver.inventoryId) : driver.cocktail,
+            amount: 0,
+            unit,
+            sources: []
+          };
+          key.amount += Number(driver.expected) * Number(driver.usagePerServe);
+          key.sources.push({ cocktail: driver.cocktail, expected: driver.expected });
+          totals.set(aggregateKey, key);
+        });
+        return Array.from(totals.values()).map(entry => ({
+          ...entry,
+          prettyAmount: formatAmount(entry.amount, entry.unit)
+        })).sort((a, b) => b.amount - a.amount);
+      }
+
+      function getInventoryLabel(id) {
+        const item = inventory.find(inv => inv.id === id);
+        if (!item) return id;
+        return `${item.name}`;
+      }
+
+      function formatAmount(value, unit = 'ml') {
+        if (!Number.isFinite(value)) return '0';
+        if (unit === 'ml') {
+          return value >= 1000 ? `${(value / 1000).toFixed(1)} L` : `${Math.round(value)} ml`;
+        }
+        if (unit === 'g') {
+          return value >= 1000 ? `${(value / 1000).toFixed(1)} kg` : `${Math.round(value)} g`;
+        }
+        if (unit === 'batches') {
+          return `${value.toFixed(1)} batches`;
+        }
+        return `${value}`;
+      }
+
+      function updateProgress() {
+        ['opening', 'prep', 'closing'].forEach(key => {
+          const tasks = state.checklists[key] || [];
+          const total = tasks.length || 1;
+          const done = tasks.filter(task => task.done).length;
+          const percent = Math.round((done / total) * 100);
+          if (elements.progressValues[key]) {
+            elements.progressValues[key].textContent = `${percent}%`;
+          }
+          if (elements.progressBars[key]) {
+            elements.progressBars[key].style.width = `${percent}%`;
+          }
+        });
+      }
+
+      function generateId(prefix) {
+        return `${prefix}-${Math.random().toString(36).slice(2, 8)}`;
+      }
+
+      function escapeHtml(value = '') {
+        return value
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;');
+      }
+    })();
+  </script>
+</body>
+</html>
