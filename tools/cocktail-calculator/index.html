@@ -160,6 +160,101 @@
       gap: var(--space-sm);
     }
 
+    .inventory-module {
+      margin-top: var(--space-lg);
+    }
+
+    .inventory-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      align-items: flex-end;
+    }
+
+    .inventory-controls .chip-group {
+      display: inline-flex;
+      gap: 0.25rem;
+    }
+
+    .inventory-status {
+      color: rgba(255, 255, 255, 0.55);
+      font-size: 0.9rem;
+    }
+
+    .inventory-list {
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-md);
+      padding: var(--space-sm);
+      background: rgba(3, 5, 12, 0.55);
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      max-height: 420px;
+      overflow-y: auto;
+    }
+
+    .inventory-group {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 0.5rem;
+    }
+
+    .inventory-group:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .inventory-group h3 {
+      margin: 0 0 0.35rem;
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .inventory-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.45rem 0;
+    }
+
+    .inventory-item strong {
+      font-family: var(--font-serif);
+      font-weight: 600;
+      color: #fdfcff;
+    }
+
+    .inventory-item small {
+      display: block;
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .inventory-item .btn-ghost {
+      padding: 0.25rem 0.4rem;
+      font-size: 0.8rem;
+    }
+
+    .inventory-empty {
+      text-align: center;
+      padding: var(--space-md);
+      color: rgba(255, 255, 255, 0.55);
+      font-size: 0.9rem;
+    }
+
+    .inventory-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .inventory-note {
+      color: rgba(242, 197, 116, 0.9);
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
     .metric-card {
       border-radius: var(--radius-md);
       border: 1px solid rgba(255, 255, 255, 0.08);
@@ -283,6 +378,52 @@
         <p class="muted" style="max-width:320px; text-align:right;">All data stays local. Reload the sample spec any time to see the flow.</p>
       </div>
     </header>
+
+    <section class="glass-card stack inventory-module" id="inventoryModule">
+      <header class="section-header" style="display:flex; justify-content:space-between; gap:1rem; align-items:flex-start;">
+        <div>
+          <p class="eyebrow">Stock brain</p>
+          <h2>Inventory database</h2>
+        </div>
+        <p class="muted" style="max-width:320px; text-align:right;">Stored in localStorage on this device. Categorise bar vs. kitchen, sync nothing, keep it fast.</p>
+      </header>
+      <div class="inventory-controls">
+        <div class="chip-group" role="group" aria-label="Inventory type">
+          <button type="button" class="is-active" data-inventory-domain="bar">Bar</button>
+          <button type="button" data-inventory-domain="kitchen">Kitchen</button>
+        </div>
+        <div class="form-field">
+          <label for="inventoryCategory">Category</label>
+          <select id="inventoryCategory"></select>
+        </div>
+        <p class="inventory-status" id="inventoryFormState">New item · Bar</p>
+      </div>
+      <div class="form-grid">
+        <div class="form-field">
+          <label for="inventoryName">Item name</label>
+          <input id="inventoryName" type="text" placeholder="e.g., Campari" />
+        </div>
+        <div class="form-field">
+          <label for="inventoryBottleSize">Bottle size (ml)</label>
+          <input id="inventoryBottleSize" type="number" min="1" step="10" inputmode="numeric" />
+        </div>
+        <div class="form-field">
+          <label for="inventoryBottleCost">Bottle cost (£)</label>
+          <input id="inventoryBottleCost" type="number" min="0" step="0.1" inputmode="decimal" />
+        </div>
+        <div class="form-field">
+          <label for="inventoryAbv">ABV%</label>
+          <input id="inventoryAbv" type="number" min="0" max="97" step="0.1" inputmode="decimal" />
+        </div>
+      </div>
+      <div class="inventory-actions">
+        <button type="button" class="btn btn-primary" id="inventorySaveBtn">Save item</button>
+        <button type="button" class="btn btn-ghost" id="inventoryResetBtn">Clear</button>
+      </div>
+      <div class="inventory-list" id="inventoryList">
+        <p class="inventory-empty">No stock logged yet. Build the backbone.</p>
+      </div>
+    </section>
 
     <section class="grid-2 align-start">
       <section class="stack">
@@ -473,6 +614,37 @@
         built: { label: 'Built', percent: 8 }
       };
 
+      const inventoryConfig = {
+        storageKey: 'liquidGlassInventory',
+        domains: {
+          bar: {
+            label: 'Bar',
+            categories: [
+              { value: 'spirits', label: 'Spirits' },
+              { value: 'liqueurs', label: 'Liqueurs' },
+              { value: 'aperitifs', label: 'Aperitifs' },
+              { value: 'digestifs', label: 'Digestifs' },
+              { value: 'fortified', label: 'Fortified & Vermouth' },
+              { value: 'syrups', label: 'Syrups & Cordials' },
+              { value: 'citrus', label: 'Fresh Citrus' },
+              { value: 'modifiers', label: 'Modifiers & Bitters' },
+              { value: 'house', label: 'House Prep' }
+            ]
+          },
+          kitchen: {
+            label: 'Kitchen',
+            categories: [
+              { value: 'produce', label: 'Produce & Prep' },
+              { value: 'ferments', label: 'Ferments & Cultures' },
+              { value: 'syrups', label: 'Syrups & Shrubs' },
+              { value: 'garnish', label: 'Garnish' },
+              { value: 'citrus', label: 'Fresh Citrus' },
+              { value: 'other', label: 'Other' }
+            ]
+          }
+        }
+      };
+
       const elements = {
         cocktailName: document.getElementById('cocktailName'),
         targetMargins: document.getElementById('targetMargins'),
@@ -503,13 +675,30 @@
         abvNote: document.getElementById('abvNote'),
         bottleStats: document.getElementById('bottleStats'),
         startBlankBtn: document.getElementById('startBlankBtn'),
-        loadSampleBtn: document.getElementById('loadSampleBtn')
+        loadSampleBtn: document.getElementById('loadSampleBtn'),
+        inventoryDomainButtons: document.querySelectorAll('[data-inventory-domain]'),
+        inventoryCategory: document.getElementById('inventoryCategory'),
+        inventoryName: document.getElementById('inventoryName'),
+        inventoryBottleSize: document.getElementById('inventoryBottleSize'),
+        inventoryBottleCost: document.getElementById('inventoryBottleCost'),
+        inventoryAbv: document.getElementById('inventoryAbv'),
+        inventorySaveBtn: document.getElementById('inventorySaveBtn'),
+        inventoryResetBtn: document.getElementById('inventoryResetBtn'),
+        inventoryList: document.getElementById('inventoryList'),
+        inventoryFormState: document.getElementById('inventoryFormState')
       };
 
+      const canPersistInventory = storageAvailable();
       let state = createSampleState();
+      const inventoryState = {
+        domain: 'bar',
+        editingId: null,
+        items: loadInventoryItems()
+      };
 
       bindEvents();
       render();
+      renderInventoryModule();
 
       function bindEvents() {
         elements.cocktailName.addEventListener('input', (event) => {
@@ -557,6 +746,14 @@
           state = createSampleState();
           render();
         });
+        elements.inventoryDomainButtons.forEach((button) => {
+          button.addEventListener('click', () => {
+            setInventoryDomain(button.dataset.inventoryDomain);
+          });
+        });
+        elements.inventorySaveBtn.addEventListener('click', handleInventorySave);
+        elements.inventoryResetBtn.addEventListener('click', () => resetInventoryForm());
+        elements.inventoryList.addEventListener('click', handleInventoryListInteraction);
       }
 
       function syncPriceInputs(event) {
@@ -569,15 +766,21 @@
 
       function handleIngredientInput(event) {
         const field = event.target.dataset.field;
-        const id = event.target.closest('tr')?.dataset.id;
+        const row = event.target.closest('tr');
+        const id = row?.dataset.id;
         if (!field || !id) return;
         const ingredient = state.ingredients.find((item) => item.id === id);
         if (!ingredient) return;
+        const focusTarget = captureFocusTarget(event, id, field);
         if (field === 'name') {
           ingredient.name = event.target.value;
+        } else if (field === 'inventoryId') {
+          ingredient.inventoryId = event.target.value;
+          applyInventorySelection(ingredient);
         } else {
           ingredient[field] = event.target.value === '' ? '' : Number(event.target.value);
         }
+        renderIngredients({ focusTarget });
         renderAll();
       }
 
@@ -589,6 +792,7 @@
         if (button.dataset.action === 'remove') {
           if (state.ingredients.length === 1) return;
           state.ingredients = state.ingredients.filter((item) => item.id !== id);
+          renderIngredients();
           renderAll();
         }
       }
@@ -613,15 +817,276 @@
         renderBottleStats();
       }
 
-      function renderIngredients() {
+      function renderInventoryModule() {
+        setInventoryDomain(inventoryState.domain);
+      }
+
+      function renderInventoryCategoryOptions() {
+        if (!elements.inventoryCategory) return;
+        const categories = getInventoryCategories(inventoryState.domain);
+        elements.inventoryCategory.innerHTML = categories
+          .map((category) => `<option value="${category.value}">${category.label}</option>`)
+          .join('');
+      }
+
+      function renderInventoryList() {
+        if (!elements.inventoryList) return;
+        const domainItems = inventoryState.items.filter((item) => item.domain === inventoryState.domain);
+        if (!domainItems.length) {
+          elements.inventoryList.innerHTML = '<p class="inventory-empty">No stock logged yet. Build the backbone.</p>';
+          return;
+        }
+        const grouped = domainItems.reduce((acc, item) => {
+          const key = item.category || 'other';
+          acc[key] = acc[key] || [];
+          acc[key].push(item);
+          return acc;
+        }, {});
+        const html = Object.keys(grouped)
+          .sort((a, b) => a.localeCompare(b))
+          .map((category) => {
+            const label = getInventoryCategoryLabel(inventoryState.domain, category);
+            const rows = grouped[category]
+              .sort((a, b) => a.name.localeCompare(b.name))
+              .map((item) => `
+                <div class="inventory-item" data-id="${item.id}">
+                  <div>
+                    <strong>${escapeHtml(item.name)}</strong>
+                    <small>${item.bottleSize || 0} ml · £${formatCurrency(item.bottleCost || 0)} · ${item.abv || 0}% ABV</small>
+                  </div>
+                  <div class="inventory-actions">
+                    <button type="button" class="btn btn-ghost" data-inventory-action="edit" data-inventory-id="${item.id}">Edit</button>
+                    <button type="button" class="btn btn-ghost" data-inventory-action="delete" data-inventory-id="${item.id}">Delete</button>
+                  </div>
+                </div>
+              `)
+              .join('');
+            return `<div class="inventory-group"><h3>${label}</h3>${rows}</div>`;
+          })
+          .join('');
+        elements.inventoryList.innerHTML = html;
+      }
+
+      function handleInventorySave() {
+        const name = elements.inventoryName.value.trim();
+        if (!name) {
+          elements.inventoryName.focus();
+          return;
+        }
+        const payload = {
+          id: inventoryState.editingId || cryptoRandom(),
+          domain: inventoryState.domain,
+          category: elements.inventoryCategory.value || getInventoryCategories(inventoryState.domain)[0]?.value || 'other',
+          name,
+          bottleSize: Number(elements.inventoryBottleSize.value) || 0,
+          bottleCost: Number(elements.inventoryBottleCost.value) || 0,
+          abv: Number(elements.inventoryAbv.value) || 0
+        };
+        if (inventoryState.editingId) {
+          inventoryState.items = inventoryState.items.map((item) => (item.id === inventoryState.editingId ? payload : item));
+        } else {
+          inventoryState.items.push(payload);
+        }
+        persistInventoryItems(inventoryState.items);
+        syncIngredientsWithInventory(payload);
+        renderInventoryList();
+        renderIngredients();
+        renderAll();
+        resetInventoryForm();
+      }
+
+      function resetInventoryForm() {
+        inventoryState.editingId = null;
+        elements.inventoryName.value = '';
+        elements.inventoryBottleSize.value = '';
+        elements.inventoryBottleCost.value = '';
+        elements.inventoryAbv.value = '';
+        const categories = getInventoryCategories(inventoryState.domain);
+        if (categories[0]) {
+          elements.inventoryCategory.value = categories[0].value;
+        }
+        updateInventoryFormState();
+      }
+
+      function handleInventoryListInteraction(event) {
+        const button = event.target.closest('[data-inventory-action]');
+        if (!button) return;
+        const id = button.dataset.inventoryId;
+        if (!id) return;
+        if (button.dataset.inventoryAction === 'edit') {
+          startEditingInventoryItem(id);
+        } else if (button.dataset.inventoryAction === 'delete') {
+          deleteInventoryItem(id);
+        }
+      }
+
+      function startEditingInventoryItem(id) {
+        const item = getInventoryItem(id);
+        if (!item) return;
+        inventoryState.editingId = id;
+        setInventoryDomain(item.domain, { preserveForm: true });
+        elements.inventoryCategory.value = item.category;
+        elements.inventoryName.value = item.name;
+        elements.inventoryBottleSize.value = item.bottleSize || '';
+        elements.inventoryBottleCost.value = item.bottleCost || '';
+        elements.inventoryAbv.value = item.abv || '';
+        updateInventoryFormState(item.name);
+      }
+
+      function deleteInventoryItem(id) {
+        inventoryState.items = inventoryState.items.filter((entry) => entry.id !== id);
+        persistInventoryItems(inventoryState.items);
+        if (inventoryState.editingId === id) {
+          inventoryState.editingId = null;
+          resetInventoryForm();
+        } else {
+          updateInventoryFormState();
+        }
+        state.ingredients.forEach((ingredient) => {
+          if (ingredient.inventoryId === id) {
+            ingredient.inventoryId = '';
+          }
+        });
+        renderInventoryList();
+        renderIngredients();
+        renderAll();
+      }
+
+      function setInventoryDomain(domain, options = {}) {
+        if (!inventoryConfig.domains[domain]) return;
+        inventoryState.domain = domain;
+        elements.inventoryDomainButtons.forEach((button) => {
+          button.classList.toggle('is-active', button.dataset.inventoryDomain === domain);
+        });
+        renderInventoryCategoryOptions();
+        if (!options.preserveForm) {
+          resetInventoryForm();
+        } else {
+          updateInventoryFormState();
+        }
+        renderInventoryList();
+      }
+
+      function updateInventoryFormState(labelOverride) {
+        if (!elements.inventoryFormState) return;
+        if (inventoryState.editingId) {
+          const label = labelOverride || elements.inventoryName.value || 'Inventory item';
+          elements.inventoryFormState.textContent = `Editing · ${label}`;
+          return;
+        }
+        const domainLabel = inventoryConfig.domains[inventoryState.domain]?.label || capitalize(inventoryState.domain);
+        elements.inventoryFormState.textContent = `New item · ${domainLabel}`;
+      }
+
+      function getInventoryCategories(domain) {
+        return inventoryConfig.domains[domain]?.categories || [{ value: 'other', label: 'Other' }];
+      }
+
+      function buildInventoryOptions(selectedId = '') {
+        const manualOption = '<option value="">Manual entry</option>';
+        const barItems = inventoryState.items.filter((item) => item.domain === 'bar');
+        if (!barItems.length) {
+          return manualOption;
+        }
+        const grouped = barItems.reduce((acc, item) => {
+          const key = item.category || 'other';
+          acc[key] = acc[key] || [];
+          acc[key].push(item);
+          return acc;
+        }, {});
+        const options = Object.keys(grouped)
+          .sort((a, b) => a.localeCompare(b))
+          .map((category) => {
+            const label = getInventoryCategoryLabel('bar', category);
+            const rows = grouped[category]
+              .sort((a, b) => a.name.localeCompare(b.name))
+              .map((item) => `<option value="${item.id}" ${item.id === selectedId ? 'selected' : ''}>${escapeHtml(item.name)} (${item.bottleSize || 0}ml)</option>`)
+              .join('');
+            return `<optgroup label="Bar · ${label}">${rows}</optgroup>`;
+          })
+          .join('');
+        return manualOption + options;
+      }
+
+      function getInventoryItem(id) {
+        if (!id) return null;
+        return inventoryState.items.find((item) => item.id === id) || null;
+      }
+
+      function getInventoryCategoryLabel(domain, value) {
+        const categories = getInventoryCategories(domain);
+        const match = categories.find((category) => category.value === value);
+        return match ? match.label : capitalize(value);
+      }
+
+      function applyInventorySelection(ingredient) {
+        if (!ingredient.inventoryId) return;
+        const item = getInventoryItem(ingredient.inventoryId);
+        if (!item) return;
+        ingredient.name = item.name;
+        ingredient.abv = item.abv ?? '';
+        ingredient.bottleSize = item.bottleSize ?? '';
+        ingredient.bottleCost = item.bottleCost ?? '';
+      }
+
+      function syncIngredientsWithInventory(updatedItem) {
+        let touched = false;
+        state.ingredients.forEach((ingredient) => {
+          if (ingredient.inventoryId === updatedItem.id) {
+            touched = true;
+            ingredient.name = updatedItem.name;
+            ingredient.abv = updatedItem.abv ?? '';
+            ingredient.bottleSize = updatedItem.bottleSize ?? '';
+            ingredient.bottleCost = updatedItem.bottleCost ?? '';
+          }
+        });
+        if (touched) {
+          renderIngredients();
+          renderAll();
+        }
+      }
+
+      function captureFocusTarget(event, id, field) {
+        const target = event.target;
+        if (!target) return null;
+        const focus = { id, field };
+        if (target.selectionStart != null) {
+          focus.selectionStart = target.selectionStart;
+          focus.selectionEnd = target.selectionEnd;
+        }
+        focus.isSelect = target.tagName === 'SELECT';
+        return focus;
+      }
+
+      function restoreIngredientFocus(focusTarget) {
+        if (!focusTarget) return;
+        const selector = `tr[data-id="${focusTarget.id}"] [data-field="${focusTarget.field}"]`;
+        const next = elements.ingredientTableBody.querySelector(selector);
+        if (!next) return;
+        next.focus();
+        if (!focusTarget.isSelect && typeof focusTarget.selectionStart === 'number' && next.setSelectionRange) {
+          const end = typeof focusTarget.selectionEnd === 'number' ? focusTarget.selectionEnd : focusTarget.selectionStart;
+          next.setSelectionRange(focusTarget.selectionStart, end);
+        }
+      }
+
+      function renderIngredients(options = {}) {
         elements.ingredientTableBody.innerHTML = state.ingredients
           .map((ingredient) => {
             const stats = computeIngredientStats(ingredient);
             const servesLabel = stats.servesPerBottle ? `${stats.servesPerBottle.toFixed(1)} serves / bottle` : '—';
+            const linkedInventory = getInventoryItem(ingredient.inventoryId);
+            const inventoryNote = linkedInventory
+              ? `Linked to ${escapeHtml(linkedInventory.name || '')} · ${getInventoryCategoryLabel(linkedInventory.domain, linkedInventory.category)}`
+              : 'Manual entry';
             return `
               <tr data-id="${ingredient.id}">
                 <td>
                   <input type="text" placeholder="Spirit or modifier" value="${escapeHtml(ingredient.name)}" data-field="name" />
+                  <select data-field="inventoryId" aria-label="Select from inventory">
+                    ${buildInventoryOptions(ingredient.inventoryId)}
+                  </select>
+                  <p class="help-text inventory-note" data-inventory-note>${inventoryNote}</p>
                   <p class="help-text">${servesLabel}</p>
                 </td>
                 <td>
@@ -642,6 +1107,7 @@
             `;
           })
           .join('');
+        restoreIngredientFocus(options.focusTarget);
       }
 
       function renderDilution() {
@@ -833,6 +1299,7 @@
           bottleSize: '',
           bottleCost: '',
           pour: '',
+          inventoryId: '',
           ...overrides
         };
       }
@@ -860,12 +1327,64 @@
           dilutionMode: 'stirred',
           customDilution: 12,
           ingredients: [
-            createIngredient({ name: 'Henley Small Batch Gin', abv: 43, bottleSize: 700, bottleCost: 33, pour: 40 }),
-            createIngredient({ name: 'Italicus Rosolio', abv: 20, bottleSize: 700, bottleCost: 27, pour: 10 }),
-            createIngredient({ name: 'Dry Vermouth', abv: 18, bottleSize: 1000, bottleCost: 16, pour: 15 }),
-            createIngredient({ name: 'Bergamot hydrosol', abv: 0, bottleSize: 500, bottleCost: 8, pour: 5 })
+            createIngredient({ name: 'Henley Small Batch Gin', abv: 43, bottleSize: 700, bottleCost: 33, pour: 40, inventoryId: 'inv-henley-gin' }),
+            createIngredient({ name: 'Italicus Rosolio', abv: 20, bottleSize: 700, bottleCost: 27, pour: 10, inventoryId: 'inv-italicus' }),
+            createIngredient({ name: 'Dry Vermouth', abv: 18, bottleSize: 1000, bottleCost: 16, pour: 15, inventoryId: 'inv-dry-vermouth' }),
+            createIngredient({ name: 'Bergamot hydrosol', abv: 0, bottleSize: 500, bottleCost: 8, pour: 5, inventoryId: 'inv-bergamot' })
           ]
         };
+      }
+
+      function persistInventoryItems(items) {
+        if (!canPersistInventory) return;
+        try {
+          window.localStorage.setItem(inventoryConfig.storageKey, JSON.stringify(items));
+        } catch (error) {
+          console.warn('Inventory save failed', error);
+        }
+      }
+
+      function loadInventoryItems() {
+        if (!canPersistInventory) {
+          return createDefaultInventory();
+        }
+        try {
+          const stored = window.localStorage.getItem(inventoryConfig.storageKey);
+          if (stored) {
+            const parsed = JSON.parse(stored);
+            if (Array.isArray(parsed)) {
+              return parsed;
+            }
+          }
+        } catch (error) {
+          console.warn('Inventory load failed', error);
+        }
+        const defaults = createDefaultInventory();
+        persistInventoryItems(defaults);
+        return defaults;
+      }
+
+      function createDefaultInventory() {
+        return [
+          { id: 'inv-henley-gin', domain: 'bar', category: 'spirits', name: 'Henley Small Batch Gin', bottleSize: 700, bottleCost: 33, abv: 43 },
+          { id: 'inv-italicus', domain: 'bar', category: 'liqueurs', name: 'Italicus Rosolio', bottleSize: 700, bottleCost: 27, abv: 20 },
+          { id: 'inv-dry-vermouth', domain: 'bar', category: 'fortified', name: 'Dry Vermouth', bottleSize: 1000, bottleCost: 16, abv: 18 },
+          { id: 'inv-bergamot', domain: 'bar', category: 'house', name: 'Bergamot hydrosol', bottleSize: 500, bottleCost: 8, abv: 0 },
+          { id: 'inv-campari', domain: 'bar', category: 'aperitifs', name: 'Campari', bottleSize: 700, bottleCost: 15, abv: 25 },
+          { id: 'inv-lemon-juice', domain: 'kitchen', category: 'citrus', name: 'Pressed lemon juice', bottleSize: 1000, bottleCost: 6, abv: 0 }
+        ];
+      }
+
+      function storageAvailable() {
+        try {
+          const storage = window.localStorage;
+          const testKey = '__liquid_glass_inventory__';
+          storage.setItem(testKey, '1');
+          storage.removeItem(testKey);
+          return true;
+        } catch (error) {
+          return false;
+        }
       }
 
       function formatCurrency(value) {
