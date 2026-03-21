@@ -52,13 +52,18 @@ Premium, dark, editorial, restrained. Clean typography. Liquid-glass UI elements
 
 ### 8. Staff Tip Pool & Distribution Calculator ✅ SHIPPED
 
-### 11. Staff Training & Onboarding Hub
+### 11. Staff Training & Onboarding Hub ✅ SHIPPED
 - Onboarding checklist builder with role-specific task lists and sign-off tracking.
-- Menu knowledge base — dishes/drinks with allergens, pairing notes, upsell prompts.
-- Competency assessment — quiz builder tied to menu items or SOPs.
-- Progress tracker — manager view across the team.
-- Pulls from Allergen Matrix and SOP Generator localStorage.
-- Printable induction packs. 100% localStorage, mobile-first, Liquid Glass aesthetic.
+- Menu knowledge base — dishes/drinks with allergens, pairing notes, upsell prompts. Seed data pre-loaded.
+- Competency assessment — quiz builder with pass/fail and score tracking.
+- Staff progress dashboard — manager view across the team, per-staff detail.
+- Certificate modal on assessment pass — staff can screenshot.
+- Manager/Staff mode toggle. 100% localStorage, mobile-first, Liquid Glass aesthetic.
+
+### 12. Food Safety & HACCP Compliance Logger
+- The next legal compliance gap: temperature logs, cleaning schedules, corrective actions.
+- EHOs request temperature records as first ask during inspections. Paper logs fail.
+- See spec below.
 
 ### 10. Guest Micro-CRM ✅ SHIPPED
 - "Little black book" for premium venues — remember your regulars.
@@ -79,26 +84,27 @@ Premium, dark, editorial, restrained. Clean typography. Liquid-glass UI elements
 - Pairs with Rota Optimizer, EOD Reconciliation, and Financial Narrative.
 
 ## Infinite Loop · Immediate Next Build
-**Staff Training & Onboarding Hub**
-- `tools/training-hub/index.html`
-- UK hospitality has the highest staff turnover of any industry (~75% annually). Every new hire costs £1,500–£3,000 to onboard. This tool cuts that cost and accelerates time-to-competency.
+**Food Safety & HACCP Compliance Logger**
+- `tools/food-safety/index.html`
+- UK legal requirement: every food business must maintain HACCP records. EHOs request temperature logs as the first act of inspection. Paper logs get lost, forgotten, or forged. Digital replaces all of it.
 - **Core modules:**
-  - Onboarding checklist builder — create structured induction programs with role-specific task lists, sign-off tracking, and completion percentages
-  - Menu knowledge base — add dishes/drinks with descriptions, allergens, upsell notes, and pairing suggestions; staff can self-study before service
-  - SOP quick-reference cards — searchable, mobile-optimised SOPs staff can pull up mid-shift
-  - Competency assessment — simple pass/fail quiz builder tied to menu items or procedures
-  - Progress tracker — manager view showing who's completed what across the team
-- **Integration:** pulls allergen data from Allergen Matrix Builder, pulls SOPs from SOP Generator localStorage
-- **Mobile-first:** staff use it on their phones between covers
-- 100% localStorage, no logins, Liquid Glass dark premium aesthetic
-- Export: printable induction packs for paper-based venues
+  - Temperature logs — fridge/freezer/hot hold/probe records with pass/fail vs legal thresholds (5°C cold, 63°C hot, -18°C frozen)
+  - Cleaning schedule — daily/weekly/monthly tasks with sign-off and timestamp
+  - Corrective action log — when something fails, record what you did about it (EHO requirement)
+  - HACCP summary — export-ready record of all logs for inspection day
+  - Dashboard — today's compliance health at a glance: red/amber/green per zone
+- **Legal context:** Hazard Analysis Critical Control Points (HACCP) is legally mandated under UK food law for all food businesses. Temperature records are the #1 thing EHOs check.
+- **Competitive gap:** ComplyFood, SafeKitchen, FoodDocs cost £50–£200/month. This is free.
+- 100% localStorage, no logins, mobile-first (kitchen staff log on their phones)
+- Liquid Glass dark premium aesthetic with red/amber/green compliance banding
+- One-tap "log temperature now" flow — under 10 seconds per reading
 
 ### Why This Wins
-- **Retention play**: structured onboarding reduces 90-day dropout by ~30% (CIPD data)
-- **Compliance**: food hygiene, allergen awareness, and licensing training can be tracked and evidenced
-- **Consistency**: every staff member learns the same thing — eliminates "ask whoever trained me" variation
-- **No competition at this price point**: Deputy, Trainual, etc. cost £100–£500/month; this is free
-- **Natural upsell**: Jordan can offer bespoke onboarding content build as a consulting service
+- **Legal shield**: proper HACCP records protect the licence and avoid criminal liability
+- **5-star hygiene rating**: inspectors love digital records — higher ratings = more bookings
+- **Zero cost**: eliminates SaaS subscriptions that operators are currently paying
+- **Pairs with**: Allergen Matrix Builder, Food Waste Audit Tracker — the compliance trio is complete
+- **Natural upsell**: Jordan can white-label or configure for each venue as a consulting deliverable
 
 ## Execution Strategy
 - **Autonomy**: Jim and the agents will continually build, test, refine, and deploy this app without asking for permission.
@@ -130,7 +136,8 @@ Premium, dark, editorial, restrained. Clean typography. Liquid-glass UI elements
 | Private Event & Hire Planner | /tools/event-planner/ | ✅ Live |
 | Guest Micro-CRM | /tools/guest-crm/ | ✅ Live |
 | Food Waste Audit Tracker | /tools/food-waste/ | ✅ Live |
-| Staff Training & Onboarding Hub | /tools/training-hub/ | 🔨 Next |
+| Staff Training & Onboarding Hub | /tools/staff-training/ | ✅ Live |
+| Food Safety & HACCP Compliance Logger | /tools/food-safety/ | 🔨 Next |
 
 ## The Infinite Loop Protocol
 At the end of every task list, the system MUST execute the following sequence indefinitely:
